@@ -15,5 +15,5 @@ export class Student {
   patronymic: string;
 
   @CreateDateColumn()
-  createDate: Date
+  createdAt: Date
 }

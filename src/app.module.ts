@@ -1,53 +1,38 @@
-import { Module }          from '@nestjs/common';
-import { AppController }   from './app.controller';
-import { TypeOrmModule }   from "@nestjs/typeorm";
-import { DbConfig }        from "./db/db.config";
-import * as Entities       from './db/entities/index'
-import { AppConfigModule } from "./configs/app.config.module";
-import { StudentModule }   from './student/student.module';
-import { TeacherModule }   from './teacher/teacher.module';
-import { ScheduleModule }  from './schedule/schedule.module';
-import { ConfigModule }    from "@nestjs/config";
-import { AppService }      from "./app.service";
+import { Module }         from "@nestjs/common";
+import { AppController }  from "./app.controller";
+import { TypeOrmModule }  from "@nestjs/typeorm";
+import { StudentModule }  from "./student/student.module";
+import { TeacherModule }  from "./teacher/teacher.module";
+import { ScheduleModule } from "./schedule/schedule.module";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { AppService }                    from "./app.service";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
       isGlobal: true
     }),
-    AppConfigModule,
     TypeOrmModule.forRootAsync({
-      imports: [AppConfigModule],
-      inject: [DbConfig],
-      useFactory: async (dbconfig: DbConfig) => {
-        const {
-          database,
-          password,
-          username,
-          port,
-          host,
-          logging,
-          synchronize
-        } = dbconfig
-        return {
-          type: 'postgres',
-          database,
-          password,
-          username,
-          port,
-          host,
-          logging,
-          synchronize,
-          entities: Object.values(Entities)
-        }
-      },
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        autoLoadEntities: true,
+        logging: true,
+        synchronize: true
+      }),
     }),
     StudentModule,
     TeacherModule,
-    ScheduleModule,
+    ScheduleModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
-export class AppModule {}
+export class AppModule {
+}
