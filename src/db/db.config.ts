@@ -12,13 +12,13 @@ export class DbConfig {
   readonly synchronize: boolean;
 
   constructor(private readonly configService: AppConfigService) {
-    this.host = this.configService.get('DB_HOST');
-    this.port = Number(this.configService.get('DB_PORT'));
-    this.username = this.configService.get('DB_USERNAME');
-    this.password = this.configService.get('DB_PASSWORD');
-    this.database = this.configService.get('DB_NAME');
-    this.logging = this.configService.get('DB_LOGGING') !== 'false';
+    this.host = this.configService.get("DB_HOST");
+    this.port = Number(this.configService.get("DB_PORT"));
+    this.username = this.configService.get("DB_USERNAME");
+    this.password = this.configService.get("DB_PASSWORD");
+    this.database = this.configService.get("DB_NAME");
+    this.logging = this.configService.get("DB_LOGGING") !== "false";
     this.synchronize =
-      this.configService.get('DB_SYNCHRONIZE') !== 'false';
+      this.configService.get("DB_SYNCHRONIZE") !== "false";
   }
 }
