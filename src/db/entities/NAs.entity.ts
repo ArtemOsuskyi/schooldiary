@@ -1,12 +1,6 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Student } from './student.entity';
-import { DateSchedule } from './date_schedule.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Student }                                                       from './student.entity';
+import { DateSchedule }                                                  from './date_schedule.entity';
 
 @Entity({ name: 'NA' })
 export class NA {

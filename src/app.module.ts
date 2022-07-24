@@ -1,16 +1,19 @@
-import { Module }         from "@nestjs/common";
-import { AppController }  from "./app.controller";
-import { TypeOrmModule }  from "@nestjs/typeorm";
-import { StudentModule }  from "./student/student.module";
-import { TeacherModule }  from "./teacher/teacher.module";
-import { ScheduleModule } from "./schedule/schedule.module";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { AppService }                    from "./app.service";
+import { Module }                      from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule }                  from './auth/auth.module';
+import { UserModule }                  from './user/user.module';
+import { TypeOrmModule }               from '@nestjs/typeorm';
+import { AppController }               from './app.controller';
+import { StudentModule }               from './student/student.module';
+import { TeacherModule }               from './teacher/teacher.module';
+import { ScheduleModule }              from './schedule/schedule.module';
+import { AppService }                  from './app.service';
+import * as Entities                   from 'src/db/entities/index';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -22,17 +25,19 @@ import { AppService }                    from "./app.service";
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
+        entities: Object.values(Entities),
         autoLoadEntities: true,
-        logging: true,
-        synchronize: true
+        synchronize: true,
       }),
     }),
     StudentModule,
     TeacherModule,
-    ScheduleModule
+    ScheduleModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
 })
 export class AppModule {
 }

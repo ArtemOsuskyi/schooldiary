@@ -1,13 +1,7 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { TeacherSubject } from './teacher_subject.entity';
-import { StudyCourse } from './study_course.entity';
-import { Weekdays } from '../enums/weekday.enum';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { TeacherSubject }                                                from './teacher_subject.entity';
+import { StudyCourse }                                                   from './study_course.entity';
+import { Weekdays }                                                      from '../enums/weekday.enum';
 
 @Entity({ name: 'schedule' })
 export class Schedule {
