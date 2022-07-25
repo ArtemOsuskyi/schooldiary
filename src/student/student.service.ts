@@ -1,24 +1,30 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { studentRepository }             from './repos/student.repository';
 import { StudentCreateDto }              from './dtos/student-create-dto';
 import { isNil }                         from '@nestjs/common/utils/shared.utils';
+import { StudentRepository }             from './repos/student.repository';
+import { InjectRepository }              from '@nestjs/typeorm';
+import { Student }                       from '../db/entities';
 
 @Injectable()
 export class StudentService {
-
+  constructor(
+    @InjectRepository(Student)
+    private readonly studentRepository: StudentRepository
+  ) {
+  }
   async getStudent(studentId: number) {
-    return await studentRepository.findOneBy({
+    return await this.studentRepository.findOne({
       id: studentId,
     });
   }
 
   async getAllStudents() {
-    return await studentRepository.find();
+    return await this.studentRepository.find();
   }
 
   async createStudent(createStudentDto: StudentCreateDto) {
     const { first_name, last_name, patronymic } = createStudentDto;
-    return studentRepository.save({
+    return this.studentRepository.save({
       first_name,
       last_name,
       patronymic,
@@ -26,10 +32,10 @@ export class StudentService {
   }
 
   async deleteStudent(studentId: number) {
-    const student = await studentRepository.findOneBy({
+    const student = await this.studentRepository.findOne({
       id: studentId,
     });
     if (isNil(student)) throw new NotFoundException('This student doesn\'t exist');
-    return await studentRepository.remove(student);
+    return await this.studentRepository.remove(student);
   }
 }

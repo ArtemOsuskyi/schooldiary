@@ -1,4 +1,5 @@
-import { dataSource } from "../../data-source";
-import { Student }    from "../../db/entities";
+import { EntityRepository, Repository } from 'typeorm';
+import { Student }                      from '../../db/entities';
 
-export const studentRepository = dataSource.getRepository(Student).extend({})
+@EntityRepository(Student)
+export class StudentRepository extends Repository<Student>{}

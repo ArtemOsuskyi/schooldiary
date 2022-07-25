@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Module }                      from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule }                  from './auth/auth.module';
@@ -8,11 +9,12 @@ import { StudentModule }               from './student/student.module';
 import { TeacherModule }               from './teacher/teacher.module';
 import { ScheduleModule }              from './schedule/schedule.module';
 import { AppService }                  from './app.service';
-import * as Entities                   from 'src/db/entities/index';
+import * as Entities from 'src/db/entities/index';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ['.env'],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
@@ -26,7 +28,6 @@ import * as Entities                   from 'src/db/entities/index';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         entities: Object.values(Entities),
-        autoLoadEntities: true,
         synchronize: true,
       }),
     }),
