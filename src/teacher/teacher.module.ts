@@ -6,9 +6,10 @@ import { Teacher }           from '../db/entities';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Teacher])
+    TypeOrmModule.forFeature([Teacher]),
   ],
   providers: [TeacherService],
-  controllers: [TeacherController]
+  controllers: [TeacherController],
 })
-export class TeacherModule {}
+export class TeacherModule {
+}

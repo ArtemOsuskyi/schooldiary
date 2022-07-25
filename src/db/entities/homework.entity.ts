@@ -1,11 +1,5 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { DateSchedule } from './date_schedule.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { DateSchedule }                                                  from './date_schedule.entity';
 
 @Entity({ name: 'homework' })
 export class Homework {

@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
-import { Teacher }                                    from "../db/entities";
-import { StudentCreateDto }                           from "../student/dtos/student-create-dto";
-import { TeacherService }                             from "./teacher.service";
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Teacher }                                    from '../db/entities';
+import { StudentCreateDto }                           from '../student/dtos/student-create-dto';
+import { TeacherService }                             from './teacher.service';
 
 @Controller('teacher')
 export class TeacherController {
@@ -10,20 +10,20 @@ export class TeacherController {
 
   @Get()
   async getAllTeachers(): Promise<Teacher[]> {
-    return this.teacherService.getAllTeachers()
+    return this.teacherService.getAllTeachers();
   }
 
-  @Get(":id")
+  @Get(':id')
   async getTeacher(@Param() params): Promise<Teacher> {
     return this.teacherService.getTeacher(params.id);
   }
 
-  @Post("create")
+  @Post('create')
   async createStudent(@Body() createStudentDto: StudentCreateDto): Promise<Teacher> {
     return this.teacherService.createTeacher(createStudentDto);
   }
 
-  @Delete("delete/:id")
+  @Delete('delete/:id')
   async deleteStudent(@Param() params): Promise<Teacher> {
     return this.teacherService.deleteTeacher(params.id);
   }

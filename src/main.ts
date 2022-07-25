@@ -1,10 +1,27 @@
-import { NestFactory } from "@nestjs/core";
-import { AppModule }   from "./app.module";
+import { NestFactory } from '@nestjs/core';
+import { AppModule }   from './app.module';
+
+const PORT = process.env.LOCAL_PORT;
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  app.enableCors({
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'X-Access-Token',
+    ],
+    credentials: true,
+    methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+  });
+  await app.listen(PORT);
 }
 
-bootstrap();
+bootstrap().then(() => {
+  console.log(`Server is running on port ${PORT}`);
+});
 

@@ -1,13 +1,7 @@
-import {
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Student } from './student.entity';
-import { StudyClass } from './class.entity';
-import { StudyYear } from './study_year.entity';
+import { Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Student }                                                          from './student.entity';
+import { StudyClass }                                                       from './class.entity';
+import { StudyYear }                                                        from './study_year.entity';
 
 @Entity({ name: 'study_course' })
 export class StudyCourse {

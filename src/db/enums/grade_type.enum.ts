@@ -1,8 +1,8 @@
 export enum GradeType {
-  'Homework',
-  'Behaviour',
-  'Classwork',
-  'Test',
-  'Quarterly',
-  'Yearly',
+  HOMEWORK = 'Homework',
+  BEHAVIOUR = 'Behaviour',
+  CLASSWORK = 'Classwork',
+  TEST = 'Test',
+  QUARTERLY = 'Quarterly',
+  YEARLY = 'Yearly',
 }

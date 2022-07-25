@@ -1,4 +1,4 @@
-import { IsString, Max } from "class-validator";
+import { IsString, Max } from 'class-validator';
 
 export class StudentCreateDto {
   @IsString()
