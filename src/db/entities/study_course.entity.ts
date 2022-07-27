@@ -12,7 +12,11 @@ export class StudyCourse {
   @JoinColumn({ name: 'student_id', referencedColumnName: 'id' })
   student: Student;
 
-  @OneToMany(() => StudyClass, (study_class) => study_class.id)
+  @OneToMany(() => StudyClass, (study_class) => study_class.id,
+    {
+      cascade: true,
+      nullable: false,
+    })
   class: StudyClass;
 
   @ManyToOne(() => StudyYear)

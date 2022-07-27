@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { TeacherSubject }                                                from './teacher_subject.entity';
-import { StudyCourse }                                                   from './study_course.entity';
-import { Weekdays }                                                      from '../enums/weekday.enum';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { TeacherSubject }                                                           from './teacher_subject.entity';
+import { StudyCourse }                                                              from './study_course.entity';
+import { Weekdays }                                                                 from '../enums/weekday.enum';
+import { DateSchedule }                                                             from './date_schedule.entity';
 
 @Entity({ name: 'schedule' })
 export class Schedule {
@@ -15,6 +16,9 @@ export class Schedule {
   @ManyToOne(() => StudyCourse)
   @JoinColumn({ name: 'study_course_id', referencedColumnName: 'id' })
   study_course: StudyCourse;
+
+  @OneToMany( () => DateSchedule, (dateSchedule) => dateSchedule.schedule)
+  date_schedule: DateSchedule
 
   @Column({ name: 'lesson_number', type: 'integer' })
   lesson_number: number;

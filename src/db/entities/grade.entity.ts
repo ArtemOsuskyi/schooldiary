@@ -16,10 +16,10 @@ export class Grade {
   @JoinColumn({ name: 'date_schedule_id', referencedColumnName: 'id' })
   date_schedule: DateSchedule;
 
-  @Column({ name: 'grade_type', type: 'enum', enum: GradeType })
-  grade_type: GradeType;
-
   @ManyToOne(() => Student)
   @JoinColumn({ name: 'student_id', referencedColumnName: 'id' })
   student: Student;
+
+  @Column({ name: 'grade_type', type: 'enum', enum: GradeType })
+  grade_type: GradeType;
 }

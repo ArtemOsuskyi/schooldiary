@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 't
 import { Student }                                                       from './student.entity';
 import { DateSchedule }                                                  from './date_schedule.entity';
 
-@Entity({ name: 'NA' })
+@Entity({ name: 'NA' }) //NA - Not Attended
 export class NA {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;

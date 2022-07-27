@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository }              from '@nestjs/typeorm';
-import { StudyClass }       from '../db/entities';
-import { Repository }       from 'typeorm';
+import { StudyClass }                    from '../db/entities';
+import { ClassRepository }               from './repository/class.repository';
 
 @Injectable()
 export class ClassService {
   constructor(
     @InjectRepository(StudyClass)
-    private readonly classRepository: Repository<StudyClass>
+    private readonly classRepository: ClassRepository
   ) {}
 
   async createClass(name: string): Promise<StudyClass> {

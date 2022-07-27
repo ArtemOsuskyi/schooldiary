@@ -4,7 +4,7 @@ import { Subject }                                               from './subject
 
 @Entity({ name: 'teacher_subject' })
 export class TeacherSubject {
-  @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
+  @PrimaryGeneratedColumn({ name: 'id', type: 'int4'})
   id: number;
 
   @ManyToOne(() => Teacher)

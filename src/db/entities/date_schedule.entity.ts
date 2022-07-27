@@ -1,5 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Schedule }                                                      from './schedule.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Schedule }                                                                 from './schedule.entity';
+import { Homework }                                                                 from './homework.entity';
+import { Grade }                                                                    from './grade.entity';
+import { NA }                                                                       from './NAs.entity';
 
 @Entity({ name: 'date_schedule' })
 export class DateSchedule {
@@ -9,6 +12,15 @@ export class DateSchedule {
   @ManyToOne(() => Schedule)
   @JoinColumn({ name: 'schedule_id', referencedColumnName: 'id' })
   schedule: Schedule;
+
+  @OneToMany( () => Homework, (homework) => homework.date_schedule)
+  homework: Homework[]
+
+  @OneToMany( () => Grade, (grade) => grade.date_schedule)
+  grades: Grade[]
+
+  @OneToMany( () => NA, (na) => na.date_schedule)
+  NAs: NA[]
 
   @Column({ name: 'date', type: 'date' })
   date: Date;
