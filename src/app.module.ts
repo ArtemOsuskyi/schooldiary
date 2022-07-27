@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Module }                      from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClassModule } from './class/class.module';
 import { AuthModule }                  from './auth/auth.module';
 import { UserModule }                  from './user/user.module';
 import { TypeOrmModule }               from '@nestjs/typeorm';
@@ -36,6 +37,7 @@ import * as Entities from 'src/db/entities/index';
     ScheduleModule,
     AuthModule,
     UserModule,
+    ClassModule,
   ],
   controllers: [AppController],
   providers: [AppService],
