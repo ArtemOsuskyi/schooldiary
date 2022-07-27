@@ -1,12 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { Teacher }                                    from '../db/entities';
-import { StudentCreateDto }                           from '../student/dtos/student-create-dto';
-import { TeacherService }                             from './teacher.service';
+import { Teacher } from '../db/entities';
+import { StudentCreateDto } from '../student/dtos/student-create-dto';
+import { TeacherService } from './teacher.service';
 
 @Controller('teacher')
 export class TeacherController {
-  constructor(private readonly teacherService: TeacherService) {
-  }
+  constructor(private readonly teacherService: TeacherService) {}
 
   @Get()
   async getAllTeachers(): Promise<Teacher[]> {
@@ -19,7 +18,9 @@ export class TeacherController {
   }
 
   @Post('create')
-  async createStudent(@Body() createStudentDto: StudentCreateDto): Promise<Teacher> {
+  async createStudent(
+    @Body() createStudentDto: StudentCreateDto,
+  ): Promise<Teacher> {
     return this.teacherService.createTeacher(createStudentDto);
   }
 

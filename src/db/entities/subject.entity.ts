@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { TeacherSubject }                                    from './teacher_subject.entity';
+import { TeacherSubject } from './teacher_subject.entity';
 
 @Entity({ name: 'subject' })
 export class Subject {
@@ -9,6 +9,8 @@ export class Subject {
   @Column({ name: 'name', type: 'varchar', nullable: false })
   name: string;
 
-  @OneToMany( () => TeacherSubject, (teacherSubject) => teacherSubject.subject)
-  teacher_subject: TeacherSubject
+  @OneToMany(() => TeacherSubject, (teacherSubject) => teacherSubject.subject, {
+    cascade: true,
+  })
+  teacher_subject: TeacherSubject;
 }

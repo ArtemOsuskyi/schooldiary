@@ -1,4 +1,4 @@
-import { IsString, Max } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Max } from 'class-validator';
 
 export class StudentCreateDto {
   @IsString()
@@ -12,4 +12,8 @@ export class StudentCreateDto {
   @IsString()
   @Max(20)
   patronymic: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  studyCourseId: number;
 }

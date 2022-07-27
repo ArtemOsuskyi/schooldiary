@@ -1,4 +1,4 @@
-export * from './class.entity';
+export * from './study_class.entity';
 export * from './date_schedule.entity';
 export * from './grade.entity';
 export * from './homework.entity';

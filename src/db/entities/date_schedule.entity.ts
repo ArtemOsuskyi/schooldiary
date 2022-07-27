@@ -1,8 +1,15 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Schedule }                                                                 from './schedule.entity';
-import { Homework }                                                                 from './homework.entity';
-import { Grade }                                                                    from './grade.entity';
-import { NA }                                                                       from './NAs.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Schedule } from './schedule.entity';
+import { Homework } from './homework.entity';
+import { Grade } from './grade.entity';
+import { NA } from './NAs.entity';
 
 @Entity({ name: 'date_schedule' })
 export class DateSchedule {
@@ -13,14 +20,20 @@ export class DateSchedule {
   @JoinColumn({ name: 'schedule_id', referencedColumnName: 'id' })
   schedule: Schedule;
 
-  @OneToMany( () => Homework, (homework) => homework.date_schedule)
-  homework: Homework[]
+  @OneToMany(() => Homework, (homework) => homework.date_schedule, {
+    cascade: true,
+  })
+  homework: Homework[];
 
-  @OneToMany( () => Grade, (grade) => grade.date_schedule)
-  grades: Grade[]
+  @OneToMany(() => Grade, (grade) => grade.date_schedule, {
+    cascade: true,
+  })
+  grades: Grade[];
 
-  @OneToMany( () => NA, (na) => na.date_schedule)
-  NAs: NA[]
+  @OneToMany(() => NA, (na) => na.date_schedule, {
+    cascade: true,
+  })
+  NAs: NA[];
 
   @Column({ name: 'date', type: 'date' })
   date: Date;

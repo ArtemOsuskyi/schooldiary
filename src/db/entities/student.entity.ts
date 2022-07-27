@@ -1,7 +1,13 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { StudyCourse }                                                         from './study_course.entity';
-import { Grade }                                                               from './grade.entity';
-import { NA }                                                                  from './NAs.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { StudyCourse } from './study_course.entity';
+import { Grade } from './grade.entity';
+import { NA } from './NAs.entity';
 
 @Entity({ name: 'student' })
 export class Student {
@@ -17,17 +23,25 @@ export class Student {
   @Column({ name: 'patronymic', type: 'varchar' })
   patronymic: string;
 
-  @OneToMany(() => StudyCourse, (studyCourse: StudyCourse) => studyCourse.student)
+  @OneToMany(
+    () => StudyCourse,
+    (studyCourse: StudyCourse) => studyCourse.students,
+    {
+      cascade: true,
+    },
+  )
   studyCourses: StudyCourse[];
 
-  @OneToMany( () => Grade, (grade) => grade.student, {
+  @OneToMany(() => Grade, (grade) => grade.student, {
     cascade: true,
     nullable: true,
   })
-  grades: Grade[]
+  grades: Grade[];
 
-  @OneToMany( () => NA, (na) => na.student)
-  NAs: NA[]
+  @OneToMany(() => NA, (na) => na.student, {
+    cascade: true,
+  })
+  NAs: NA[];
 
   @CreateDateColumn()
   createdAt: Date;

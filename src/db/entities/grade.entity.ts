@@ -1,7 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { DateSchedule }                                                  from './date_schedule.entity';
-import { GradeType }                                                     from '../enums/grade_type.enum';
-import { Student }                                                       from './student.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { DateSchedule } from './date_schedule.entity';
+import { GradeType } from '../enums/grade_type.enum';
+import { Student } from './student.entity';
 
 //TODO: add not null constraints to all entities
 @Entity({ name: 'grade' })

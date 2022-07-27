@@ -1,12 +1,16 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository }                                                          from '@nestjs/typeorm';
-import { JwtService }                                                                from '@nestjs/jwt';
-import * as bcrypt                                                                   from 'bcrypt';
-import { LoginDto }                                                                  from './dtos/login-dto';
-import { RegisterDto }                                                               from './dtos/register-dto';
-import { UserService }                                                               from '../user/user.service';
-import { UserRepository }                                                            from '../user/user.repository';
-import { User }                                                                      from '../db/entities';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { LoginDto } from './dtos/login-dto';
+import { RegisterDto } from './dtos/register-dto';
+import { UserService } from '../user/user.service';
+import { UserRepository } from '../user/user.repository';
+import { User } from '../db/entities';
 
 @Injectable()
 export class AuthService {
@@ -15,8 +19,7 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) {
-  }
+  ) {}
 
   async register(registerDto: RegisterDto): Promise<User> {
     const { email, password, role } = registerDto;
