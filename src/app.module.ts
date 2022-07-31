@@ -14,6 +14,8 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { AppService } from './app.service';
 import { NaModule } from './na/na.module';
 import { GradeModule } from './grade/grade.module';
+import { TeacherSubjectModule } from './teacher_subject/teacher_subject.module';
+import { SubjectModule } from './subject/subject.module';
 import * as Entities from 'src/db/entities/index';
 
 @Module({
@@ -46,6 +48,8 @@ import * as Entities from 'src/db/entities/index';
     StudyCourseModule,
     NaModule,
     GradeModule,
+    TeacherSubjectModule,
+    SubjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],

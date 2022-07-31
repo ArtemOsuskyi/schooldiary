@@ -1,23 +1,33 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Teacher } from '../db/entities';
 import { TeacherService } from './teacher.service';
-import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
+import {
+  TeacherCreateBodyDto,
+  TeacherCreateDto,
+} from './dtos/teacher-create-dto';
 
+@ApiTags('teacher')
 @Controller('teacher')
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
 
-  @Get()
+  @Get('/all')
   async getAllTeachers(): Promise<Teacher[]> {
     return this.teacherService.getAllTeachers();
   }
 
-  @Get(':id')
-  async getTeacher(@Param() params): Promise<Teacher> {
-    return this.teacherService.getTeacher(params.id);
+  @Get(':teacherId')
+  async getTeacher(@Param('teacherId') teacherId: number): Promise<Teacher> {
+    return this.teacherService.getTeacher(teacherId);
   }
 
   @Post('create')
+  @ApiResponse({
+    status: 201,
+    description: 'Teacher created successfully',
+    type: TeacherCreateDto,
+  })
   async createTeacher(
     @Body() createTeacherDto: TeacherCreateBodyDto,
   ): Promise<Teacher> {

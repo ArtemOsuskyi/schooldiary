@@ -12,9 +12,16 @@ export class TeacherService {
     private readonly teacherRepository: TeacherRepository,
   ) {}
   async getTeacher(teacherId: number) {
-    return await this.teacherRepository.findOne({
-      id: teacherId,
-    });
+    const teacher = await this.teacherRepository.findOne(
+      {
+        id: teacherId,
+      },
+      {
+        relations: ['teacher_subjects'],
+      },
+    );
+    if (isNil(teacher)) throw new NotFoundException();
+    return teacher;
   }
 
   async getAllTeachers() {

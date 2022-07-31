@@ -29,6 +29,7 @@ export class StudentService {
         relations: ['studyCourses', 'grades', 'NAs'],
       },
     );
+    console.log(student);
     if (isNil(student)) throw new NotFoundException();
     return student;
   }

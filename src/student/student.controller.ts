@@ -17,7 +17,7 @@ export class StudentController {
     return this.studentService.getAllStudents();
   }
 
-  @Get(':id')
+  @Get(':studentId')
   @ApiResponse({
     status: 200,
     description: 'Student found succesfully',
@@ -26,8 +26,8 @@ export class StudentController {
     status: 404,
     description: 'Student not found',
   })
-  async getStudent(@Param() params): Promise<Student> {
-    return this.studentService.getStudent(params.id);
+  async getStudent(@Param('studentId') studentId: number): Promise<Student> {
+    return this.studentService.getStudent(studentId);
   }
 
   @Post('create')
@@ -45,8 +45,8 @@ export class StudentController {
     );
   }
 
-  @Delete('delete/:id')
-  async deleteStudent(@Param() params): Promise<Student> {
-    return this.studentService.deleteStudent(params.id);
+  @Delete('delete/:studentId')
+  async deleteStudent(@Param('studentId') studentId: number): Promise<Student> {
+    return this.studentService.deleteStudent(studentId);
   }
 }
