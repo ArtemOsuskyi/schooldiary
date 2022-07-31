@@ -1,19 +1,51 @@
-import { IsNotEmpty, IsNumber, IsString, Max } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsString,
+  Length,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class StudentCreateDto {
+export class StudentCreateBodyDto {
+  @ApiProperty({
+    required: true,
+    example: 'Artem',
+    type: String,
+  })
   @IsString()
-  @Max(20)
+  @Length(2, 20)
   first_name: string;
 
+  @ApiProperty({
+    required: true,
+    example: 'Osuskyi',
+    type: String,
+  })
   @IsString()
-  @Max(20)
+  @Length(2, 20)
   last_name: string;
 
+  @ApiProperty({
+    required: true,
+    example: 'Viktorovich',
+    type: String,
+  })
   @IsString()
-  @Max(20)
+  @Length(2, 20)
   patronymic: string;
 
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
   @IsNumber()
   @IsNotEmpty()
   studyCourseId: number;
+}
+
+export class StudentCreateDto {
+  @ApiProperty({ required: true })
+  @IsObject()
+  student: StudentCreateBodyDto;
 }

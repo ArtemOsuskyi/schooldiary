@@ -2,12 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { StudyCourse } from './study_course.entity';
 import { Grade } from './grade.entity';
 import { NA } from './NAs.entity';
+import { User } from './user.entity';
 
 @Entity({ name: 'student' })
 export class Student {
@@ -22,6 +25,10 @@ export class Student {
 
   @Column({ name: 'patronymic', type: 'varchar' })
   patronymic: string;
+
+  @OneToOne(() => User, { nullable: false })
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  user: User;
 
   @OneToMany(
     () => StudyCourse,

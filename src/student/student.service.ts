@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { StudentCreateDto } from './dtos/student-create-dto';
+import { StudentCreateBodyDto } from './dtos/student-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { StudentRepository } from './repos/student.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,19 +21,26 @@ export class StudentService {
   ) {}
 
   async getStudent(studentId: number) {
-    const student = await this.studentRepository.findOne({
-      id: studentId,
-    });
+    const student = await this.studentRepository.findOne(
+      {
+        id: studentId,
+      },
+      {
+        relations: ['studyCourses', 'grades', 'NAs'],
+      },
+    );
     if (isNil(student)) throw new NotFoundException();
     return student;
   }
 
   async getAllStudents() {
-    return await this.studentRepository.find();
+    return await this.studentRepository.find({
+      relations: ['studyCourses', 'grades', 'NAs'],
+    });
   }
 
   async createStudent(
-    createStudentDto: StudentCreateDto,
+    createStudentDto: StudentCreateBodyDto,
     studyCourseId: number,
   ): Promise<Student> {
     const { first_name, last_name, patronymic } = createStudentDto;

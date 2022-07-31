@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TeacherCreateDto } from './dtos/teacher-create-dto';
+import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { TeacherRepository } from './repos/teacher.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,7 +21,7 @@ export class TeacherService {
     return await this.teacherRepository.find();
   }
 
-  async createTeacher(teacherCreateDto: TeacherCreateDto) {
+  async createTeacher(teacherCreateDto: TeacherCreateBodyDto) {
     const { first_name, last_name, patronymic } = teacherCreateDto;
     return this.teacherRepository.save({
       first_name,

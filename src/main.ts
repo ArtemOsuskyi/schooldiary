@@ -1,10 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 const PORT = process.env.LOCAL_PORT;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const options = new DocumentBuilder()
+    .setTitle('Schooldiary swagger')
+    .setDescription('Schooldiary API description')
+    .setVersion('1.0')
+    .addTag('schooldiary')
+    .addServer(`http://localhost:${PORT}/api`)
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api/profile/swagger', app, document);
+  app.setGlobalPrefix('api/');
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
   app.enableCors({
     allowedHeaders: [
       'Origin',
