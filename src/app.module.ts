@@ -12,7 +12,6 @@ import { StudentModule } from './student/student.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { AppService } from './app.service';
-import { NasModule } from './NA/nas.module';
 import { NaModule } from './na/na.module';
 import { GradeModule } from './grade/grade.module';
 import * as Entities from 'src/db/entities/index';
@@ -45,7 +44,6 @@ import * as Entities from 'src/db/entities/index';
     StudyClassModule,
     StudyYearModule,
     StudyCourseModule,
-    NasModule,
     NaModule,
     GradeModule,
   ],

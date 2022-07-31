@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from '../db/entities';
 import { StudentRepository } from './repos/student.repository';
 import { StudyCourseModule } from '../study_course/study_course.module';
+import { NaModule } from '../na/na.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Student, StudentRepository]),
     forwardRef(() => StudyCourseModule),
+    NaModule,
   ],
   controllers: [StudentController],
   providers: [StudentService],
