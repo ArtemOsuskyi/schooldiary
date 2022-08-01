@@ -6,8 +6,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { LoginDto } from './dtos/login-dto';
-import { RegisterDto } from './dtos/register-dto';
+import { LoginBodyDto } from './dtos/login-dto';
+import { RegisterBodyDto } from './dtos/register-dto';
 import { UserService } from '../user/user.service';
 import { UserRepository } from '../user/user.repository';
 import { User } from '../db/entities';
@@ -21,7 +21,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<User> {
+  async register(registerDto: RegisterBodyDto): Promise<User> {
     const { email, password, role } = registerDto;
     const existingUser = await this.userService.findUserByEmail(email);
     if (existingUser) throw new BadRequestException('This user already exists');
@@ -34,17 +34,7 @@ export class AuthService {
     });
   }
 
-  async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.userService.findUserByEmail(email);
-    //console.log(user)
-    //console.log(password, user.password)
-    if (user && bcrypt.compareSync(password, user.password)) {
-      const { password, ...result } = user;
-      return result as User;
-    } else return null;
-  }
-
-  async login(loginDto: LoginDto): Promise<{ access_token }> {
+  async login(loginDto: LoginBodyDto): Promise<{ access_token }> {
     const { email, password } = loginDto;
     const user = await this.validateUser(email, password);
     if (!user) throw new UnauthorizedException();
@@ -52,5 +42,21 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async validateUser(email: string, password: string): Promise<User> {
+    const user = await this.userService.findUserByEmail(email);
+    await this.validatePassword(password, user.password);
+    return user;
+  }
+
+  async validatePassword(
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    if (!bcrypt.compareSync(password, hashedPassword)) {
+      throw new BadRequestException('Wrong credentials');
+    }
+    return true;
   }
 }

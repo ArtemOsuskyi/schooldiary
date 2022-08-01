@@ -16,6 +16,7 @@ import { NaModule } from './na/na.module';
 import { GradeModule } from './grade/grade.module';
 import { TeacherSubjectModule } from './teacher_subject/teacher_subject.module';
 import { SubjectModule } from './subject/subject.module';
+import { HomeworkModule } from './homework/homework.module';
 import * as Entities from 'src/db/entities/index';
 
 @Module({
@@ -50,6 +51,7 @@ import * as Entities from 'src/db/entities/index';
     GradeModule,
     TeacherSubjectModule,
     SubjectModule,
+    HomeworkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

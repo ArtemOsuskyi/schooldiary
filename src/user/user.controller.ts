@@ -6,14 +6,13 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('/id/:id')
-  async getUser(@Param() params): Promise<User> {
-    console.log(params.id);
-    return this.userService.findUserById(params.id);
+  @Get('/id/:userId')
+  async getUser(@Param('userId') userId: number): Promise<User> {
+    return this.userService.findUserById(userId);
   }
 
   @Get('/email/:email')
-  async getUserByEmail(@Param() params): Promise<User> {
-    return await this.userService.findUserByEmail(params.email);
+  async getUserByEmail(@Param('email') email: string): Promise<User> {
+    return await this.userService.findUserByEmail(email);
   }
 }
