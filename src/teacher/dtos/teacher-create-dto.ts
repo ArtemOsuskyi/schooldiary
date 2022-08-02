@@ -9,7 +9,7 @@ export class TeacherCreateBodyDto {
   })
   @IsString()
   @Length(2, 20)
-  first_name: string;
+  firstName: string;
 
   @ApiProperty({
     required: true,
@@ -18,7 +18,7 @@ export class TeacherCreateBodyDto {
   })
   @IsString()
   @Length(2, 20)
-  last_name: string;
+  lastName: string;
 
   @ApiProperty({
     required: true,

@@ -7,14 +7,12 @@ import {
 import { StudentCreateBodyDto } from './dtos/student-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { StudentRepository } from './repos/student.repository';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from '../db/entities';
 import { StudyCourseService } from '../study_course/study_course.service';
 
 @Injectable()
 export class StudentService {
   constructor(
-    @InjectRepository(Student)
     private readonly studentRepository: StudentRepository,
     @Inject(forwardRef(() => StudyCourseService))
     private readonly studyCourseService: StudyCourseService,
@@ -26,12 +24,16 @@ export class StudentService {
         id: studentId,
       },
       {
-        relations: ['studyCourses', 'grades', 'NAs'],
+        relations: ['studyCourses', 'grades', 'NAs', 'user'],
       },
     );
     console.log(student);
     if (isNil(student)) throw new NotFoundException();
     return student;
+  }
+
+  async getStudentByUserId(userId: number): Promise<Student> {
+    return await this.studentRepository.getStudentByUserId(userId);
   }
 
   async getAllStudents() {
@@ -42,19 +44,20 @@ export class StudentService {
 
   async createStudent(
     createStudentDto: StudentCreateBodyDto,
-    studyCourseId: number,
   ): Promise<Student> {
-    const { first_name, last_name, patronymic } = createStudentDto;
-    const newStudent = await this.studentRepository.save({
-      first_name,
-      last_name,
+    const { firstName, lastName, patronymic } = createStudentDto;
+    return this.studentRepository.create({
+      first_name: firstName,
+      last_name: lastName,
       patronymic,
     });
-    await this.studyCourseService.assignStudyCourseToStudent(
-      studyCourseId,
-      newStudent.id,
-    );
-    return newStudent;
+    // const studyCourse = await this.studyCourseService.getStudyCourseByStudyYear(
+    //   studyYearId,
+    // );
+    // await this.studyCourseService.assignStudyCourseToStudent(
+    //   studyCourse.id,
+    //   newStudent.id,
+    // );
   }
 
   async deleteStudent(studentId: number) {
@@ -64,5 +67,9 @@ export class StudentService {
     if (isNil(student))
       throw new NotFoundException("This student doesn't exist");
     return await this.studentRepository.remove(student);
+  }
+
+  async saveStudent(student: Student) {
+    return await this.studentRepository.save(student);
   }
 }

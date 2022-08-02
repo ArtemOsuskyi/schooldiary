@@ -39,10 +39,7 @@ export class StudentController {
   async createStudent(
     @Body() createStudentDto: StudentCreateBodyDto,
   ): Promise<Student> {
-    return this.studentService.createStudent(
-      createStudentDto,
-      createStudentDto.studyCourseId,
-    );
+    return this.studentService.createStudent(createStudentDto);
   }
 
   @Delete('delete/:studentId')

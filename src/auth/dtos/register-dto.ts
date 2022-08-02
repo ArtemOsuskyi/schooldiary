@@ -31,7 +31,7 @@ export class RegisterBodyDto {
   @IsEnum(Roles)
   @ApiProperty({
     description: 'User role',
-    example: 'student',
+    example: 'student|teacher',
     required: true,
   })
   role: Roles;

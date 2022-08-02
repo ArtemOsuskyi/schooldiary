@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { TeacherSubjectRepository } from './repository/teacher_subject.repository';
 import { TeacherSubject } from '../db/entities';
-import { InjectRepository } from '@nestjs/typeorm';
 import { TeacherService } from '../teacher/teacher.service';
 import { SubjectService } from '../subject/subject.service';
 
 @Injectable()
 export class TeacherSubjectService {
   constructor(
-    @InjectRepository(TeacherSubject)
     private readonly teacherSubjectRepository: TeacherSubjectRepository,
     private readonly teacherService: TeacherService,
     private readonly subjectService: SubjectService,
@@ -20,10 +18,13 @@ export class TeacherSubjectService {
   ): Promise<TeacherSubject> {
     const teacher = await this.teacherService.getTeacher(teacherId);
     const subject = await this.subjectService.getSubject(subjectId);
-    return await this.teacherSubjectRepository.save({
+    const teacherSubject = this.teacherSubjectRepository.create({
       teacher,
       subject,
     });
+    if (await this.teacherSubjectRepository.findOne(teacherSubject))
+      return teacherSubject;
+    return await this.teacherSubjectRepository.save(teacherSubject);
   }
 
   async getTeacherSubject(teacherSubjectId: number): Promise<TeacherSubject> {

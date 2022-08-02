@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Roles } from '../enums/roles.enum';
+import { Student } from './student.entity';
+import { Teacher } from './teacher.entity';
 
 @Entity({ name: 'user' })
 export class User {
@@ -14,4 +16,10 @@ export class User {
 
   @Column({ name: 'role', type: 'enum', enum: Roles })
   role: Roles;
+
+  @OneToOne(() => Student, ({ user }) => user, { nullable: true })
+  student?: Student | null;
+
+  @OneToOne(() => Teacher, ({ user }) => user, { nullable: true })
+  teacher?: Teacher | null;
 }
