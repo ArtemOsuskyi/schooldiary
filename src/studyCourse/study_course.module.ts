@@ -3,9 +3,10 @@ import { StudyCourseService } from './study_course.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StudyCourse } from '../db/entities';
 import { StudentModule } from '../student/student.module';
-import { StudyClassModule } from '../class/study_class.module';
-import { StudyYearModule } from '../study_year/study_year.module';
+import { StudyClassModule } from '../studyClass/studyClass.module';
+import { StudyYearModule } from '../studyYear/studyYear.module';
 import { StudyCourseRepository } from './repository/study_course.repository';
+import { StudyCourseController } from './study_course.controller';
 
 @Module({
   imports: [
@@ -16,5 +17,6 @@ import { StudyCourseRepository } from './repository/study_course.repository';
   ],
   providers: [StudyCourseService],
   exports: [StudyCourseService, TypeOrmModule],
+  controllers: [StudyCourseController],
 })
 export class StudyCourseModule {}

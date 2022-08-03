@@ -8,7 +8,7 @@ import { StudentCreateBodyDto } from './dtos/student-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { StudentRepository } from './repos/student.repository';
 import { Student } from '../db/entities';
-import { StudyCourseService } from '../study_course/study_course.service';
+import { StudyCourseService } from '../studyCourse/study_course.service';
 
 @Injectable()
 export class StudentService {

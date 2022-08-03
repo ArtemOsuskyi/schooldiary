@@ -8,6 +8,7 @@ import { Roles } from '../db/enums/roles.enum';
 import * as bcrypt from 'bcrypt';
 import { TeacherService } from '../teacher/teacher.service';
 import { TeacherCreateBodyDto } from '../teacher/dtos/teacher-create-dto';
+import { isNil } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
 export class UserService {
@@ -55,10 +56,29 @@ export class UserService {
     } else throw new BadRequestException('Incorrect role');
   }
 
+  async assignExistingUserToTeacher(
+    userId: number,
+    teacherCreateDto: TeacherCreateBodyDto,
+  ): Promise<User> {
+    const user = await this.getUser(userId);
+    const teacher = await this.teacherService.createTeacher(teacherCreateDto);
+    if (isNil(user.teacher)) {
+      teacher.user = user;
+      await this.teacherService.saveTeacher(teacher);
+    } else
+      throw new BadRequestException(
+        'This teacher already assigned to existing user',
+      );
+    return teacher.user;
+  }
+
   async getUser(userId: number): Promise<User> {
-    return await this.userRepository.findOne(userId, {
+    const user = await this.userRepository.findOne(userId, {
       relations: ['student', 'teacher'],
     });
+    if (user.teacher === null) delete user.teacher;
+    if (user.student === null) delete user.student;
+    return user;
   }
 
   async findUserByEmail(email: string): Promise<User> {
@@ -66,9 +86,5 @@ export class UserService {
       { email },
       { select: ['id', 'email', 'password', 'role'] },
     );
-  }
-
-  async findUserById(id: number): Promise<User> {
-    return await this.userRepository.findOne(id);
   }
 }

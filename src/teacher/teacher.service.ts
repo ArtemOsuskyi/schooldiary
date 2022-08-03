@@ -25,7 +25,9 @@ export class TeacherService {
   }
 
   async getAllTeachers() {
-    return await this.teacherRepository.find();
+    return await this.teacherRepository.find({
+      relations: ['teacher_subjects'],
+    });
   }
 
   async createTeacher(teacherCreateDto: TeacherCreateBodyDto) {

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { StudyClass } from '../db/entities';
 import { StudyClassRepository } from './repository/study_class.repository';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { StudyClassCreateDto } from './dtos/studyClass-create.dto';
 
 @Injectable()
 export class StudyClassService {
@@ -11,9 +12,11 @@ export class StudyClassService {
     private readonly classRepository: StudyClassRepository,
   ) {}
 
-  async createClass(name: string): Promise<StudyClass> {
+  async createClass(
+    studyClassCreateDto: StudyClassCreateDto,
+  ): Promise<StudyClass> {
     return await this.classRepository.save({
-      name,
+      name: studyClassCreateDto.name,
     });
   }
 
@@ -23,8 +26,8 @@ export class StudyClassService {
     return studyClass;
   }
 
-  async deleteClass(name: string): Promise<StudyClass> {
-    const studyClass = await this.classRepository.findOne({ name });
+  async removeClass(classId: number): Promise<StudyClass> {
+    const studyClass = await this.classRepository.findOne(classId);
     if (!studyClass) throw new NotFoundException("This class doesn't exist");
     return await this.classRepository.remove(studyClass);
   }

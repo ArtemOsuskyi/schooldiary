@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { StudyClassModule } from './class/study_class.module';
-import { StudyYearModule } from './study_year/study_year.module';
-import { StudyCourseModule } from './study_course/study_course.module';
+import { StudyClassModule } from './studyClass/studyClass.module';
+import { StudyYearModule } from './studyYear/studyYear.module';
+import { StudyCourseModule } from './studyCourse/study_course.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,6 +17,7 @@ import { GradeModule } from './grade/grade.module';
 import { TeacherSubjectModule } from './teacher_subject/teacher_subject.module';
 import { SubjectModule } from './subject/subject.module';
 import { HomeworkModule } from './homework/homework.module';
+import { StudyClassController } from './studyClass/studyClass.controller';
 import * as Entities from 'src/db/entities/index';
 
 @Module({
@@ -53,7 +54,7 @@ import * as Entities from 'src/db/entities/index';
     SubjectModule,
     HomeworkModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, StudyClassController],
   providers: [AppService],
 })
 export class AppModule {}

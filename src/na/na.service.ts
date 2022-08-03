@@ -19,7 +19,7 @@ export class NaService {
 
   async createNa(naCreateDto: NaCreateDto): Promise<NA> {
     const { student_id, date_schedule_id, reason } = naCreateDto;
-    return await this.naRepository.save({
+    return this.naRepository.create({
       student: { id: student_id },
       date_schedule: { id: date_schedule_id },
       reason,

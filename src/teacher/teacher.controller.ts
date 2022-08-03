@@ -34,8 +34,8 @@ export class TeacherController {
     return this.teacherService.createTeacher(createTeacherDto);
   }
 
-  @Delete('delete/:id')
-  async deleteTeacher(@Param() params): Promise<Teacher> {
-    return this.teacherService.deleteTeacher(params.id);
+  @Delete('delete/:teacherId')
+  async deleteTeacher(@Param('teacherId') teacherId: number): Promise<Teacher> {
+    return this.teacherService.deleteTeacher(teacherId);
   }
 }

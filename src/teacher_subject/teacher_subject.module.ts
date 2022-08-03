@@ -5,6 +5,7 @@ import { TeacherSubject } from '../db/entities';
 import { TeacherSubjectRepository } from './repository/teacher_subject.repository';
 import { TeacherModule } from '../teacher/teacher.module';
 import { SubjectModule } from '../subject/subject.module';
+import { TeacherSubjectController } from './teacher_subject.controller';
 
 @Module({
   imports: [
@@ -14,5 +15,6 @@ import { SubjectModule } from '../subject/subject.module';
   ],
   providers: [TeacherSubjectService],
   exports: [TypeOrmModule, TeacherSubjectService],
+  controllers: [TeacherSubjectController],
 })
 export class TeacherSubjectModule {}

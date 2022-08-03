@@ -8,11 +8,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Student, StudyCourse } from '../db/entities';
 import { StudyCourseRepository } from './repository/study_course.repository';
 import { StudentService } from '../student/student.service';
-import { StudyClassService } from '../class/study_class.service';
-import { StudyYearService } from '../study_year/study_year.service';
+import { StudyClassService } from '../studyClass/studyClass.service';
+import { StudyYearService } from '../studyYear/studyYear.service';
 import { StudentRepository } from '../student/repos/student.repository';
 import { isNil } from '@nestjs/common/utils/shared.utils';
-import { StudyCourseCreateDto } from './study_course-create.dto';
+import { StudyCourseCreateDto } from './dtos/study_course-create.dto';
 
 @Injectable()
 export class StudyCourseService {
@@ -42,9 +42,19 @@ export class StudyCourseService {
   }
 
   async getStudyCourse(studyCourseId: number): Promise<StudyCourse> {
-    const studyYear = await this.studyCourseRepository.findOne(studyCourseId);
-    if (isNil(studyYear)) throw new NotFoundException();
-    return studyYear;
+    const studyCourse = await this.studyCourseRepository.findOne(studyCourseId);
+    if (isNil(studyCourse)) throw new NotFoundException();
+    return studyCourse;
+  }
+
+  async getStudyCourseByStudyYear(studyYearId: number): Promise<StudyCourse> {
+    const studyCourse = await this.studyCourseRepository.findOne({
+      where: {
+        study_year: { id: studyYearId },
+      },
+    });
+    if (isNil(studyCourse)) throw new NotFoundException();
+    return studyCourse;
   }
 
   async assignStudyCourseToStudent(
