@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudyYear } from '../db/entities';
-import { StudyYearRepository } from './repository/study_year.repository';
-import { StudyYearCreateDto } from './dtos/study_year-create.dto';
+import { StudyYearRepository } from './repository/studyYear.repository';
+import { StudyYearCreateBodyDto } from './dtos/studyYear-create.dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class StudyYearService {
   ) {}
 
   async createStudyYear(
-    studyYearCreateDto: StudyYearCreateDto,
+    studyYearCreateDto: StudyYearCreateBodyDto,
   ): Promise<StudyYear> {
     const { start_date, end_date } = studyYearCreateDto;
     return await this.studyYearRepository.save({
