@@ -3,10 +3,14 @@ import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { TeacherRepository } from './repos/teacher.repository';
 import { Teacher } from '../db/entities';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class TeacherService {
-  constructor(private readonly teacherRepository: TeacherRepository) {}
+  constructor(
+    private readonly teacherRepository: TeacherRepository,
+    private entityManager: EntityManager,
+  ) {}
   async getTeacher(teacherId: number) {
     const teacher = await this.teacherRepository.findOne(
       {
@@ -40,12 +44,23 @@ export class TeacherService {
   }
 
   async deleteTeacher(teacherId: number) {
-    const teacher = await this.teacherRepository.findOne({
-      id: teacherId,
-    });
+    const teacher: Teacher = await this.teacherRepository.findOne(
+      {
+        id: teacherId,
+      },
+      {
+        relations: ['user'],
+      },
+    );
     if (isNil(teacher))
       throw new NotFoundException("This teacher doesn't exist");
-    return await this.teacherRepository.remove(teacher);
+    console.log(teacher, teacher.user);
+    return await this.entityManager.transaction(
+      async (transactionEntityManager) => {
+        await transactionEntityManager.remove(teacher);
+        await transactionEntityManager.remove(teacher.user);
+      },
+    );
   }
 
   async saveTeacher(teacher: Teacher) {

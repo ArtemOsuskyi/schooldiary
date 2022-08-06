@@ -4,7 +4,7 @@ import { StudentService } from './student.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from '../db/entities';
 import { StudentRepository } from './repos/student.repository';
-import { StudyCourseModule } from '../studyCourse/study_course.module';
+import { StudyCourseModule } from '../studyCourse/studyCourse.module';
 import { NaModule } from '../na/na.module';
 
 @Module({

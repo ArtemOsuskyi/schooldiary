@@ -8,7 +8,8 @@ import { StudentCreateBodyDto } from './dtos/student-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { StudentRepository } from './repos/student.repository';
 import { Student } from '../db/entities';
-import { StudyCourseService } from '../studyCourse/study_course.service';
+import { StudyCourseService } from '../studyCourse/studyCourse.service';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class StudentService {
@@ -16,6 +17,7 @@ export class StudentService {
     private readonly studentRepository: StudentRepository,
     @Inject(forwardRef(() => StudyCourseService))
     private readonly studyCourseService: StudyCourseService,
+    private entityManager: EntityManager,
   ) {}
 
   async getStudent(studentId: number) {
@@ -61,12 +63,22 @@ export class StudentService {
   }
 
   async deleteStudent(studentId: number) {
-    const student = await this.studentRepository.findOne({
-      id: studentId,
-    });
+    const student = await this.studentRepository.findOne(
+      {
+        id: studentId,
+      },
+      {
+        relations: ['user'],
+      },
+    );
     if (isNil(student))
       throw new NotFoundException("This student doesn't exist");
-    return await this.studentRepository.remove(student);
+    return await this.entityManager.transaction(
+      async (transactionEntityManager) => {
+        await transactionEntityManager.remove(student);
+        await transactionEntityManager.remove(student.user);
+      },
+    );
   }
 
   async saveStudent(student: Student) {

@@ -12,6 +12,7 @@ import { UserRepository } from '../user/repository/user.repository';
 import { User } from '../db/entities';
 import { StudentService } from '../student/student.service';
 import { TeacherService } from '../teacher/teacher.service';
+import { isNil } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
 export class AuthService {
@@ -42,6 +43,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findUserByEmail(email);
+    if (isNil(user)) throw new BadRequestException('Wrong credentials');
     await this.validatePassword(password, user.password);
     return user;
   }

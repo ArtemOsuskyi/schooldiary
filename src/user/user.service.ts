@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from '../db/entities';
 import { UserRepository } from './repository/user.repository';
 import { RegisterBodyDto } from '../auth/dtos/register-dto';
@@ -76,6 +80,7 @@ export class UserService {
     const user = await this.userRepository.findOne(userId, {
       relations: ['student', 'teacher'],
     });
+    if (isNil(user)) throw new NotFoundException("User doesn't exist");
     if (user.teacher === null) delete user.teacher;
     if (user.student === null) delete user.student;
     return user;

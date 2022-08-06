@@ -43,7 +43,7 @@ export class StudentController {
   }
 
   @Delete('delete/:studentId')
-  async deleteStudent(@Param('studentId') studentId: number): Promise<Student> {
+  async deleteStudent(@Param('studentId') studentId: number): Promise<void> {
     return this.studentService.deleteStudent(studentId);
   }
 }
