@@ -1,15 +1,18 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Schedule } from './schedule.entity';
 import { Homework } from './homework.entity';
 import { Grade } from './grade.entity';
 import { NA } from './NAs.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'date_schedule' })
 export class DateSchedule {
@@ -22,19 +25,28 @@ export class DateSchedule {
 
   @OneToMany(() => Homework, (homework) => homework.date_schedule, {
     cascade: true,
+    nullable: true,
   })
   homework: Homework[];
 
   @OneToMany(() => Grade, (grade) => grade.date_schedule, {
     cascade: true,
+    nullable: true,
   })
   grades: Grade[];
 
   @OneToMany(() => NA, (na) => na.date_schedule, {
     cascade: true,
+    nullable: true,
   })
   NAs: NA[];
 
-  @Column({ name: 'date', type: 'date' })
+  @Column({ name: 'date', type: 'date', default: nowDate })
   date: Date;
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }

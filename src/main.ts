@@ -2,11 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-
-const PORT = process.env.LOCAL_PORT;
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const PORT = configService.get<number>('LOCAL_PORT');
 
   const options = new DocumentBuilder()
     .setTitle('Schooldiary swagger')
@@ -33,9 +34,11 @@ async function bootstrap() {
     methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
   });
-  await app.listen(PORT);
+  await app.listen(PORT).then(() => {
+    console.log(
+      `Server is running. Swagger endpoint - http://localhost:${PORT}/api/profile/swagger`,
+    );
+  });
 }
 
-bootstrap().then(() => {
-  console.log(`Server is running on port ${PORT}`);
-});
+bootstrap();

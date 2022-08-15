@@ -1,14 +1,17 @@
 import {
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Student } from './student.entity';
-import { StudyClass } from './study_class.entity';
-import { StudyYear } from './study_year.entity';
+import { StudyClass } from './studyClass.entity';
+import { StudyYear } from './studyYear.entity';
 import { Schedule } from './schedule.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'study_course' })
 export class StudyCourse {
@@ -31,4 +34,10 @@ export class StudyCourse {
 
   @OneToMany(() => Schedule, (schedule) => schedule.study_course)
   schedule: Schedule;
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }

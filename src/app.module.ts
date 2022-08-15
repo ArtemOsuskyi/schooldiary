@@ -14,16 +14,16 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { AppService } from './app.service';
 import { NaModule } from './na/na.module';
 import { GradeModule } from './grade/grade.module';
-import { TeacherSubjectModule } from './teacher_subject/teacher_subject.module';
+import { TeacherSubjectModule } from './teacherSubject/teacherSubject.module';
 import { SubjectModule } from './subject/subject.module';
 import { HomeworkModule } from './homework/homework.module';
 import { StudyClassController } from './studyClass/studyClass.controller';
+import { DateScheduleModule } from './dateSchedule/dateSchedule.module';
 import * as Entities from 'src/db/entities/index';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env'],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
@@ -53,6 +53,7 @@ import * as Entities from 'src/db/entities/index';
     TeacherSubjectModule,
     SubjectModule,
     HomeworkModule,
+    DateScheduleModule,
   ],
   controllers: [AppController, StudyClassController],
   providers: [AppService],

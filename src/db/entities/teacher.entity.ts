@@ -1,13 +1,16 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { TeacherSubject } from './teacher_subject.entity';
+import { TeacherSubject } from './teacherSubject.entity';
 import { User } from './user.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'teacher' })
 export class Teacher {
@@ -31,4 +34,10 @@ export class Teacher {
     cascade: true,
   })
   teacher_subjects: TeacherSubject[];
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }

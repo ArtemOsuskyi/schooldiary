@@ -1,15 +1,18 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { TeacherSubject } from './teacher_subject.entity';
-import { StudyCourse } from './study_course.entity';
+import { TeacherSubject } from './teacherSubject.entity';
+import { StudyCourse } from './studyCourse.entity';
 import { Weekdays } from '../enums/weekday.enum';
-import { DateSchedule } from './date_schedule.entity';
+import { DateSchedule } from './dateSchedule.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'schedule' })
 export class Schedule {
@@ -38,4 +41,10 @@ export class Schedule {
 
   @Column({ name: 'weekday', type: 'enum', enum: Weekdays })
   weekday: Weekdays;
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }

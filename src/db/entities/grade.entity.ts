@@ -1,13 +1,16 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { DateSchedule } from './date_schedule.entity';
+import { DateSchedule } from './dateSchedule.entity';
 import { GradeType } from '../enums/grade_type.enum';
 import { Student } from './student.entity';
+import { nowDate } from '../../constants';
 
 //TODO: add not null constraints to all entities
 @Entity({ name: 'grade' })
@@ -28,4 +31,10 @@ export class Grade {
 
   @Column({ name: 'grade_type', type: 'enum', enum: GradeType })
   grade_type: GradeType;
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }

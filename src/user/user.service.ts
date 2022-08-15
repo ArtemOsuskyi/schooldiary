@@ -22,8 +22,8 @@ export class UserService {
     private readonly teacherService: TeacherService,
   ) {}
 
-  async createUser(registerDto: RegisterBodyDto) {
-    const { email, password, role } = registerDto;
+  async createUser(registerDto: RegisterBodyDto, role: Roles) {
+    const { email, password } = registerDto;
     const existingUser = await this.findUserByEmail(email);
     if (existingUser) throw new BadRequestException('This user already exists');
     const hashPassword = await bcrypt.hash(password, 12);
@@ -38,26 +38,22 @@ export class UserService {
     registerDto: RegisterBodyDto,
     studentCreateDto: StudentCreateBodyDto,
   ): Promise<User> {
-    const user = await this.createUser(registerDto);
-    if (user.role === Roles.STUDENT) {
-      const student = await this.studentService.createStudent(studentCreateDto);
-      student.user = user;
-      await this.studentService.saveStudent(student);
-      return await this.userRepository.save(user);
-    } else throw new BadRequestException('Incorrect role');
+    const user = await this.createUser(registerDto, Roles.STUDENT);
+    const student = await this.studentService.createStudent(studentCreateDto);
+    student.user = user;
+    await this.studentService.saveStudent(student);
+    return await this.userRepository.save(user);
   }
 
   async createTeacherUser(
     registerDto: RegisterBodyDto,
     teacherCreateDto: TeacherCreateBodyDto,
   ): Promise<User> {
-    const user = await this.createUser(registerDto);
-    if (user.role === Roles.TEACHER) {
-      const teacher = await this.teacherService.createTeacher(teacherCreateDto);
-      teacher.user = user;
-      await this.teacherService.saveTeacher(teacher);
-      return await this.userRepository.save(user);
-    } else throw new BadRequestException('Incorrect role');
+    const user = await this.createUser(registerDto, Roles.TEACHER);
+    const teacher = await this.teacherService.createTeacher(teacherCreateDto);
+    teacher.user = user;
+    await this.teacherService.saveTeacher(teacher);
+    return await this.userRepository.save(user);
   }
 
   async assignExistingUserToTeacher(
@@ -89,7 +85,10 @@ export class UserService {
   async findUserByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne(
       { email },
-      { select: ['id', 'email', 'password', 'role'] },
+      {
+        select: ['id', 'email', 'password', 'role'],
+        relations: ['student', 'teacher'],
+      },
     );
   }
 }

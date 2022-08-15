@@ -1,7 +1,15 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Roles } from '../enums/roles.enum';
 import { Student } from './student.entity';
 import { Teacher } from './teacher.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'user' })
 export class User {
@@ -22,4 +30,10 @@ export class User {
 
   @OneToOne(() => Teacher, ({ user }) => user, { nullable: true })
   teacher?: Teacher | null;
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }

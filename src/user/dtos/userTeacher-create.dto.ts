@@ -26,9 +26,8 @@ export class UserTeacherCreateBodyDto {
 
 export class UserTeacherCreateDto {
   @ApiProperty({
-    example: UserTeacherCreateBodyDto,
     required: true,
   })
   @IsObject()
-  userStudent: UserTeacherCreateBodyDto;
+  userTeacher: UserTeacherCreateBodyDto;
 }

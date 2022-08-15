@@ -1,12 +1,12 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { StudyCourseService } from './study_course.service';
+import { StudyCourseService } from './studyCourse.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StudyCourse } from '../db/entities';
 import { StudentModule } from '../student/student.module';
 import { StudyClassModule } from '../studyClass/studyClass.module';
 import { StudyYearModule } from '../studyYear/studyYear.module';
 import { StudyCourseRepository } from './repository/study_course.repository';
-import { StudyCourseController } from './study_course.controller';
+import { StudyCourseController } from './studyCourse.controller';
 
 @Module({
   imports: [

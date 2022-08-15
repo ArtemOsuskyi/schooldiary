@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TeacherSubjectRepository } from './repository/teacher_subject.repository';
+import { TeacherSubjectRepository } from './repository/teacherSubject.repository';
 import { TeacherSubject } from '../db/entities';
 import { TeacherService } from '../teacher/teacher.service';
 import { SubjectService } from '../subject/subject.service';

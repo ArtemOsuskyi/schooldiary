@@ -1,6 +1,14 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Teacher } from './teacher.entity';
 import { Subject } from './subject.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'teacher_subject' })
 export class TeacherSubject {
@@ -18,4 +26,10 @@ export class TeacherSubject {
   })
   @JoinColumn({ name: 'subject_id', referencedColumnName: 'id' })
   subject: Subject;
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }

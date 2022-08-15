@@ -4,8 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { StudentCreateBodyDto } from './dtos/student-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { StudentCreateBodyDto } from './dtos/student-create-dto';
 import { StudentRepository } from './repos/student.repository';
 import { Student } from '../db/entities';
 import { StudyCourseService } from '../studyCourse/studyCourse.service';

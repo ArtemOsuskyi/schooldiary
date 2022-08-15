@@ -6,21 +6,19 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TeacherSubject } from './teacherSubject.entity';
+import { StudyCourse } from './studyCourse.entity';
 import { nowDate } from '../../constants';
 
-@Entity({ name: 'subject' })
-export class Subject {
+@Entity({ name: 'class' })
+export class StudyClass {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
 
-  @Column({ name: 'name', type: 'varchar', nullable: false })
+  @Column({ name: 'name', type: 'varchar' })
   name: string;
 
-  @OneToMany(() => TeacherSubject, (teacherSubject) => teacherSubject.subject, {
-    cascade: true,
-  })
-  teacher_subject: TeacherSubject;
+  @OneToMany(() => StudyCourse, (studyCourse) => studyCourse.class)
+  study_course: StudyCourse;
 
   @CreateDateColumn({ default: nowDate })
   createdAt: Date;

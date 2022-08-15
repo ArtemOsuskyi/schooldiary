@@ -1,5 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { StudyCourse } from './study_course.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { StudyCourse } from './studyCourse.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'study_year' })
 export class StudyYear {
@@ -16,4 +24,10 @@ export class StudyYear {
     cascade: true,
   })
   studyCourse: StudyCourse[];
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }

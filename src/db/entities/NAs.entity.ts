@@ -1,12 +1,15 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Student } from './student.entity';
-import { DateSchedule } from './date_schedule.entity';
+import { DateSchedule } from './dateSchedule.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'NA' }) //NA - Not Attended
 export class NA {
@@ -27,4 +30,10 @@ export class NA {
 
   @Column({ name: 'reason', type: 'varchar' })
   reason: string;
+
+  @CreateDateColumn({ default: nowDate })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate })
+  updatedAt: Date;
 }
