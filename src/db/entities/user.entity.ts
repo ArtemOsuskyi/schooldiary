@@ -31,9 +31,9 @@ export class User {
   @OneToOne(() => Teacher, ({ user }) => user, { nullable: true })
   teacher?: Teacher | null;
 
-  @CreateDateColumn({ default: nowDate })
+  @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ default: nowDate })
+  @UpdateDateColumn({ default: nowDate, select: false })
   updatedAt: Date;
 }

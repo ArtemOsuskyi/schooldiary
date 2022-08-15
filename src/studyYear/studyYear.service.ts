@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudyYear } from '../db/entities';
 import { StudyYearRepository } from './repository/studyYear.repository';
@@ -16,6 +20,10 @@ export class StudyYearService {
     studyYearCreateDto: StudyYearCreateBodyDto,
   ): Promise<StudyYear> {
     const { start_date, end_date } = studyYearCreateDto;
+    if (start_date > end_date)
+      throw new BadRequestException(
+        'Start date cannot be greater than end date',
+      );
     return await this.studyYearRepository.save({
       start_date,
       end_date,
