@@ -1,30 +1,41 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { Teacher }                                    from '../db/entities';
-import { StudentCreateDto }                           from '../student/dtos/student-create-dto';
-import { TeacherService }                             from './teacher.service';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Teacher } from '../db/entities';
+import { TeacherService } from './teacher.service';
+import {
+  TeacherCreateBodyDto,
+  TeacherCreateDto,
+} from './dtos/teacher-create-dto';
 
+@ApiTags('teacher')
 @Controller('teacher')
 export class TeacherController {
-  constructor(private readonly teacherService: TeacherService) {
-  }
+  constructor(private readonly teacherService: TeacherService) {}
 
-  @Get()
+  @Get('/all')
   async getAllTeachers(): Promise<Teacher[]> {
     return this.teacherService.getAllTeachers();
   }
 
-  @Get(':id')
-  async getTeacher(@Param() params): Promise<Teacher> {
-    return this.teacherService.getTeacher(params.id);
+  @Get(':teacherId')
+  async getTeacher(@Param('teacherId') teacherId: number): Promise<Teacher> {
+    return this.teacherService.getTeacher(teacherId);
   }
 
   @Post('create')
-  async createStudent(@Body() createStudentDto: StudentCreateDto): Promise<Teacher> {
-    return this.teacherService.createTeacher(createStudentDto);
+  @ApiResponse({
+    status: 201,
+    description: 'Teacher created successfully',
+    type: TeacherCreateDto,
+  })
+  async createTeacher(
+    @Body() createTeacherDto: TeacherCreateBodyDto,
+  ): Promise<Teacher> {
+    return this.teacherService.createTeacher(createTeacherDto);
   }
 
-  @Delete('delete/:id')
-  async deleteStudent(@Param() params): Promise<Teacher> {
-    return this.teacherService.deleteTeacher(params.id);
+  @Delete('delete/:teacherId')
+  async deleteTeacher(@Param('teacherId') teacherId: number): Promise<void> {
+    return this.teacherService.deleteTeacher(teacherId);
   }
 }

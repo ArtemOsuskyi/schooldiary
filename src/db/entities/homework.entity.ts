@@ -1,5 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { DateSchedule }                                                  from './date_schedule.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { DateSchedule } from './dateSchedule.entity';
+import { nowDate } from '../../constants';
 
 @Entity({ name: 'homework' })
 export class Homework {
@@ -15,4 +24,10 @@ export class Homework {
 
   @Column({ name: 'deadline', type: 'date' })
   deadline: Date;
+
+  @CreateDateColumn({ default: nowDate, select: false })
+  createdAt: Date;
+
+  @UpdateDateColumn({ default: nowDate, select: false })
+  updatedAt: Date;
 }

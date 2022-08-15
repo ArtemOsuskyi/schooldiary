@@ -1,21 +1,29 @@
 import 'reflect-metadata';
-import { Module }                      from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClassModule } from './class/class.module';
-import { AuthModule }                  from './auth/auth.module';
-import { UserModule }                  from './user/user.module';
-import { TypeOrmModule }               from '@nestjs/typeorm';
-import { AppController }               from './app.controller';
-import { StudentModule }               from './student/student.module';
-import { TeacherModule }               from './teacher/teacher.module';
-import { ScheduleModule }              from './schedule/schedule.module';
-import { AppService }                  from './app.service';
+import { StudyClassModule } from './studyClass/studyClass.module';
+import { StudyYearModule } from './studyYear/studyYear.module';
+import { StudyCourseModule } from './studyCourse/studyCourse.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller';
+import { StudentModule } from './student/student.module';
+import { TeacherModule } from './teacher/teacher.module';
+import { ScheduleModule } from './schedule/schedule.module';
+import { AppService } from './app.service';
+import { NaModule } from './na/na.module';
+import { GradeModule } from './grade/grade.module';
+import { TeacherSubjectModule } from './teacherSubject/teacherSubject.module';
+import { SubjectModule } from './subject/subject.module';
+import { HomeworkModule } from './homework/homework.module';
+import { StudyClassController } from './studyClass/studyClass.controller';
+import { DateScheduleModule } from './dateSchedule/dateSchedule.module';
 import * as Entities from 'src/db/entities/index';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env'],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
@@ -37,10 +45,17 @@ import * as Entities from 'src/db/entities/index';
     ScheduleModule,
     AuthModule,
     UserModule,
-    ClassModule,
+    StudyClassModule,
+    StudyYearModule,
+    StudyCourseModule,
+    NaModule,
+    GradeModule,
+    TeacherSubjectModule,
+    SubjectModule,
+    HomeworkModule,
+    DateScheduleModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, StudyClassController],
   providers: [AppService],
 })
-export class AppModule {
-}
+export class AppModule {}

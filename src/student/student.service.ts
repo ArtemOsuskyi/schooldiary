@@ -1,41 +1,94 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { StudentCreateDto }              from './dtos/student-create-dto';
-import { isNil }                         from '@nestjs/common/utils/shared.utils';
-import { StudentRepository }             from './repos/student.repository';
-import { InjectRepository }              from '@nestjs/typeorm';
-import { Student }                       from '../db/entities';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { isNil } from '@nestjs/common/utils/shared.utils';
+import { StudentCreateBodyDto } from './dtos/student-create-dto';
+import { StudentRepository } from './repos/student.repository';
+import { Student } from '../db/entities';
+import { StudyCourseService } from '../studyCourse/studyCourse.service';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class StudentService {
   constructor(
-    @InjectRepository(Student)
-    private readonly studentRepository: StudentRepository
-  ) {
-  }
+    private readonly studentRepository: StudentRepository,
+    @Inject(forwardRef(() => StudyCourseService))
+    private readonly studyCourseService: StudyCourseService,
+    private entityManager: EntityManager,
+  ) {}
+
   async getStudent(studentId: number) {
-    return await this.studentRepository.findOne({
-      id: studentId,
-    });
+    const student = await this.studentRepository.findOne(
+      {
+        id: studentId,
+      },
+      {
+        relations: [
+          'studyCourses',
+          'studyCourses.class',
+          'grades',
+          'NAs',
+          'user',
+        ],
+      },
+    );
+    if (isNil(student)) throw new NotFoundException();
+    return student;
+  }
+
+  async getStudentByUserId(userId: number): Promise<Student> {
+    return await this.studentRepository.getStudentByUserId(userId);
   }
 
   async getAllStudents() {
-    return await this.studentRepository.find();
+    return await this.studentRepository.find({
+      relations: ['studyCourses', 'grades', 'NAs'],
+    });
   }
 
-  async createStudent(createStudentDto: StudentCreateDto) {
-    const { first_name, last_name, patronymic } = createStudentDto;
-    return this.studentRepository.save({
-      first_name,
-      last_name,
+  async createStudent(
+    createStudentDto: StudentCreateBodyDto,
+    userId?: number,
+  ): Promise<Student> {
+    const { firstName, lastName, patronymic } = createStudentDto;
+    return this.studentRepository.create({
+      user: { id: userId },
+      first_name: firstName,
+      last_name: lastName,
       patronymic,
     });
+    // const studyCourse = await this.studyCourseService.getStudyCourseByStudyYear(
+    //   studyYearId,
+    // );
+    // await this.studyCourseService.assignStudyCourseToStudent(
+    //   studyCourse.id,
+    //   newStudent.id,
+    // );
   }
 
   async deleteStudent(studentId: number) {
-    const student = await this.studentRepository.findOne({
-      id: studentId,
-    });
-    if (isNil(student)) throw new NotFoundException('This student doesn\'t exist');
-    return await this.studentRepository.remove(student);
+    const student = await this.studentRepository.findOne(
+      {
+        id: studentId,
+      },
+      {
+        relations: ['user'],
+      },
+    );
+    if (isNil(student))
+      throw new NotFoundException("This student doesn't exist");
+    return await this.entityManager.transaction(
+      async (transactionEntityManager) => {
+        await transactionEntityManager.remove(student);
+        await transactionEntityManager.remove(student.user);
+      },
+    );
+  }
+
+  async saveStudent(student: Student) {
+    return await this.studentRepository.save(student);
   }
 }

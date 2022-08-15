@@ -1,15 +1,37 @@
-import { IsString, Max } from 'class-validator';
+import { IsObject, IsString, Length } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class TeacherCreateBodyDto {
+  @ApiProperty({
+    required: true,
+    example: 'Artem',
+    type: String,
+  })
+  @IsString()
+  @Length(2, 20)
+  firstName: string;
+
+  @ApiProperty({
+    required: true,
+    example: 'Osuskyi',
+    type: String,
+  })
+  @IsString()
+  @Length(2, 20)
+  lastName: string;
+
+  @ApiProperty({
+    required: true,
+    example: 'Viktorovich',
+    type: String,
+  })
+  @IsString()
+  @Length(2, 20)
+  patronymic: string;
+}
 
 export class TeacherCreateDto {
-  @IsString()
-  @Max(20)
-  first_name: string;
-
-  @IsString()
-  @Max(20)
-  last_name: string;
-
-  @IsString()
-  @Max(20)
-  patronymic: string;
+  @ApiProperty({ required: true })
+  @IsObject()
+  teacher: TeacherCreateBodyDto;
 }

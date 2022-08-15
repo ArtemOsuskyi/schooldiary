@@ -1,0 +1,14 @@
+import { Module } from '@nestjs/common';
+import { GradeService } from './grade.service';
+import { GradeController } from './grade.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Grade } from '../db/entities';
+import { GradeRepository } from './repository/grade.repository';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Grade, GradeRepository])],
+  providers: [GradeService],
+  controllers: [GradeController],
+  exports: [TypeOrmModule, GradeService],
+})
+export class GradeModule {}
