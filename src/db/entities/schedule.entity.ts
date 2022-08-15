@@ -42,9 +42,9 @@ export class Schedule {
   @Column({ name: 'weekday', type: 'enum', enum: Weekdays })
   weekday: Weekdays;
 
-  @CreateDateColumn({ default: nowDate })
+  @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ default: nowDate })
+  @UpdateDateColumn({ default: nowDate, select: false })
   updatedAt: Date;
 }

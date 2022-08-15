@@ -27,9 +27,9 @@ export class TeacherSubject {
   @JoinColumn({ name: 'subject_id', referencedColumnName: 'id' })
   subject: Subject;
 
-  @CreateDateColumn({ default: nowDate })
+  @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ default: nowDate })
+  @UpdateDateColumn({ default: nowDate, select: false })
   updatedAt: Date;
 }

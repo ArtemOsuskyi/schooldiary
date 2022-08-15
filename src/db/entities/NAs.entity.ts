@@ -31,9 +31,9 @@ export class NA {
   @Column({ name: 'reason', type: 'varchar' })
   reason: string;
 
-  @CreateDateColumn({ default: nowDate })
+  @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ default: nowDate })
+  @UpdateDateColumn({ default: nowDate, select: false })
   updatedAt: Date;
 }

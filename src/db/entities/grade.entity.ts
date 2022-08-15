@@ -32,9 +32,9 @@ export class Grade {
   @Column({ name: 'grade_type', type: 'enum', enum: GradeType })
   grade_type: GradeType;
 
-  @CreateDateColumn({ default: nowDate })
+  @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ default: nowDate })
+  @UpdateDateColumn({ default: nowDate, select: false })
   updatedAt: Date;
 }
