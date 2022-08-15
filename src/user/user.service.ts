@@ -83,12 +83,15 @@ export class UserService {
   }
 
   async findUserByEmail(email: string): Promise<User> {
-    return await this.userRepository.findOne(
+    const user = await this.userRepository.findOne(
       { email },
       {
         select: ['id', 'email', 'password', 'role'],
         relations: ['student', 'teacher'],
       },
     );
+    if (user.teacher === null) delete user.teacher;
+    if (user.student === null) delete user.student;
+    return user;
   }
 }
