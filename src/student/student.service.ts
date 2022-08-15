@@ -26,10 +26,15 @@ export class StudentService {
         id: studentId,
       },
       {
-        relations: ['studyCourses', 'grades', 'NAs', 'user'],
+        relations: [
+          'studyCourses',
+          'studyCourses.class',
+          'grades',
+          'NAs',
+          'user',
+        ],
       },
     );
-    console.log(student);
     if (isNil(student)) throw new NotFoundException();
     return student;
   }
@@ -46,9 +51,11 @@ export class StudentService {
 
   async createStudent(
     createStudentDto: StudentCreateBodyDto,
+    userId?: number,
   ): Promise<Student> {
     const { firstName, lastName, patronymic } = createStudentDto;
     return this.studentRepository.create({
+      user: { id: userId },
       first_name: firstName,
       last_name: lastName,
       patronymic,

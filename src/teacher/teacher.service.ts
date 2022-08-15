@@ -17,7 +17,7 @@ export class TeacherService {
         id: teacherId,
       },
       {
-        relations: ['teacher_subjects'],
+        relations: ['teacher_subjects', 'teacher_subjects.subject'],
       },
     );
     if (isNil(teacher)) throw new NotFoundException();
@@ -30,13 +30,14 @@ export class TeacherService {
 
   async getAllTeachers() {
     return await this.teacherRepository.find({
-      relations: ['teacher_subjects'],
+      relations: ['teacher_subjects', 'teacher_subjects.subject'],
     });
   }
 
-  async createTeacher(teacherCreateDto: TeacherCreateBodyDto) {
+  async createTeacher(teacherCreateDto: TeacherCreateBodyDto, userId?: number) {
     const { firstName, lastName, patronymic } = teacherCreateDto;
     return this.teacherRepository.create({
+      user: { id: userId },
       first_name: firstName,
       last_name: lastName,
       patronymic,

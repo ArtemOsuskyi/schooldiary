@@ -39,10 +39,14 @@ export class UserService {
     studentCreateDto: StudentCreateBodyDto,
   ): Promise<User> {
     const user = await this.createUser(registerDto, Roles.STUDENT);
-    const student = await this.studentService.createStudent(studentCreateDto);
-    student.user = user;
+    const student = await this.studentService.createStudent(
+      studentCreateDto,
+      user.id,
+    );
     await this.studentService.saveStudent(student);
-    return await this.userRepository.save(user);
+    user.student = student;
+    await this.userRepository.save(user);
+    return this.getUser(user.id);
   }
 
   async createTeacherUser(
@@ -50,27 +54,21 @@ export class UserService {
     teacherCreateDto: TeacherCreateBodyDto,
   ): Promise<User> {
     const user = await this.createUser(registerDto, Roles.TEACHER);
-    const teacher = await this.teacherService.createTeacher(teacherCreateDto);
-    teacher.user = user;
+    const teacher = await this.teacherService.createTeacher(
+      teacherCreateDto,
+      user.id,
+    );
     await this.teacherService.saveTeacher(teacher);
-    return await this.userRepository.save(user);
+    user.teacher = teacher;
+    await this.userRepository.save(user);
+    return this.getUser(user.id);
   }
 
-  async assignExistingUserToTeacher(
-    userId: number,
-    teacherCreateDto: TeacherCreateBodyDto,
-  ): Promise<User> {
-    const user = await this.getUser(userId);
-    const teacher = await this.teacherService.createTeacher(teacherCreateDto);
-    if (isNil(user.teacher)) {
-      teacher.user = user;
-      await this.teacherService.saveTeacher(teacher);
-    } else
-      throw new BadRequestException(
-        'This teacher already assigned to existing user',
-      );
-    return teacher.user;
-  }
+  // async assignTeacherToUser(userId: number, teacherId: number) {
+  //   const user = await this.getUser(userId);
+  //   user.teacher = await this.teacherService.getTeacher(teacherId);
+  //   return user;
+  // }
 
   async getUser(userId: number): Promise<User> {
     const user = await this.userRepository.findOne(userId, {
@@ -87,7 +85,6 @@ export class UserService {
       { email },
       {
         select: ['id', 'email', 'password', 'role'],
-        relations: ['student', 'teacher'],
       },
     );
   }

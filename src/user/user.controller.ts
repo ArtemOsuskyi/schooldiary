@@ -4,7 +4,6 @@ import { User } from '../db/entities';
 import { UserService } from './user.service';
 import { UserStudentCreateBodyDto } from './dtos/userStudent-create.dto';
 import { UserTeacherCreateBodyDto } from './dtos/userTeacher-create.dto';
-import { TeacherCreateBodyDto } from '../teacher/dtos/teacher-create-dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -41,14 +40,14 @@ export class UserController {
     );
   }
 
-  @Post('assignTeacherToUser/:userId')
-  async assignTeacherToExistingUser(
-    @Param('userId') userId: number,
-    @Body() createTeacherDto: TeacherCreateBodyDto,
-  ): Promise<User> {
-    return this.userService.assignExistingUserToTeacher(
-      userId,
-      createTeacherDto,
-    );
-  }
+  // @Post('assignTeacherToUser/:userId')
+  // async assignTeacherToExistingUser(
+  //   @Param('userId') userId: number,
+  //   @Body() createTeacherDto: TeacherCreateBodyDto,
+  // ): Promise<User> {
+  //   return this.userService.assignExistingUserToTeacher(
+  //     userId,
+  //     createTeacherDto,
+  //   );
+  // }
 }
