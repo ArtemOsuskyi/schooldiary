@@ -6,6 +6,7 @@ import {
   StudentCreateDto,
 } from './dtos/student-create-dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { StudentSearchByFullNameDto } from './dtos/student-searchByFullName.dto';
 
 @ApiTags('student')
 @Controller('student')
@@ -20,7 +21,7 @@ export class StudentController {
   @Get(':studentId')
   @ApiResponse({
     status: 200,
-    description: 'Student found succesfully',
+    description: 'Student found successfully',
   })
   @ApiResponse({
     status: 404,
@@ -28,6 +29,20 @@ export class StudentController {
   })
   async getStudent(@Param('studentId') studentId: number): Promise<Student> {
     return this.studentService.getStudent(studentId);
+  }
+
+  @Get('/search/byClassId/:classId')
+  async getStudentsByClassId(
+    @Param('classId') classId: number,
+  ): Promise<Student[]> {
+    return this.studentService.getStudentsByClass(classId);
+  }
+
+  @Post('/search/byFullName')
+  async getStudentsByFullName(
+    @Body() studentSearchDto: StudentSearchByFullNameDto,
+  ): Promise<Student[]> {
+    return this.studentService.getStudentsByFullName(studentSearchDto);
   }
 
   @Post('create')

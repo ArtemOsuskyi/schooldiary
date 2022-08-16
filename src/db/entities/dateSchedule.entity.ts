@@ -29,7 +29,7 @@ export class DateSchedule {
   })
   homework: Homework[];
 
-  @OneToMany(() => Grade, (grade) => grade.date_schedule, {
+  @OneToMany(() => Grade, (grade) => grade.dateSchedule, {
     cascade: true,
     nullable: true,
   })

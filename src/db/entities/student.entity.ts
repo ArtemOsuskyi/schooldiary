@@ -34,10 +34,7 @@ export class Student {
 
   @OneToMany(
     () => StudyCourse,
-    (studyCourse: StudyCourse) => studyCourse.student,
-    {
-      cascade: true,
-    },
+    (studyCourse: StudyCourse) => studyCourse.students,
   )
   studyCourses: StudyCourse[];
 

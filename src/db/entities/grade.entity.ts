@@ -23,14 +23,14 @@ export class Grade {
 
   @ManyToOne(() => DateSchedule)
   @JoinColumn({ name: 'date_schedule_id', referencedColumnName: 'id' })
-  date_schedule: DateSchedule;
+  dateSchedule: DateSchedule;
 
   @ManyToOne(() => Student)
   @JoinColumn({ name: 'student_id', referencedColumnName: 'id' })
   student: Student;
 
   @Column({ name: 'grade_type', type: 'enum', enum: GradeType })
-  grade_type: GradeType;
+  gradeType: GradeType;
 
   @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;

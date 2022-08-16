@@ -1,4 +1,4 @@
-import { IsDate, IsISO8601, IsNotEmpty, IsObject } from 'class-validator';
+import { IsISO8601, IsNotEmpty, IsObject } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class StudyYearCreateBodyDto {
@@ -13,7 +13,7 @@ export class StudyYearCreateBodyDto {
   @IsISO8601()
   @IsNotEmpty()
   @ApiProperty({
-    example: '2022-05-25',
+    example: '2023-05-25',
     required: true,
   })
   end_date: Date;

@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DateSchedule, StudyCourse } from '../../db/entities';
 import { IsEnum, IsNumber, IsObject, Max, Min } from 'class-validator';
-import { StudyCourseCreateDto } from '../../studyCourse/dtos/study_course-create.dto';
+import { StudyCourseCreateBodyDto } from '../../studyCourse/dtos/study_course-create.dto';
 import { Weekdays } from '../../db/enums/weekday.enum';
 
 export class ScheduleCreateBodyDto {
   @ApiProperty({
     required: true,
-    example: StudyCourseCreateDto,
+    example: StudyCourseCreateBodyDto,
   })
   @IsObject()
   studyCourse: StudyCourse;

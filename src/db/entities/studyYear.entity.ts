@@ -20,10 +20,10 @@ export class StudyYear {
   @Column({ name: 'end_date', type: 'date' })
   end_date: Date;
 
-  @OneToMany(() => StudyCourse, (studyCourse) => studyCourse.study_year, {
+  @OneToMany(() => StudyCourse, (studyCourse) => studyCourse.studyYear, {
     cascade: true,
   })
-  studyCourse: StudyCourse[];
+  studyCourses: StudyCourse[];
 
   @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;

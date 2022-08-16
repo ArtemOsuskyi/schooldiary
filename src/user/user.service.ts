@@ -13,6 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { TeacherService } from '../teacher/teacher.service';
 import { TeacherCreateBodyDto } from '../teacher/dtos/teacher-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -20,6 +21,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly studentService: StudentService,
     private readonly teacherService: TeacherService,
+    private entityManager: EntityManager,
   ) {}
 
   async createUser(registerDto: RegisterBodyDto, role: Roles) {
@@ -38,15 +40,11 @@ export class UserService {
     registerDto: RegisterBodyDto,
     studentCreateDto: StudentCreateBodyDto,
   ): Promise<User> {
-    const user = await this.createUser(registerDto, Roles.STUDENT);
-    const student = await this.studentService.createStudent(
-      studentCreateDto,
-      user.id,
-    );
+    const student = await this.studentService.createStudent(studentCreateDto);
+    student.user = await this.createUser(registerDto, Roles.STUDENT);
     await this.studentService.saveStudent(student);
-    user.student = student;
-    await this.userRepository.save(user);
-    return this.getUser(user.id);
+    await this.userRepository.save(student.user);
+    return this.getUser(student.user.id);
   }
 
   async createTeacherUser(
@@ -58,25 +56,22 @@ export class UserService {
       teacherCreateDto,
       user.id,
     );
-    await this.teacherService.saveTeacher(teacher);
-    user.teacher = teacher;
-    await this.userRepository.save(user);
-    return this.getUser(user.id);
+    return await this.entityManager.transaction(
+      async (transactionEntityManager) => {
+        await transactionEntityManager.save(teacher);
+        user.teacher = teacher;
+        return await transactionEntityManager.save(user);
+      },
+    );
   }
-
-  // async assignTeacherToUser(userId: number, teacherId: number) {
-  //   const user = await this.getUser(userId);
-  //   user.teacher = await this.teacherService.getTeacher(teacherId);
-  //   return user;
-  // }
 
   async getUser(userId: number): Promise<User> {
     const user = await this.userRepository.findOne(userId, {
-      relations: ['student', 'teacher'],
+      relations: ['student', 'student.studyCourses', 'teacher'],
     });
     if (isNil(user)) throw new NotFoundException("User doesn't exist");
-    if (user.teacher === null) delete user.teacher;
-    if (user.student === null) delete user.student;
+    if (isNil(user.teacher)) delete user.teacher;
+    if (isNil(user.student)) delete user.student;
     return user;
   }
 
@@ -85,10 +80,12 @@ export class UserService {
       { email },
       {
         select: ['id', 'email', 'password', 'role'],
+        relations: ['student', 'teacher'],
       },
     );
-    if (user.teacher === null) delete user.teacher;
-    if (user.student === null) delete user.student;
+    if (isNil(user)) return null;
+    if (isNil(user.teacher)) delete user.teacher;
+    if (isNil(user.student)) delete user.student;
     return user;
   }
 }

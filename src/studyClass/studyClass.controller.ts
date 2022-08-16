@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { ApiExcludeEndpoint, ApiHideProperty, ApiTags } from '@nestjs/swagger';
 import { StudyClassCreateDto } from './dtos/studyClass-create.dto';
 import { StudyClass } from '../db/entities';
 import { StudyClassService } from './studyClass.service';
@@ -8,6 +8,12 @@ import { StudyClassService } from './studyClass.service';
 @Controller('studyClass')
 export class StudyClassController {
   constructor(private readonly studyClassService: StudyClassService) {}
+
+  @ApiExcludeEndpoint()
+  @Get(':classId')
+  async getStudyClass(@Param('classId') classId: number): Promise<StudyClass> {
+    return this.studyClassService.getClassById(classId);
+  }
 
   @Post('/create')
   async createStudyClass(

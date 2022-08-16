@@ -21,7 +21,7 @@ export class GradeRepository extends Repository<Grade> {
   ): Promise<Grade[]> {
     return await this.getStudentGrades(studentId, {
       where: {
-        grade_type: gradeType,
+        gradeType: gradeType,
       },
     });
   }
@@ -43,7 +43,7 @@ export class GradeRepository extends Repository<Grade> {
   ): Promise<Grade[]> {
     return await this.getStudentGrades(studentId, {
       where: {
-        date_schedule: { date },
+        dateSchedule: { date },
       },
     });
   }

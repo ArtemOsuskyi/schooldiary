@@ -1,16 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { isNil } from '@nestjs/common/utils/shared.utils';
 import { StudyClass } from '../db/entities';
 import { StudyClassRepository } from './repository/study_class.repository';
-import { isNil } from '@nestjs/common/utils/shared.utils';
 import { StudyClassCreateDto } from './dtos/studyClass-create.dto';
 
 @Injectable()
 export class StudyClassService {
-  constructor(
-    @InjectRepository(StudyClass)
-    private readonly classRepository: StudyClassRepository,
-  ) {}
+  constructor(private readonly classRepository: StudyClassRepository) {}
 
   async createClass(
     studyClassCreateDto: StudyClassCreateDto,
@@ -20,9 +16,11 @@ export class StudyClassService {
     });
   }
 
-  async getClass(classId: number): Promise<StudyClass> {
-    const studyClass = await this.classRepository.findOne(classId);
-    if (isNil(studyClass)) throw new NotFoundException();
+  async getClassById(classId: number): Promise<StudyClass> {
+    const studyClass = await this.classRepository.findOne(classId, {
+      relations: ['studyCourses', 'studyCourses.students'],
+    });
+    if (isNil(studyClass)) throw new NotFoundException('Class not found');
     return studyClass;
   }
 

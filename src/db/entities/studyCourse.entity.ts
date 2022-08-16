@@ -18,26 +18,31 @@ export class StudyCourse {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
 
-  @ManyToOne(() => Student, {
+  @ManyToOne(() => Student, (student) => student.studyCourses, {
     onUpdate: 'CASCADE',
+    nullable: true,
   })
   @JoinColumn({ name: 'student_id', referencedColumnName: 'id' })
-  student: Student;
+  students: Student[];
 
-  @ManyToOne(() => StudyClass)
+  @ManyToOne(() => StudyClass, (studyClass) => studyClass.studyCourses, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'class_id', referencedColumnName: 'id' })
   class: StudyClass;
 
   @ManyToOne(() => StudyYear)
   @JoinColumn({ name: 'study_year_id', referencedColumnName: 'id' })
-  study_year: StudyYear;
+  studyYear: StudyYear;
 
   @OneToMany(() => Schedule, (schedule) => schedule.study_course)
   schedule: Schedule;
 
-  @CreateDateColumn({ default: nowDate })
+  @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ default: nowDate })
+  @UpdateDateColumn({ default: nowDate, select: false })
   updatedAt: Date;
 }

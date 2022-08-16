@@ -31,7 +31,9 @@ export class StudyYearService {
   }
 
   async getStudyYear(studyYearId: number): Promise<StudyYear> {
-    const studyYear = await this.studyYearRepository.findOne(studyYearId);
+    const studyYear = await this.studyYearRepository.findOne(studyYearId, {
+      relations: ['studyCourses', 'studyCourses.class'],
+    });
     if (isNil(studyYear)) throw new NotFoundException();
     return studyYear;
   }

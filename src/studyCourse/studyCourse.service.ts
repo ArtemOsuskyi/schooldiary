@@ -12,7 +12,7 @@ import { StudyClassService } from '../studyClass/studyClass.service';
 import { StudyYearService } from '../studyYear/studyYear.service';
 import { StudentRepository } from '../student/repos/student.repository';
 import { isNil } from '@nestjs/common/utils/shared.utils';
-import { StudyCourseCreateDto } from './dtos/study_course-create.dto';
+import { StudyCourseCreateBodyDto } from './dtos/study_course-create.dto';
 
 @Injectable()
 export class StudyCourseService {
@@ -28,32 +28,42 @@ export class StudyCourseService {
   ) {}
 
   async createStudyCourse(
-    createStudyCourseDto: StudyCourseCreateDto,
+    createStudyCourseDto: StudyCourseCreateBodyDto,
   ): Promise<StudyCourse> {
-    const { student_id, class_id, study_year_id } = createStudyCourseDto;
-    const student = await this.studentService.getStudent(student_id);
-    const studyClass = await this.studyClassService.getClass(class_id);
-    const studyYear = await this.studyYearService.getStudyYear(study_year_id);
+    const { classId, studyYearId } = createStudyCourseDto;
+    //const student = await this.studentService.getStudent(studentId);
+    const studyClass = await this.studyClassService.getClassById(classId);
+    const studyYear = await this.studyYearService.getStudyYear(studyYearId);
     return await this.studyCourseRepository.save({
-      student,
+      students: [],
       class: studyClass,
-      study_year: studyYear,
+      studyYear,
     });
   }
 
-  async getStudyCourse(studyCourseId: number): Promise<StudyCourse> {
-    const studyCourse = await this.studyCourseRepository.findOne(studyCourseId);
+  async getStudyCourseById(studyCourseId: number): Promise<StudyCourse> {
+    const studyCourse = await this.studyCourseRepository.findOne(
+      studyCourseId,
+      {
+        relations: ['students', 'class', 'studyYear'],
+      },
+    );
     if (isNil(studyCourse)) throw new NotFoundException();
     return studyCourse;
   }
 
-  async getStudyCourseByStudyYear(studyYearId: number): Promise<StudyCourse> {
+  async getStudyCourseForStudent(
+    studyYearId: number,
+    classId: number,
+  ): Promise<StudyCourse> {
     const studyCourse = await this.studyCourseRepository.findOne({
       where: {
-        study_year: { id: studyYearId },
+        studyYear: { id: studyYearId },
+        class: { id: classId },
       },
     });
-    if (isNil(studyCourse)) throw new NotFoundException();
+    if (isNil(studyCourse))
+      throw new NotFoundException('Such study course not found');
     return studyCourse;
   }
 
@@ -63,7 +73,7 @@ export class StudyCourseService {
   ): Promise<StudyCourse> {
     const student = await this.studentService.getStudent(studentId);
     const studyCoursesToUpdate = student.studyCourses;
-    const studyCourse = await this.getStudyCourse(studyCourseId);
+    const studyCourse = await this.getStudyCourseById(studyCourseId);
     studyCoursesToUpdate.push(studyCourse);
     student.studyCourses = studyCoursesToUpdate;
     await this.studentRepository.save(student);
