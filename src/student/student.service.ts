@@ -61,6 +61,7 @@ export class StudentService {
 
   async createStudent(
     createStudentDto: StudentCreateBodyDto,
+    userId?: number,
   ): Promise<Student> {
     const { firstName, lastName, patronymic, studyYearId, studyClassId } =
       createStudentDto;
@@ -72,6 +73,7 @@ export class StudentService {
     if (!studyCourse) throw new NotFoundException('');
     studentStudyCourses.push(studyCourse);
     return this.studentRepository.create({
+      user: { id: userId },
       first_name: firstName,
       last_name: lastName,
       patronymic,

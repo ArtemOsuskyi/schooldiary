@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { User } from '../db/entities';
+import { Student, Teacher, User } from '../db/entities';
 import { UserRepository } from './repository/user.repository';
 import { RegisterBodyDto } from '../auth/dtos/register-dto';
 import { StudentCreateBodyDto } from '../student/dtos/student-create-dto';
@@ -29,7 +29,7 @@ export class UserService {
     const existingUser = await this.findUserByEmail(email);
     if (existingUser) throw new BadRequestException('This user already exists');
     const hashPassword = await bcrypt.hash(password, 12);
-    return await this.userRepository.save({
+    return this.userRepository.create({
       email,
       password: hashPassword,
       role,
@@ -40,26 +40,35 @@ export class UserService {
     registerDto: RegisterBodyDto,
     studentCreateDto: StudentCreateBodyDto,
   ): Promise<User> {
-    const student = await this.studentService.createStudent(studentCreateDto);
-    student.user = await this.createUser(registerDto, Roles.STUDENT);
-    await this.studentService.saveStudent(student);
-    await this.userRepository.save(student.user);
-    return this.getUser(student.user.id);
+    return await this.entityManager.transaction(
+      async (transactionEntityManager) => {
+        const user: User = await transactionEntityManager.save(
+          User,
+          await this.createUser(registerDto, Roles.STUDENT),
+        );
+        user.student = await transactionEntityManager.save(
+          Student,
+          await this.studentService.createStudent(studentCreateDto, user.id),
+        );
+        return await transactionEntityManager.save(user);
+      },
+    );
   }
 
   async createTeacherUser(
     registerDto: RegisterBodyDto,
     teacherCreateDto: TeacherCreateBodyDto,
   ): Promise<User> {
-    const user = await this.createUser(registerDto, Roles.TEACHER);
-    const teacher = await this.teacherService.createTeacher(
-      teacherCreateDto,
-      user.id,
-    );
     return await this.entityManager.transaction(
       async (transactionEntityManager) => {
-        await transactionEntityManager.save(teacher);
-        user.teacher = teacher;
+        const user: User = await transactionEntityManager.save(
+          User,
+          await this.createUser(registerDto, Roles.TEACHER),
+        );
+        user.teacher = await transactionEntityManager.save(
+          Teacher,
+          await this.teacherService.createTeacher(teacherCreateDto, user.id),
+        );
         return await transactionEntityManager.save(user);
       },
     );
