@@ -41,6 +41,12 @@ export class StudyCourseService {
     });
   }
 
+  async getAllStudyCourses(): Promise<StudyCourse[]> {
+    return this.studyCourseRepository.find({
+      relations: ['students', 'class'],
+    });
+  }
+
   async getStudyCourseById(studyCourseId: number): Promise<StudyCourse> {
     const studyCourse = await this.studyCourseRepository.findOne(
       studyCourseId,

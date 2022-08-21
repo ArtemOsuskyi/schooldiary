@@ -9,6 +9,11 @@ import { StudyCourseCreateBodyDto } from './dtos/study_course-create.dto';
 export class StudyCourseController {
   constructor(private readonly studyCourseService: StudyCourseService) {}
 
+  @Get('/getAll')
+  async getAllStudyCourses(): Promise<StudyCourse[]> {
+    return this.studyCourseService.getAllStudyCourses();
+  }
+
   @Get(':studyCourseId')
   async getStudyCourse(
     @Param('studyCourseId') studyCourseId: number,

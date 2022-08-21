@@ -9,6 +9,11 @@ import { StudyYear } from '../db/entities';
 export class StudyYearController {
   constructor(private readonly studyYearService: StudyYearService) {}
 
+  @Get('/getAll')
+  async getAllStudyYears(): Promise<StudyYear[]> {
+    return this.studyYearService.getAllStudyYear();
+  }
+
   @Get(':studyYearId')
   async getStudyYear(
     @Param('studyYearId') studyYearId: number,

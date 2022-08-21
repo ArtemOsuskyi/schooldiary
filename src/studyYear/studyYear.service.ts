@@ -16,6 +16,10 @@ export class StudyYearService {
     private readonly studyYearRepository: StudyYearRepository,
   ) {}
 
+  async getAllStudyYear(): Promise<StudyYear[]> {
+    return await this.studyYearRepository.find();
+  }
+
   async createStudyYear(
     studyYearCreateDto: StudyYearCreateBodyDto,
   ): Promise<StudyYear> {
