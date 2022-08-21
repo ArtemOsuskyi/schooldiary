@@ -13,6 +13,7 @@ import { StudyCourse } from './studyCourse.entity';
 import { Weekdays } from '../enums/weekday.enum';
 import { DateSchedule } from './dateSchedule.entity';
 import { nowDate } from '../../constants';
+import dayjs from 'dayjs';
 
 @Entity({ name: 'schedule' })
 export class Schedule {
@@ -23,23 +24,28 @@ export class Schedule {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'teacher_subject_id', referencedColumnName: 'id' })
-  teacher_subject: TeacherSubject;
+  teacherSubject: TeacherSubject;
 
   @ManyToOne(() => StudyCourse, {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'study_course_id', referencedColumnName: 'id' })
-  study_course: StudyCourse;
+  studyCourse: StudyCourse;
 
   @OneToMany(() => DateSchedule, (dateSchedule) => dateSchedule.schedule, {
     cascade: true,
   })
-  date_schedule: DateSchedule;
+  dateSchedule: DateSchedule;
 
-  @Column({ name: 'lesson_number', type: 'integer' })
-  lesson_number: number;
+  @Column({ name: 'lesson_number', type: 'int4' })
+  lessonNumber: number;
 
-  @Column({ name: 'weekday', type: 'enum', enum: Weekdays })
+  @Column({
+    name: 'weekday',
+    type: 'enum',
+    enum: Weekdays,
+    default: dayjs().format('dddd'),
+  })
   weekday: Weekdays;
 
   @CreateDateColumn({ default: nowDate, select: false })

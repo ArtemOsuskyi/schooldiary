@@ -1,12 +1,36 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsObject, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class NaCreateDto {
+export class NaCreateBodyDto {
+  @ApiProperty({
+    required: true,
+    example: 1,
+  })
+  @IsNotEmpty()
   @IsNumber()
-  student_id: number;
+  studentId: number;
 
+  @ApiProperty({
+    required: true,
+    example: 1,
+  })
+  @IsNotEmpty()
   @IsNumber()
-  date_schedule_id: number;
+  dateScheduleId: number;
 
+  @ApiProperty({
+    required: true,
+    example: 'Health issues',
+  })
+  @IsNotEmpty()
   @IsString()
   reason: string;
+}
+
+export class CreateNaDto {
+  @ApiProperty({
+    required: true,
+  })
+  @IsObject()
+  NA: NaCreateBodyDto;
 }

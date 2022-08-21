@@ -1,24 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate } from 'class-validator';
-import { Grade, Homework, NA, Schedule } from '../../db/entities';
-import { ScheduleCreateDto } from '../../schedule/dtos/schedule-create.dto';
+import { IsDate, IsNumber } from 'class-validator';
 import { nowDate } from '../../constants';
 
 export class DateScheduleCreateBodyDto {
   @ApiProperty({
     required: true,
-    example: ScheduleCreateDto,
   })
-  schedule: Schedule;
+  @IsNumber()
+  scheduleId: number;
 
-  @ApiProperty()
-  homework: Homework[];
-
-  @ApiProperty()
-  grades: Grade[];
-
-  @ApiProperty()
-  NAs: NA[];
+  // @ApiProperty()
+  // homework: Homework[];
+  //
+  // @ApiProperty()
+  // grades: Grade[];
+  //
+  // @ApiProperty()
+  // NAs: NA[];
 
   @ApiProperty({
     required: true,

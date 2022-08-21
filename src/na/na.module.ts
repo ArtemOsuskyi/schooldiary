@@ -5,11 +5,13 @@ import { NaRepository } from './repository/na.repository';
 import { NA } from '../db/entities';
 import { NaController } from './na.controller';
 import { StudentModule } from '../student/student.module';
+import { DateScheduleModule } from '../dateSchedule/dateSchedule.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([NA, NaRepository]),
     forwardRef(() => StudentModule),
+    DateScheduleModule,
   ],
   controllers: [NaController],
   providers: [NaService],

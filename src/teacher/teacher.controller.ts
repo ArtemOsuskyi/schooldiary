@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Teacher } from '../db/entities';
 import { TeacherService } from './teacher.service';
 import {
@@ -22,12 +22,13 @@ export class TeacherController {
     return this.teacherService.getTeacher(teacherId);
   }
 
+  @ApiExcludeEndpoint()
   @Post('create')
-  @ApiResponse({
-    status: 201,
-    description: 'Teacher created successfully',
-    type: TeacherCreateDto,
-  })
+  // @ApiResponse({
+  //   status: 201,
+  //   description: 'Teacher created successfully',
+  //   type: TeacherCreateDto,
+  // })
   async createTeacher(
     @Body() createTeacherDto: TeacherCreateBodyDto,
   ): Promise<Teacher> {

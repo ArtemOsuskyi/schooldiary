@@ -24,16 +24,17 @@ export class GradeService {
     return grade;
   }
 
-  // async createGrade(gradeCreateDto: GradeCreateBodyDto): Promise<Grade> {
-  //   const { value, date, gradeType, studentId } = gradeCreateDto;
-  //   const dateSchedule =
-  //     await this.dateScheduleRepository.getDateScheduleByDate(date);
-  //   return await this.gradeRepository.save({
-  //     student: { id: studentId },
-  //     value,
-  //     dateSchedule: {date},
-  //     gradeType,
-  //   });
+  async createGrade(gradeCreateDto: GradeCreateBodyDto): Promise<Grade> {
+    const { value, date, gradeType, studentId } = gradeCreateDto;
+    const dateSchedule =
+      await this.dateScheduleRepository.getDateScheduleByDate(date);
+    return await this.gradeRepository.save({
+      student: { id: studentId },
+      value,
+      dateSchedule: { date },
+      gradeType,
+    });
+  }
 
   async removeGrade(gradeId: number): Promise<Grade> {
     const grade = await this.getGrade(gradeId);

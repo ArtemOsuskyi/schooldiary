@@ -1,11 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { Student } from '../db/entities';
-import {
-  StudentCreateBodyDto,
-  StudentCreateDto,
-} from './dtos/student-create-dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { StudentCreateBodyDto } from './dtos/student-create-dto';
+import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { StudentSearchByFullNameDto } from './dtos/student-searchByFullName.dto';
 
 @ApiTags('student')
@@ -45,12 +42,13 @@ export class StudentController {
     return this.studentService.getStudentsByFullName(studentSearchDto);
   }
 
+  @ApiExcludeEndpoint()
   @Post('create')
-  @ApiResponse({
-    status: 201,
-    description: 'Succesfull create',
-    type: StudentCreateDto,
-  })
+  // @ApiResponse({
+  //   status: 201,
+  //   description: 'Succesfull create',
+  //   type: StudentCreateDto,
+  // })
   async createStudent(
     @Body() createStudentDto: StudentCreateBodyDto,
   ): Promise<Student> {

@@ -37,7 +37,7 @@ export class StudyCourse {
   @JoinColumn({ name: 'study_year_id', referencedColumnName: 'id' })
   studyYear: StudyYear;
 
-  @OneToMany(() => Schedule, (schedule) => schedule.study_course)
+  @OneToMany(() => Schedule, (schedule) => schedule.studyCourse)
   schedule: Schedule;
 
   @CreateDateColumn({ default: nowDate, select: false })

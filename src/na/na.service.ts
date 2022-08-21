@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { NA, Student } from '../db/entities';
 import { NaRepository } from './repository/na.repository';
-import { NaCreateDto } from './dtos/na-create.dto';
+import { NaCreateBodyDto } from './dtos/na-create.dto';
 import { StudentService } from '../student/student.service';
 import { StudentRepository } from '../student/repos/student.repository';
+import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 
 @Injectable()
 export class NaService {
@@ -15,13 +16,18 @@ export class NaService {
     @InjectRepository(Student)
     private readonly studentRepository: StudentRepository,
     private readonly studentService: StudentService,
+    private readonly dateScheduleService: DateScheduleService,
   ) {}
 
-  async createNa(naCreateDto: NaCreateDto): Promise<NA> {
-    const { student_id, date_schedule_id, reason } = naCreateDto;
-    return this.naRepository.create({
-      student: { id: student_id },
-      date_schedule: { id: date_schedule_id },
+  async createNa(naCreateDto: NaCreateBodyDto): Promise<NA> {
+    const { studentId, dateScheduleId, reason } = naCreateDto;
+    const student = await this.studentService.getStudent(studentId);
+    const dateSchedule = await this.dateScheduleService.getDataSchedule(
+      dateScheduleId,
+    );
+    return this.naRepository.save({
+      student,
+      date_schedule: dateSchedule,
       reason,
     });
   }
@@ -34,7 +40,7 @@ export class NaService {
 
   async assignNaToStudent(
     studentId: number,
-    naCreateDto: NaCreateDto,
+    naCreateDto: NaCreateBodyDto,
   ): Promise<NA> {
     const student = await this.studentService.getStudent(studentId);
     const naToUpdate = student.NAs;

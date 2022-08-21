@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Homework } from '../db/entities';
 import { HomeworkCreateBodyDto } from './dto/homework-create.dto';
 import { HomeworkRepository } from './repository/homework.repository';
 import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
+import { isNil } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
 export class HomeworkService {
@@ -14,15 +15,26 @@ export class HomeworkService {
   async createHomework(
     createHomeworkDto: HomeworkCreateBodyDto,
   ): Promise<Homework> {
-    const { description, deadline } = createHomeworkDto;
-    return this.homeworkRepository.create({
+    const { description, deadline, dateScheduleId } = createHomeworkDto;
+    const dateSchedule = await this.dateScheduleService.getDataSchedule(
+      dateScheduleId,
+    );
+    return this.homeworkRepository.save({
       description,
       deadline,
+      date_schedule: dateSchedule,
     });
   }
 
   async getHomework(homeworkId: number): Promise<Homework> {
-    return this.homeworkRepository.findOne(homeworkId);
+    const homework = this.homeworkRepository.findOne(homeworkId);
+    if (isNil(homework)) throw new NotFoundException('Homework not found');
+    return homework;
+  }
+
+  async deleteHomework(homeworkId: number): Promise<Homework> {
+    const homework = await this.getHomework(homeworkId);
+    return await this.homeworkRepository.remove(homework);
   }
 
   // async assignDateScheduleToHomework(
