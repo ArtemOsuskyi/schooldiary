@@ -16,6 +16,12 @@ export class StudyClassService {
     });
   }
 
+  async getAllClasses(): Promise<StudyClass[]> {
+    return this.classRepository.find({
+      relations: ['studyCourses'],
+    });
+  }
+
   async getClassById(classId: number): Promise<StudyClass> {
     const studyClass = await this.classRepository.findOne(classId, {
       relations: ['studyCourses', 'studyCourses.students'],

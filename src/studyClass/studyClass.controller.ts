@@ -9,6 +9,11 @@ import { StudyClassService } from './studyClass.service';
 export class StudyClassController {
   constructor(private readonly studyClassService: StudyClassService) {}
 
+  @Get('/getAll')
+  async getAllStudyClasses(): Promise<StudyClass[]> {
+    return this.studyClassService.getAllClasses();
+  }
+
   @ApiExcludeEndpoint()
   @Get(':classId')
   async getStudyClass(@Param('classId') classId: number): Promise<StudyClass> {
