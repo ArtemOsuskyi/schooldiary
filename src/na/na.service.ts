@@ -27,7 +27,7 @@ export class NaService {
     );
     return this.naRepository.save({
       student,
-      date_schedule: dateSchedule,
+      dateSchedule: dateSchedule,
       reason,
     });
   }

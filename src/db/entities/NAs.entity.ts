@@ -26,7 +26,7 @@ export class NA {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'date_schedule_id', referencedColumnName: 'id' })
-  date_schedule: DateSchedule;
+  dateSchedule: DateSchedule;
 
   @Column({ name: 'reason', type: 'varchar' })
   reason: string;

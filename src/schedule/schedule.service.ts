@@ -26,19 +26,28 @@ export class ScheduleService {
     const { date, studyCourseId, weekday, lessonNumber } = scheduleCreateDto;
     return await this.entityManager.transaction(
       async (transactionEntityManager) => {
-        const dateSchedule = await transactionEntityManager.save(
+        const existingDateSchedule =
+          await this.dateScheduleService.getDateScheduleByDate(date);
+        const dateSchedule = transactionEntityManager.create(
           DateSchedule,
-          await this.dateScheduleService.getDateScheduleByDate(date),
+          isNil(existingDateSchedule)
+            ? transactionEntityManager.create(DateSchedule, {
+                date,
+              })
+            : existingDateSchedule,
         );
         const studyCourse = await transactionEntityManager.findOne(
           StudyCourse,
-          await this.studyCourseService.getStudyCourseById(studyCourseId),
+          {
+            where: { id: studyCourseId },
+            relations: ['students'],
+          },
         );
         return await transactionEntityManager.save(Schedule, {
           studyCourse,
+          date_schedule: dateSchedule,
           lessonNumber,
           weekday,
-          date_schedule: dateSchedule,
         });
       },
     );

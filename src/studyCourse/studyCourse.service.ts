@@ -47,6 +47,11 @@ export class StudyCourseService {
   }
 
   async getStudyCourseById(studyCourseId: number): Promise<StudyCourse> {
+    // return await this.studyCourseRepository
+    //   .createQueryBuilder('studyCourse')
+    //   .where(`studyCourse.id = ${studyCourseId}`)
+    //   .leftJoinAndSelect('studyCourse.students', 'students')
+    //   .getOne();
     const studyCourse = await this.studyCourseRepository.findOne(
       studyCourseId,
       {

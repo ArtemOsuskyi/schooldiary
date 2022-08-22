@@ -35,7 +35,7 @@ export class DateSchedule {
   })
   grades: Grade[];
 
-  @OneToMany(() => NA, (na) => na.date_schedule, {
+  @OneToMany(() => NA, (na) => na.dateSchedule, {
     cascade: true,
     nullable: true,
   })

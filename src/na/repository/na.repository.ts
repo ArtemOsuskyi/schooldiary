@@ -17,7 +17,7 @@ export class NaRepository extends Repository<NA> {
   async getStudentNaByDate(studentId: number, date: Date): Promise<NA[]> {
     return await this.getStudentNa(studentId, {
       where: {
-        date_schedule: { date },
+        dateSchedule: { date },
       },
     });
   }

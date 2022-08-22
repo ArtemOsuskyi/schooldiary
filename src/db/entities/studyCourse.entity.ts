@@ -24,7 +24,17 @@ export class StudyCourse {
     onUpdate: 'CASCADE',
     nullable: true,
   })
-  @JoinTable()
+  @JoinTable({
+    name: 'study_course_student',
+    joinColumn: {
+      name: 'student_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'study_course_id',
+      referencedColumnName: 'id',
+    },
+  })
   students: Student[];
 
   @ManyToOne(() => StudyClass, (studyClass) => studyClass.studyCourses, {
