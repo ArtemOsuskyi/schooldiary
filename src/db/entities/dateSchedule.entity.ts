@@ -19,11 +19,11 @@ export class DateSchedule {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
 
-  @ManyToOne(() => Schedule)
+  @ManyToOne(() => Schedule, (schedule) => schedule.dateSchedule)
   @JoinColumn({ name: 'schedule_id', referencedColumnName: 'id' })
   schedule: Schedule;
 
-  @OneToMany(() => Homework, (homework) => homework.date_schedule, {
+  @OneToMany(() => Homework, (homework) => homework.dateSchedule, {
     cascade: true,
     nullable: true,
   })

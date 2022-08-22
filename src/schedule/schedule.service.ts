@@ -8,8 +8,9 @@ import { ScheduleRepository } from './repository/schedule.repository';
 import { ScheduleCreateBodyDto } from './dtos/schedule-create.dto';
 import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 import { StudyCourseService } from '../studyCourse/studyCourse.service';
-import { Schedule } from '../db/entities';
+import { DateSchedule, Schedule, StudyCourse } from '../db/entities';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class ScheduleService {
@@ -18,23 +19,29 @@ export class ScheduleService {
     @Inject(forwardRef(() => DateScheduleService))
     private readonly dateScheduleService: DateScheduleService,
     private readonly studyCourseService: StudyCourseService,
+    private entityManager: EntityManager,
   ) {}
 
   async createSchedule(scheduleCreateDto: ScheduleCreateBodyDto) {
-    const { dateScheduleId, studyCourseId, weekday, lessonNumber } =
-      scheduleCreateDto;
-    const dateSchedule = await this.dateScheduleService.getDataSchedule(
-      dateScheduleId,
+    const { date, studyCourseId, weekday, lessonNumber } = scheduleCreateDto;
+    return await this.entityManager.transaction(
+      async (transactionEntityManager) => {
+        const dateSchedule = await transactionEntityManager.save(
+          DateSchedule,
+          await this.dateScheduleService.getDateScheduleByDate(date),
+        );
+        const studyCourse = await transactionEntityManager.findOne(
+          StudyCourse,
+          await this.studyCourseService.getStudyCourseById(studyCourseId),
+        );
+        return await transactionEntityManager.save(Schedule, {
+          studyCourse,
+          lessonNumber,
+          weekday,
+          date_schedule: dateSchedule,
+        });
+      },
     );
-    const studyCourse = await this.studyCourseService.getStudyCourseById(
-      studyCourseId,
-    );
-    return await this.scheduleRepository.save({
-      date_schedule: dateSchedule,
-      study_course: studyCourse,
-      weekday,
-      lesson_number: lessonNumber,
-    });
   }
 
   async getSchedule(scheduleId: number): Promise<Schedule> {

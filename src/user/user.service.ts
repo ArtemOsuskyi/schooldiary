@@ -42,7 +42,7 @@ export class UserService {
   ): Promise<User> {
     return await this.entityManager.transaction(
       async (transactionEntityManager) => {
-        const user: User = await transactionEntityManager.save(
+        const user = await transactionEntityManager.save(
           User,
           await this.createUser(registerDto, Roles.STUDENT),
         );
@@ -50,7 +50,9 @@ export class UserService {
           Student,
           await this.studentService.createStudent(studentCreateDto, user.id),
         );
-        return await transactionEntityManager.save(user);
+        return await transactionEntityManager.findOne(User, user.id, {
+          relations: ['student', 'student.studyCourses'],
+        });
       },
     );
   }
@@ -61,7 +63,7 @@ export class UserService {
   ): Promise<User> {
     return await this.entityManager.transaction(
       async (transactionEntityManager) => {
-        const user: User = await transactionEntityManager.save(
+        const user = await transactionEntityManager.save(
           User,
           await this.createUser(registerDto, Roles.TEACHER),
         );

@@ -27,6 +27,12 @@ export class TeacherSubjectService {
     return await this.teacherSubjectRepository.save(teacherSubject);
   }
 
+  async getAllTeacherSubjects(): Promise<TeacherSubject[]> {
+    return await this.teacherSubjectRepository.find({
+      relations: ['teacher', 'subject'],
+    });
+  }
+
   async getTeacherSubject(teacherSubjectId: number): Promise<TeacherSubject> {
     return await this.teacherSubjectRepository.findOne(
       {

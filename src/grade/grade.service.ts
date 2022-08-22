@@ -3,13 +3,13 @@ import { Grade } from '../db/entities';
 import { GradeRepository } from './repository/grade.repository';
 import { GradeCreateBodyDto } from './dtos/grade-create.dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
-import { DateScheduleRepository } from '../dateSchedule/repository/dateSchedule.repository';
+import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 
 @Injectable()
 export class GradeService {
   constructor(
     private readonly gradeRepository: GradeRepository,
-    private readonly dateScheduleRepository: DateScheduleRepository,
+    private readonly dateScheduleService: DateScheduleService,
   ) {}
 
   async getGrades(): Promise<Grade[]> {
@@ -26,12 +26,13 @@ export class GradeService {
 
   async createGrade(gradeCreateDto: GradeCreateBodyDto): Promise<Grade> {
     const { value, date, gradeType, studentId } = gradeCreateDto;
-    const dateSchedule =
-      await this.dateScheduleRepository.getDateScheduleByDate(date);
+    const dateSchedule = await this.dateScheduleService.getDateScheduleByDate(
+      date,
+    );
     return await this.gradeRepository.save({
       student: { id: studentId },
       value,
-      dateSchedule: { date },
+      dateSchedule,
       gradeType,
     });
   }

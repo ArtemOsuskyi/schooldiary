@@ -35,7 +35,7 @@ export class Schedule {
   @OneToMany(() => DateSchedule, (dateSchedule) => dateSchedule.schedule, {
     cascade: true,
   })
-  dateSchedule: DateSchedule;
+  dateSchedule: DateSchedule[];
 
   @Column({ name: 'lesson_number', type: 'int4' })
   lessonNumber: number;

@@ -13,7 +13,7 @@ export class DateScheduleController {
   async getSchedule(
     @Param('scheduleId') scheduleId: number,
   ): Promise<DateSchedule> {
-    return this.dateScheduleService.getDataSchedule(scheduleId);
+    return this.dateScheduleService.getDateSchedule(scheduleId);
   }
 
   @Post('/create')

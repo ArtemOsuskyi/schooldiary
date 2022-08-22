@@ -8,10 +8,4 @@ export class DateScheduleRepository extends Repository<DateSchedule> {
       relations: ['homework', 'NAs', 'grades'],
     });
   }
-
-  async getDateScheduleByDate(date: Date) {
-    return this.findOne(date, {
-      relations: ['homework'],
-    });
-  }
 }

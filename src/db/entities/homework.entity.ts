@@ -17,7 +17,7 @@ export class Homework {
 
   @ManyToOne(() => DateSchedule)
   @JoinColumn({ name: 'date_schedule_id', referencedColumnName: 'id' })
-  date_schedule: DateSchedule;
+  dateSchedule: DateSchedule;
 
   @Column({ name: 'description', type: 'varchar' })
   description: string;

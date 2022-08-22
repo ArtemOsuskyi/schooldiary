@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber } from 'class-validator';
-import { nowDate } from '../../constants';
+import { IsISO8601, IsNumber } from 'class-validator';
+import { nowDateIso } from '../../constants';
 
 export class DateScheduleCreateBodyDto {
   @ApiProperty({
     required: true,
+    example: 1,
   })
   @IsNumber()
   scheduleId: number;
@@ -20,9 +21,9 @@ export class DateScheduleCreateBodyDto {
 
   @ApiProperty({
     required: true,
-    example: nowDate,
+    example: nowDateIso,
   })
-  @IsDate()
+  @IsISO8601()
   date: Date;
 }
 

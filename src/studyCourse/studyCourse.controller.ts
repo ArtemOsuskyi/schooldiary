@@ -5,7 +5,7 @@ import { StudyCourse } from '../db/entities';
 import { StudyCourseCreateBodyDto } from './dtos/study_course-create.dto';
 
 @ApiTags('studyCourse')
-@Controller('study-course')
+@Controller('studyCourse')
 export class StudyCourseController {
   constructor(private readonly studyCourseService: StudyCourseService) {}
 

@@ -1,30 +1,39 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DateSchedule } from '../db/entities';
 import { DateScheduleCreateBodyDto } from './dtos/dateSchedule-create.dto';
 import { DateScheduleRepository } from './repository/dateSchedule.repository';
-import { ScheduleService } from '../schedule/schedule.service';
+import { isNil } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
 export class DateScheduleService {
   constructor(
     private readonly dateScheduleRepository: DateScheduleRepository,
-    private readonly scheduleService: ScheduleService,
   ) {}
 
   async createDateSchedule(
     dateScheduleCreateDto: DateScheduleCreateBodyDto,
   ): Promise<DateSchedule> {
-    const { scheduleId, date } = dateScheduleCreateDto;
-    const schedule = await this.scheduleService.getSchedule(scheduleId);
     return this.dateScheduleRepository.save({
-      schedule,
-      date,
+      date: dateScheduleCreateDto.date,
     });
   }
 
-  async getDataSchedule(dataScheduleId: number): Promise<DateSchedule> {
-    return await this.dateScheduleRepository.getDateScheduleById(
+  async getDateSchedule(dataScheduleId: number): Promise<DateSchedule> {
+    const dateSchedule = await this.dateScheduleRepository.getDateScheduleById(
       dataScheduleId,
     );
+    if (isNil(dateSchedule))
+      throw new NotFoundException("Date schedule doesn't exist");
+    return dateSchedule;
+  }
+
+  async getDateScheduleByDate(date: Date): Promise<DateSchedule> {
+    // if (isNil(dateSchedule))
+    //   return this.dateScheduleRepository.create({ date });
+    return await this.dateScheduleRepository.findOne({
+      where: {
+        date,
+      },
+    });
   }
 }

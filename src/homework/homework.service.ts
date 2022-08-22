@@ -16,13 +16,13 @@ export class HomeworkService {
     createHomeworkDto: HomeworkCreateBodyDto,
   ): Promise<Homework> {
     const { description, deadline, dateScheduleId } = createHomeworkDto;
-    const dateSchedule = await this.dateScheduleService.getDataSchedule(
+    const dateSchedule = await this.dateScheduleService.getDateSchedule(
       dateScheduleId,
     );
     return this.homeworkRepository.save({
       description,
       deadline,
-      date_schedule: dateSchedule,
+      dateSchedule,
     });
   }
 

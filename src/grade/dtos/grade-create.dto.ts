@@ -5,19 +5,19 @@ import { ApiProperty } from '@nestjs/swagger';
 export class GradeCreateBodyDto {
   @ApiProperty({
     required: true,
+    example: 1,
+  })
+  @IsNumber()
+  studentId: number;
+
+  @ApiProperty({
+    required: true,
     example: 9,
   })
   @IsNumber()
   @Min(1)
   @Max(12)
   value: number;
-
-  @ApiProperty({
-    required: true,
-    example: 1,
-  })
-  @IsNumber()
-  studentId: number;
 
   @ApiProperty({
     required: true,

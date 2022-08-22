@@ -22,7 +22,7 @@ export class NaService {
   async createNa(naCreateDto: NaCreateBodyDto): Promise<NA> {
     const { studentId, dateScheduleId, reason } = naCreateDto;
     const student = await this.studentService.getStudent(studentId);
-    const dateSchedule = await this.dateScheduleService.getDataSchedule(
+    const dateSchedule = await this.dateScheduleService.getDateSchedule(
       dateScheduleId,
     );
     return this.naRepository.save({

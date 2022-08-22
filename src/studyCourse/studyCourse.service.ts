@@ -35,7 +35,6 @@ export class StudyCourseService {
     const studyClass = await this.studyClassService.getClassById(classId);
     const studyYear = await this.studyYearService.getStudyYear(studyYearId);
     return await this.studyCourseRepository.save({
-      students: [],
       class: studyClass,
       studyYear,
     });
@@ -43,7 +42,7 @@ export class StudyCourseService {
 
   async getAllStudyCourses(): Promise<StudyCourse[]> {
     return this.studyCourseRepository.find({
-      relations: ['students', 'class'],
+      relations: ['students'],
     });
   }
 

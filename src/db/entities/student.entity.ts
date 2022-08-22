@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -32,10 +33,7 @@ export class Student {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
-  @OneToMany(
-    () => StudyCourse,
-    (studyCourse: StudyCourse) => studyCourse.students,
-  )
+  @ManyToMany(() => StudyCourse, (studyCourse) => studyCourse.students)
   studyCourses: StudyCourse[];
 
   @OneToMany(() => Grade, (grade) => grade.student, {

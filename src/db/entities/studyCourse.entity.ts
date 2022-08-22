@@ -2,6 +2,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -18,11 +20,11 @@ export class StudyCourse {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
 
-  @ManyToOne(() => Student, (student) => student.studyCourses, {
+  @ManyToMany(() => Student, (student) => student.studyCourses, {
     onUpdate: 'CASCADE',
     nullable: true,
   })
-  @JoinColumn({ name: 'student_id', referencedColumnName: 'id' })
+  @JoinTable()
   students: Student[];
 
   @ManyToOne(() => StudyClass, (studyClass) => studyClass.studyCourses, {
