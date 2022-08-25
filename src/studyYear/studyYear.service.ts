@@ -31,15 +31,22 @@ export class StudyYearService {
   }
 
   async getStudyYear(studyYearId: number): Promise<StudyYear> {
-    const studyYear = await this.studyYearRepository.findOne(studyYearId, {
-      relations: ['studyCourses', 'studyCourses.class'],
+    const studyYear = await this.studyYearRepository.findOne({
+      where: { id: studyYearId },
+      relations: {
+        studyCourses: {
+          studyClass: true,
+        },
+      },
     });
     if (isNil(studyYear)) throw new NotFoundException();
     return studyYear;
   }
 
   async deleteStudyYear(studyYearId: number): Promise<StudyYear> {
-    const studyYear = await this.studyYearRepository.findOne(studyYearId);
+    const studyYear = await this.studyYearRepository.findOne({
+      where: { id: studyYearId },
+    });
     if (isNil(studyYear))
       throw new NotFoundException("This study year doesn't exist");
     return await this.studyYearRepository.remove(studyYear);

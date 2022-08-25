@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
 import { SubjectService } from './subject.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Subject } from '../db/entities';
 import { SubjectRepository } from './repository/subject.repository';
 import { SubjectController } from './subject.controller';
 import { TeacherModule } from '../teacher/teacher.module';
+import { TypeOrmExModule } from '../db/typeorm_ex.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Subject, SubjectRepository]),
+    TypeOrmExModule.forCustomRepository([SubjectRepository]),
     TeacherModule,
   ],
   providers: [SubjectService],
   controllers: [SubjectController],
-  exports: [TypeOrmModule, SubjectService],
+  exports: [SubjectService],
 })
 export class SubjectModule {}

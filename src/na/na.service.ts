@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { isNil } from '@nestjs/common/utils/shared.utils';
-import { NA, Student } from '../db/entities';
+import { NA } from '../db/entities';
 import { NaRepository } from './repository/na.repository';
 import { NaCreateBodyDto } from './dtos/na-create.dto';
 import { StudentService } from '../student/student.service';
@@ -11,9 +10,7 @@ import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 @Injectable()
 export class NaService {
   constructor(
-    @InjectRepository(NA)
     private readonly naRepository: NaRepository,
-    @InjectRepository(Student)
     private readonly studentRepository: StudentRepository,
     private readonly studentService: StudentService,
     private readonly dateScheduleService: DateScheduleService,
@@ -33,7 +30,9 @@ export class NaService {
   }
 
   async getNa(naId: number): Promise<NA> {
-    const na = await this.naRepository.findOne(naId);
+    const na = await this.naRepository.findOne({
+      where: { id: naId },
+    });
     if (isNil(na)) throw new NotFoundException();
     return na;
   }

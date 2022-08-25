@@ -17,8 +17,12 @@ export class GradeService {
   }
 
   async getGrade(gradeId: number): Promise<Grade> {
-    const grade = await this.gradeRepository.findOne(gradeId, {
-      relations: ['dateSchedule', 'student'],
+    const grade = await this.gradeRepository.findOne({
+      where: { id: gradeId },
+      relations: {
+        dateSchedule: true,
+        student: true,
+      },
     });
     if (isNil(grade)) throw new NotFoundException('Grade not found');
     return grade;

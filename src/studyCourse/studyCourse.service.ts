@@ -4,8 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Student, StudyCourse } from '../db/entities';
+import { StudyCourse } from '../db/entities';
 import { StudyCourseRepository } from './repository/studyCourse.repository';
 import { StudentService } from '../student/student.service';
 import { StudyClassService } from '../studyClass/studyClass.service';
@@ -51,12 +50,14 @@ export class StudyCourseService {
     //   .where(`studyCourse.id = ${studyCourseId}`)
     //   .leftJoinAndSelect('studyCourse.students', 'students')
     //   .getOne();
-    const studyCourse = await this.studyCourseRepository.findOne(
-      studyCourseId,
-      {
-        relations: ['students', 'studyClass', 'studyYear'],
+    const studyCourse = await this.studyCourseRepository.findOne({
+      where: { id: studyCourseId },
+      relations: {
+        students: true,
+        studyClass: true,
+        studyYear: true,
       },
-    );
+    });
     if (isNil(studyCourse)) throw new NotFoundException();
     return studyCourse;
   }
@@ -86,12 +87,12 @@ export class StudyCourseService {
   }
 
   async removeStudentFromStudyCourse(studentId: number, studyCourseId: number) {
-    const studyCourse = await this.studyCourseRepository.findOne(
-      studyCourseId,
-      {
-        relations: ['students'],
+    const studyCourse = await this.studyCourseRepository.findOne({
+      where: { id: studyCourseId },
+      relations: {
+        students: true,
       },
-    );
+    });
     studyCourse.students = studyCourse.students.filter(
       (student) => student.id !== studentId,
     );

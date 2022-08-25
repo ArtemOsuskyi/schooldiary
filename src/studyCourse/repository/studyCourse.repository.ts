@@ -1,8 +1,9 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { StudyCourse } from '../../db/entities';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { CustomRepository } from '../../db/typeorm_ex.decorator';
 
-@EntityRepository(StudyCourse)
+@CustomRepository(StudyCourse)
 export class StudyCourseRepository extends Repository<StudyCourse> {
   private readonly tableAlias = 'studyCourse';
 
@@ -13,7 +14,7 @@ export class StudyCourseRepository extends Repository<StudyCourse> {
   ) {
     return await this.find({
       where: {
-        students: { id: studentId },
+        ...(!isNil(studentId) && { students: { id: studentId } }),
         // fix above
         ...(!isNil(classId) && { studyClass: { id: classId } }),
         ...(!isNil(studyYearId) && { studyYear: { id: studyYearId } }),

@@ -23,15 +23,22 @@ export class StudyClassService {
   }
 
   async getClassById(classId: number): Promise<StudyClass> {
-    const studyClass = await this.classRepository.findOne(classId, {
-      relations: ['studyCourses', 'studyCourses.students'],
+    const studyClass = await this.classRepository.findOne({
+      where: { id: classId },
+      relations: {
+        studyCourses: {
+          students: true,
+        },
+      },
     });
     if (isNil(studyClass)) throw new NotFoundException('Class not found');
     return studyClass;
   }
 
   async removeClass(classId: number): Promise<StudyClass> {
-    const studyClass = await this.classRepository.findOne(classId);
+    const studyClass = await this.classRepository.findOne({
+      where: { id: classId },
+    });
     if (!studyClass) throw new NotFoundException("This class doesn't exist");
     return await this.classRepository.remove(studyClass);
   }

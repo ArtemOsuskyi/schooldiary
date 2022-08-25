@@ -54,8 +54,11 @@ export class ScheduleService {
   }
 
   async getSchedule(scheduleId: number): Promise<Schedule> {
-    const schedule = await this.scheduleRepository.findOne(scheduleId, {
-      relations: ['studyCourse'],
+    const schedule = await this.scheduleRepository.findOne({
+      where: { id: scheduleId },
+      relations: {
+        studyCourse: true,
+      },
     });
     if (isNil(schedule)) throw new NotFoundException('Schedule not found');
     return schedule;

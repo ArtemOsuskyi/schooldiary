@@ -52,9 +52,7 @@ export class UserService {
           Student,
           await this.studentService.createStudent(studentCreateDto, user.id),
         );
-        return await transactionEntityManager.findOne(User, user.id, {
-          relations: ['student', 'student.studyCourses'],
-        });
+        return await transactionEntityManager.findOne(User, {});
       },
     );
   }
@@ -91,17 +89,35 @@ export class UserService {
         }
         await transactionEntityManager.save(teacher);
         await transactionEntityManager.save(user);
-        return await transactionEntityManager.findOne(User, user.id, {
-          relations: ['teacher', 'teacher.subjects'],
+        return await transactionEntityManager.findOne(User, {
+          where: {
+            id: user.id,
+          },
+          relations: {
+            teacher: {
+              subjects: true,
+            },
+          },
         });
       },
     );
   }
 
   async getUser(userId: number): Promise<User> {
-    const user = await this.userRepository.findOne(userId, {
-      relations: ['student', 'student.studyCourses', 'teacher'],
-    });
+    const user = await this.userRepository.findOne(
+      {
+        where: {
+          id: userId,
+        },
+        relations: {
+          student: {
+            studyCourses: true,
+          },
+          teacher: true,
+        },
+      },
+      // relations: { ['student', 'student.studyCourses', 'teacher']}
+    );
     if (isNil(user)) throw new NotFoundException("User doesn't exist");
     if (isNil(user.teacher)) delete user.teacher;
     if (isNil(user.student)) delete user.student;
@@ -109,13 +125,21 @@ export class UserService {
   }
 
   async findUserByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findOne(
-      { email },
-      {
-        select: ['id', 'email', 'password', 'role'],
-        relations: ['student', 'teacher'],
+    const user = await this.userRepository.findOne({
+      where: {
+        email,
       },
-    );
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        role: true,
+      },
+      relations: {
+        student: true,
+        teacher: true,
+      },
+    });
     if (isNil(user)) return null;
     if (isNil(user.teacher)) delete user.teacher;
     if (isNil(user.student)) delete user.student;

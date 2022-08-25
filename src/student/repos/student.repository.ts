@@ -1,8 +1,9 @@
-import { EntityRepository, ILike, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Student } from '../../db/entities';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { CustomRepository } from '../../db/typeorm_ex.decorator';
 
-@EntityRepository(Student)
+@CustomRepository(Student)
 export class StudentRepository extends Repository<Student> {
   async findStudentByFullName(
     firstName?: string,

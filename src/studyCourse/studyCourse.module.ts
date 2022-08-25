@@ -1,22 +1,21 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { StudyCourseService } from './studyCourse.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { StudyCourse } from '../db/entities';
 import { StudentModule } from '../student/student.module';
 import { StudyClassModule } from '../studyClass/studyClass.module';
 import { StudyYearModule } from '../studyYear/studyYear.module';
 import { StudyCourseRepository } from './repository/studyCourse.repository';
 import { StudyCourseController } from './studyCourse.controller';
+import { TypeOrmExModule } from '../db/typeorm_ex.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([StudyCourse, StudyCourseRepository]),
+    TypeOrmExModule.forCustomRepository([StudyCourseRepository]),
     StudyClassModule,
     StudyYearModule,
     forwardRef(() => StudentModule),
   ],
   providers: [StudyCourseService],
-  exports: [StudyCourseService, TypeOrmModule],
   controllers: [StudyCourseController],
+  exports: [StudyCourseService],
 })
 export class StudyCourseModule {}

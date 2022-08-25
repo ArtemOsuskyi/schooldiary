@@ -22,20 +22,17 @@ export class StudentService {
   ) {}
 
   async getStudent(studentId: number) {
-    const student = await this.studentRepository.findOne(
-      {
-        id: studentId,
+    const student = await this.studentRepository.findOne({
+      where: { id: studentId },
+      relations: {
+        studyCourses: {
+          studyClass: true,
+        },
+        grades: true,
+        NAs: true,
+        user: true,
       },
-      {
-        relations: [
-          'studyCourses',
-          'studyCourses.class',
-          'grades',
-          'NAs',
-          'user',
-        ],
-      },
-    );
+    });
     if (isNil(student)) throw new NotFoundException('Student not found');
     return student;
   }
@@ -86,14 +83,12 @@ export class StudentService {
   }
 
   async deleteStudent(studentId: number) {
-    const student = await this.studentRepository.findOne(
-      {
-        id: studentId,
+    const student = await this.studentRepository.findOne({
+      where: { id: studentId },
+      relations: {
+        user: true,
       },
-      {
-        relations: ['user'],
-      },
-    );
+    });
     if (isNil(student))
       throw new NotFoundException("This student doesn't exist");
     return await this.entityManager.transaction(

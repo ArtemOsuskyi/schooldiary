@@ -3,7 +3,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginBodyDto } from './dtos/login-dto';
@@ -17,7 +16,6 @@ import { isNil } from '@nestjs/common/utils/shared.utils';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
     private readonly userRepository: UserRepository,
     private readonly studentService: StudentService,
     private readonly teacherService: TeacherService,

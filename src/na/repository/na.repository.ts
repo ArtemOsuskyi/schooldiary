@@ -1,7 +1,8 @@
-import { EntityRepository, FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { NA } from '../../db/entities';
+import { CustomRepository } from '../../db/typeorm_ex.decorator';
 
-@EntityRepository(NA)
+@CustomRepository(NA)
 export class NaRepository extends Repository<NA> {
   async getStudentNa(
     studentId: number,

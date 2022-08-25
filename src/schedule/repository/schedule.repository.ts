@@ -1,5 +1,6 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Schedule } from '../../db/entities';
+import { CustomRepository } from '../../db/typeorm_ex.decorator';
 
-@EntityRepository(Schedule)
+@CustomRepository(Schedule)
 export class ScheduleRepository extends Repository<Schedule> {}

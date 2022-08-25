@@ -1,8 +1,9 @@
-import { EntityRepository, FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Grade } from '../../db/entities';
 import { GradeType } from '../../db/enums/grade_type.enum';
+import { CustomRepository } from '../../db/typeorm_ex.decorator';
 
-@EntityRepository(Grade)
+@CustomRepository(Grade)
 export class GradeRepository extends Repository<Grade> {
   async getStudentGrades(
     studentId: number,

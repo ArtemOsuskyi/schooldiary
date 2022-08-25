@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
 import { HomeworkService } from './homework.service';
 import { HomeworkController } from './homework.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Homework } from '../db/entities';
 import { HomeworkRepository } from './repository/homework.repository';
 import { DateScheduleModule } from '../dateSchedule/dateSchedule.module';
+import { TypeOrmExModule } from '../db/typeorm_ex.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Homework, HomeworkRepository]),
+    TypeOrmExModule.forCustomRepository([HomeworkRepository]),
     DateScheduleModule,
   ],
   controllers: [HomeworkController],
   providers: [HomeworkService],
-  exports: [TypeOrmModule, HomeworkService],
+  exports: [HomeworkService],
 })
 export class HomeworkModule {}

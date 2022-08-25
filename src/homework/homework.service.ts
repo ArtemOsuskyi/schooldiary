@@ -27,7 +27,9 @@ export class HomeworkService {
   }
 
   async getHomework(homeworkId: number): Promise<Homework> {
-    const homework = this.homeworkRepository.findOne(homeworkId);
+    const homework = this.homeworkRepository.findOne({
+      where: { id: homeworkId },
+    });
     if (isNil(homework)) throw new NotFoundException('Homework not found');
     return homework;
   }

@@ -13,14 +13,12 @@ export class TeacherService {
   ) {}
 
   async getTeacher(teacherId: number) {
-    const teacher = await this.teacherRepository.findOne(
-      {
-        id: teacherId,
+    const teacher = await this.teacherRepository.findOne({
+      where: { id: teacherId },
+      relations: {
+        subjects: true,
       },
-      {
-        relations: ['subjects'],
-      },
-    );
+    });
     if (isNil(teacher)) throw new NotFoundException('Teacher not found');
     return teacher;
   }
@@ -48,14 +46,14 @@ export class TeacherService {
   }
 
   async deleteTeacher(teacherId: number) {
-    const teacher: Teacher = await this.teacherRepository.findOne(
-      {
+    const teacher: Teacher = await this.teacherRepository.findOne({
+      where: {
         id: teacherId,
       },
-      {
-        relations: ['user'],
+      relations: {
+        user: true,
       },
-    );
+    });
     if (isNil(teacher))
       throw new NotFoundException("This teacher doesn't exist");
     console.log(teacher, teacher.user);

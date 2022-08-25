@@ -1,20 +1,19 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleController } from './schedule.controller';
 import { ScheduleService } from './schedule.service';
 import { ScheduleRepository } from './repository/schedule.repository';
 import { DateScheduleModule } from '../dateSchedule/dateSchedule.module';
 import { StudyCourseModule } from '../studyCourse/studyCourse.module';
-import { Schedule } from '../db/entities';
+import { TypeOrmExModule } from '../db/typeorm_ex.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Schedule, ScheduleRepository]),
+    TypeOrmExModule.forCustomRepository([ScheduleRepository]),
     forwardRef(() => DateScheduleModule),
     forwardRef(() => StudyCourseModule),
   ],
   controllers: [ScheduleController],
   providers: [ScheduleService],
-  exports: [TypeOrmModule, ScheduleService],
+  exports: [ScheduleService],
 })
 export class ScheduleModule {}
