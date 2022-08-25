@@ -5,7 +5,7 @@ import { StudyCourse } from '../db/entities';
 import { StudentModule } from '../student/student.module';
 import { StudyClassModule } from '../studyClass/studyClass.module';
 import { StudyYearModule } from '../studyYear/studyYear.module';
-import { StudyCourseRepository } from './repository/study_course.repository';
+import { StudyCourseRepository } from './repository/studyCourse.repository';
 import { StudyCourseController } from './studyCourse.controller';
 
 @Module({

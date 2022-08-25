@@ -11,16 +11,17 @@ export class TeacherService {
     private readonly teacherRepository: TeacherRepository,
     private entityManager: EntityManager,
   ) {}
+
   async getTeacher(teacherId: number) {
     const teacher = await this.teacherRepository.findOne(
       {
         id: teacherId,
       },
       {
-        relations: ['teacher_subjects', 'teacher_subjects.subject'],
+        relations: ['subjects'],
       },
     );
-    if (isNil(teacher)) throw new NotFoundException();
+    if (isNil(teacher)) throw new NotFoundException('Teacher not found');
     return teacher;
   }
 
@@ -30,17 +31,19 @@ export class TeacherService {
 
   async getAllTeachers() {
     return await this.teacherRepository.find({
-      relations: ['teacher_subjects', 'teacher_subjects.subject'],
+      relations: ['subjects'],
     });
   }
 
   async createTeacher(teacherCreateDto: TeacherCreateBodyDto, userId?: number) {
     const { firstName, lastName, patronymic } = teacherCreateDto;
-    return this.teacherRepository.create({
-      user: { id: userId },
-      first_name: firstName,
-      last_name: lastName,
-      patronymic,
+    return this.entityManager.transaction(async (transactionEntityManager) => {
+      return transactionEntityManager.create(Teacher, {
+        user: { id: userId },
+        firstName: firstName,
+        lastName: lastName,
+        patronymic,
+      });
     });
   }
 

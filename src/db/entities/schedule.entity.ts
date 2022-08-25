@@ -2,35 +2,40 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TeacherSubject } from './teacherSubject.entity';
 import { StudyCourse } from './studyCourse.entity';
 import { Weekdays } from '../enums/weekday.enum';
 import { DateSchedule } from './dateSchedule.entity';
 import { nowDate } from '../../constants';
 import dayjs from 'dayjs';
+import { Teacher } from './teacher.entity';
+import { Subject } from './subject.entity';
 
 @Entity({ name: 'schedule' })
+@Index(['teacher', 'subject'], { unique: true })
 export class Schedule {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
-
-  @ManyToOne(() => TeacherSubject, {
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn({ name: 'teacher_subject_id', referencedColumnName: 'id' })
-  teacherSubject: TeacherSubject;
 
   @ManyToOne(() => StudyCourse, {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'study_course_id', referencedColumnName: 'id' })
   studyCourse: StudyCourse;
+
+  @ManyToOne(() => Teacher)
+  @JoinColumn({ name: 'teacher_id', referencedColumnName: 'id' })
+  teacher: Teacher;
+
+  @ManyToOne(() => Subject)
+  @JoinColumn({ name: 'subject_id', referencedColumnName: 'id' })
+  subject: Subject;
 
   @OneToMany(() => DateSchedule, (dateSchedule) => dateSchedule.schedule, {
     cascade: true,

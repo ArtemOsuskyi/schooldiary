@@ -26,4 +26,14 @@ export class StudentRepository extends Repository<Student> {
       .leftJoinAndSelect('studyCourse.studyYear', 'studyYear')
       .getMany();
   }
+
+  async findStudentsByStudyYear(studyYearId: number): Promise<Student[]> {
+    console.log(studyYearId);
+    return await this.createQueryBuilder('student')
+      .leftJoinAndSelect('student.studyCourses', 'studyCourse')
+      .leftJoinAndSelect('studyCourse.studyYear', 'studyYear')
+      .where(`studyYear.id = ${studyYearId}`)
+      .leftJoinAndSelect('studyCourse.class', 'class')
+      .getMany();
+  }
 }

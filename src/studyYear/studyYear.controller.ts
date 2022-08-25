@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StudyYearService } from './studyYear.service';
 import { StudyYearCreateBodyDto } from './dtos/studyYear-create.dto';
@@ -26,5 +26,12 @@ export class StudyYearController {
     @Body() createStudyYearDto: StudyYearCreateBodyDto,
   ): Promise<StudyYear> {
     return await this.studyYearService.createStudyYear(createStudyYearDto);
+  }
+
+  @Delete(':studyYearId')
+  async deleteStudyYear(
+    @Param('studyYearId') studyYearId: number,
+  ): Promise<StudyYear> {
+    return await this.studyYearService.deleteStudyYear(studyYearId);
   }
 }

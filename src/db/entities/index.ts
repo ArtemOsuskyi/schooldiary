@@ -9,5 +9,4 @@ export * from './studyCourse.entity';
 export * from './studyYear.entity';
 export * from './subject.entity';
 export * from './teacher.entity';
-export * from './teacherSubject.entity';
 export * from './user.entity';

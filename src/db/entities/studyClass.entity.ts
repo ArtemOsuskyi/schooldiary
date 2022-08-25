@@ -17,7 +17,7 @@ export class StudyClass {
   @Column({ name: 'name', type: 'varchar' })
   name: string;
 
-  @OneToMany(() => StudyCourse, (studyCourse) => studyCourse.class)
+  @OneToMany(() => StudyCourse, (studyCourse) => studyCourse.studyClass)
   studyCourses: StudyCourse[];
 
   @CreateDateColumn({ default: nowDate, select: false })

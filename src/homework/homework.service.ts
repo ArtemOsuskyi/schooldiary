@@ -36,12 +36,4 @@ export class HomeworkService {
     const homework = await this.getHomework(homeworkId);
     return await this.homeworkRepository.remove(homework);
   }
-
-  // async assignDateScheduleToHomework(
-  //   createHomeworkDto: HomeworkCreateBodyDto,
-  //   date: Date,
-  // ): Promise<Homework> {
-  //   const homework = this.createHomework(createHomeworkDto);
-  //   const dateSchedule = this.dateScheduleService.getDateSchedule();
-  // }
 }

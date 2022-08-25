@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { StudyYear } from '../db/entities';
 import { StudyYearRepository } from './repository/studyYear.repository';
 import { StudyYearCreateBodyDto } from './dtos/studyYear-create.dto';
@@ -11,10 +10,7 @@ import { isNil } from '@nestjs/common/utils/shared.utils';
 
 @Injectable()
 export class StudyYearService {
-  constructor(
-    @InjectRepository(StudyYear)
-    private readonly studyYearRepository: StudyYearRepository,
-  ) {}
+  constructor(private readonly studyYearRepository: StudyYearRepository) {}
 
   async getAllStudyYear(): Promise<StudyYear[]> {
     return await this.studyYearRepository.find();
@@ -42,8 +38,8 @@ export class StudyYearService {
     return studyYear;
   }
 
-  async deleteStudyYear(id: number): Promise<StudyYear> {
-    const studyYear = await this.studyYearRepository.findOne(id);
+  async deleteStudyYear(studyYearId: number): Promise<StudyYear> {
+    const studyYear = await this.studyYearRepository.findOne(studyYearId);
     if (isNil(studyYear))
       throw new NotFoundException("This study year doesn't exist");
     return await this.studyYearRepository.remove(studyYear);

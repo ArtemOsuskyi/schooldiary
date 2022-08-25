@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Student, Teacher, User } from '../db/entities';
+import { Student, Subject, Teacher, User } from '../db/entities';
 import { UserRepository } from './repository/user.repository';
 import { RegisterBodyDto } from '../auth/dtos/register-dto';
 import { StudentCreateBodyDto } from '../student/dtos/student-create-dto';
@@ -14,6 +14,7 @@ import { TeacherService } from '../teacher/teacher.service';
 import { TeacherCreateBodyDto } from '../teacher/dtos/teacher-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { EntityManager } from 'typeorm';
+import { SubjectService } from '../subject/subject.service';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly studentService: StudentService,
     private readonly teacherService: TeacherService,
+    private readonly subjectService: SubjectService,
     private entityManager: EntityManager,
   ) {}
 
@@ -67,11 +69,31 @@ export class UserService {
           User,
           await this.createUser(registerDto, Roles.TEACHER),
         );
-        user.teacher = await transactionEntityManager.save(
+        const teacher = await transactionEntityManager.save(
           Teacher,
           await this.teacherService.createTeacher(teacherCreateDto, user.id),
         );
-        return await transactionEntityManager.save(user);
+        user.teacher = teacher;
+        for (const subjectName of teacherCreateDto.subjects) {
+          const subject = await this.subjectService.getSubjectByName(
+            subjectName,
+          );
+          if (isNil(subject)) {
+            await transactionEntityManager.save(
+              Subject,
+              await this.subjectService.createSubject(subjectName, teacher.id),
+            );
+          } else
+            await transactionEntityManager.save(Subject, {
+              ...subject,
+              teachers: [teacher],
+            });
+        }
+        await transactionEntityManager.save(teacher);
+        await transactionEntityManager.save(user);
+        return await transactionEntityManager.findOne(User, user.id, {
+          relations: ['teacher', 'teacher.subjects'],
+        });
       },
     );
   }

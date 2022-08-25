@@ -59,6 +59,10 @@ export class StudentService {
     return await this.studentRepository.findStudentsByClass(classId);
   }
 
+  async getStudentsByStudyYear(studyYearId: number) {
+    return await this.studentRepository.findStudentsByStudyYear(studyYearId);
+  }
+
   async createStudent(
     createStudentDto: StudentCreateBodyDto,
     userId?: number,
@@ -79,13 +83,6 @@ export class StudentService {
       patronymic,
       studyCourses: studentStudyCourses,
     });
-    // const studyCourse = await this.studyCourseService.getStudyCourseByStudyYear(
-    //   studyYearId,
-    // );
-    // await this.studyCourseService.assignStudyCourseToStudent(
-    //   studyCourse.id,
-    //   newStudent.id,
-    // );
   }
 
   async deleteStudent(studentId: number) {
@@ -105,9 +102,5 @@ export class StudentService {
         await transactionEntityManager.remove(student.user);
       },
     );
-  }
-
-  async saveStudent(student: Student) {
-    return await this.studentRepository.save(student);
   }
 }

@@ -42,6 +42,13 @@ export class StudentController {
     return this.studentService.getStudentsByFullName(studentSearchDto);
   }
 
+  @Get('/search/byStudyYear/:studyYearId')
+  async getStudentsByStudyYear(
+    @Param('studyYearId') studyYearId: number,
+  ): Promise<Student[]> {
+    return this.studentService.getStudentsByStudyYear(studyYearId);
+  }
+
   @ApiExcludeEndpoint()
   @Post('create')
   // @ApiResponse({

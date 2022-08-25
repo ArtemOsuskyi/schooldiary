@@ -2,12 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TeacherSubject } from './teacherSubject.entity';
 import { nowDate } from '../../constants';
+import { Teacher } from './teacher.entity';
 
 @Entity({ name: 'subject' })
 export class Subject {
@@ -17,10 +17,10 @@ export class Subject {
   @Column({ name: 'name', type: 'varchar', nullable: false })
   name: string;
 
-  @OneToMany(() => TeacherSubject, (teacherSubject) => teacherSubject.subject, {
-    cascade: true,
+  @ManyToMany(() => Teacher, (teacher) => teacher.subjects, {
+    onUpdate: 'CASCADE',
   })
-  teacher_subject: TeacherSubject;
+  teachers: Teacher[];
 
   @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;

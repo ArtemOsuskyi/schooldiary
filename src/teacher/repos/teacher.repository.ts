@@ -8,7 +8,7 @@ export class TeacherRepository extends Repository<Teacher> {
       where: {
         user: { id: userId },
       },
-      relations: ['teacher_subjects', 'user'],
+      relations: ['subjects', 'user'],
     });
   }
 }

@@ -14,7 +14,6 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { AppService } from './app.service';
 import { NaModule } from './na/na.module';
 import { GradeModule } from './grade/grade.module';
-import { TeacherSubjectModule } from './teacherSubject/teacherSubject.module';
 import { SubjectModule } from './subject/subject.module';
 import { HomeworkModule } from './homework/homework.module';
 import { StudyClassController } from './studyClass/studyClass.controller';
@@ -38,6 +37,7 @@ import * as Entities from 'src/db/entities/index';
         database: configService.get('DB_NAME'),
         entities: Object.values(Entities),
         synchronize: true,
+        logging: true,
       }),
     }),
     StudentModule,
@@ -50,7 +50,6 @@ import * as Entities from 'src/db/entities/index';
     StudyCourseModule,
     NaModule,
     GradeModule,
-    TeacherSubjectModule,
     SubjectModule,
     HomeworkModule,
     DateScheduleModule,

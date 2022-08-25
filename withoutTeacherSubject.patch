@@ -1,0 +1,660 @@
+Index: src/db/entities/subject.entity.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/db/entities/subject.entity.ts b/src/db/entities/subject.entity.ts
+--- a/src/db/entities/subject.entity.ts	
++++ b/src/db/entities/subject.entity.ts	(date 1661259832916)
+@@ -2,12 +2,12 @@
+   Column,
+   CreateDateColumn,
+   Entity,
+-  ManyToMany,
++  OneToMany,
+   PrimaryGeneratedColumn,
+   UpdateDateColumn,
+ } from 'typeorm';
++import { TeacherSubject } from './teacherSubject.entity';
+ import { nowDate } from '../../constants';
+-import { Teacher } from './teacher.entity';
+ 
+ @Entity({ name: 'subject' })
+ export class Subject {
+@@ -17,10 +17,10 @@
+   @Column({ name: 'name', type: 'varchar', nullable: false })
+   name: string;
+ 
+-  @ManyToMany(() => Teacher, (teacher) => teacher.subjects, {
+-    onUpdate: 'CASCADE',
++  @OneToMany(() => TeacherSubject, (teacherSubject) => teacherSubject.subject, {
++    cascade: true,
+   })
+-  teachers: Teacher[];
++  teacher_subject: TeacherSubject;
+ 
+   @CreateDateColumn({ default: nowDate, select: false })
+   createdAt: Date;
+Index: src/db/entities/teacher.entity.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/db/entities/teacher.entity.ts b/src/db/entities/teacher.entity.ts
+--- a/src/db/entities/teacher.entity.ts	
++++ b/src/db/entities/teacher.entity.ts	(date 1661259832912)
+@@ -3,16 +3,14 @@
+   CreateDateColumn,
+   Entity,
+   JoinColumn,
+-  JoinTable,
+-  ManyToMany,
+   OneToMany,
+   OneToOne,
+   PrimaryGeneratedColumn,
+   UpdateDateColumn,
+ } from 'typeorm';
++import { TeacherSubject } from './teacherSubject.entity';
+ import { User } from './user.entity';
+ import { nowDate } from '../../constants';
+-import { Subject } from './subject.entity';
+ 
+ @Entity({ name: 'teacher' })
+ export class Teacher {
+@@ -32,22 +30,11 @@
+   @Column({ name: 'patronymic', type: 'varchar' })
+   patronymic: string;
+ 
+-  @ManyToMany(() => Subject, (subject) => subject.teachers, {
+-    nullable: true,
++  @OneToMany(() => TeacherSubject, (teacherSubject) => teacherSubject.teacher, {
++    cascade: true,
+     onUpdate: 'CASCADE',
+   })
+-  @JoinTable({
+-    name: 'teacher_subject',
+-    joinColumn: {
+-      name: 'subject_id',
+-      referencedColumnName: 'id',
+-    },
+-    inverseJoinColumn: {
+-      name: 'teacher_id',
+-      referencedColumnName: 'id',
+-    },
+-  })
+-  subjects: Subject[];
++  teacherSubjects: TeacherSubject[];
+ 
+   @CreateDateColumn({ default: nowDate, select: false })
+   createdAt: Date;
+Index: src/db/entities/teacherSubject.entity.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/db/entities/teacherSubject.entity.ts b/src/db/entities/teacherSubject.entity.ts
+--- a/src/db/entities/teacherSubject.entity.ts	
++++ b/src/db/entities/teacherSubject.entity.ts	(date 1661259832904)
+@@ -1,39 +1,35 @@
+-// import {
+-//   CreateDateColumn,
+-//   Entity,
+-//   JoinColumn,
+-//   ManyToMany,
+-//   ManyToOne,
+-//   PrimaryGeneratedColumn,
+-//   UpdateDateColumn,
+-// } from 'typeorm';
+-// import { Teacher } from './teacher.entity';
+-// import { Subject } from './subject.entity';
+-// import { nowDate } from '../../constants';
+-//
+-// @Entity({ name: 'teacher_subject' })
+-// export class TeacherSubject {
+-//   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
+-//   id: number;
+-//
+-//   @ManyToMany()
+-//
+-//   // @ManyToOne(() => Teacher, {
+-//   //   onUpdate: 'CASCADE',
+-//   //   cascade: true,
+-//   // })
+-//   // @JoinColumn({ name: 'teacher_id', referencedColumnName: 'id' })
+-//   // teacher: Teacher;
+-//   //
+-//   // @ManyToOne(() => Subject, {
+-//   //   onUpdate: 'CASCADE',
+-//   //   cascade: true,
+-//   // })
+-//   // @JoinColumn({ name: 'subject_id', referencedColumnName: 'id' })
+-//   // subject: Subject;
+-//   @CreateDateColumn({ default: nowDate, select: false })
+-//   createdAt: Date;
+-//
+-//   @UpdateDateColumn({ default: nowDate, select: false })
+-//   updatedAt: Date;
+-// }
++import {
++  CreateDateColumn,
++  Entity,
++  JoinColumn,
++  ManyToOne,
++  PrimaryGeneratedColumn,
++  UpdateDateColumn,
++} from 'typeorm';
++import { Teacher } from './teacher.entity';
++import { Subject } from './subject.entity';
++import { nowDate } from '../../constants';
++
++@Entity({ name: 'teacher_subject' })
++export class TeacherSubject {
++  @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
++  id: number;
++
++  @ManyToOne(() => Teacher, {
++    onUpdate: 'CASCADE',
++  })
++  @JoinColumn({ name: 'teacher_id', referencedColumnName: 'id' })
++  teacher: Teacher;
++
++  @ManyToOne(() => Subject, {
++    onUpdate: 'CASCADE',
++  })
++  @JoinColumn({ name: 'subject_id', referencedColumnName: 'id' })
++  subject: Subject;
++
++  @CreateDateColumn({ default: nowDate, select: false })
++  createdAt: Date;
++
++  @UpdateDateColumn({ default: nowDate, select: false })
++  updatedAt: Date;
++}
+Index: src/user/user.module.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/user/user.module.ts b/src/user/user.module.ts
+--- a/src/user/user.module.ts	
++++ b/src/user/user.module.ts	(date 1661259832904)
+@@ -6,14 +6,12 @@
+ import { UserRepository } from './repository/user.repository';
+ import { StudentModule } from '../student/student.module';
+ import { TeacherModule } from '../teacher/teacher.module';
+-import { TeacherSubjectModule } from '../teacherSubject/teacherSubject.module';
+ 
+ @Module({
+   imports: [
+     TypeOrmModule.forFeature([User, UserRepository]),
+     StudentModule,
+     TeacherModule,
+-    TeacherSubjectModule,
+   ],
+   providers: [UserService],
+   controllers: [UserController],
+Index: src/user/user.service.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/user/user.service.ts b/src/user/user.service.ts
+--- a/src/user/user.service.ts	
++++ b/src/user/user.service.ts	(date 1661259832896)
+@@ -3,7 +3,7 @@
+   Injectable,
+   NotFoundException,
+ } from '@nestjs/common';
+-import { Student, Subject, Teacher, User } from '../db/entities';
++import { Student, Teacher, User } from '../db/entities';
+ import { UserRepository } from './repository/user.repository';
+ import { RegisterBodyDto } from '../auth/dtos/register-dto';
+ import { StudentCreateBodyDto } from '../student/dtos/student-create-dto';
+@@ -14,7 +14,6 @@
+ import { TeacherCreateBodyDto } from '../teacher/dtos/teacher-create-dto';
+ import { isNil } from '@nestjs/common/utils/shared.utils';
+ import { EntityManager } from 'typeorm';
+-import { SubjectService } from '../subject/subject.service';
+ 
+ @Injectable()
+ export class UserService {
+@@ -22,7 +21,6 @@
+     private readonly userRepository: UserRepository,
+     private readonly studentService: StudentService,
+     private readonly teacherService: TeacherService,
+-    private readonly subjectService: SubjectService,
+     private entityManager: EntityManager,
+   ) {}
+ 
+@@ -63,27 +61,19 @@
+     registerDto: RegisterBodyDto,
+     teacherCreateDto: TeacherCreateBodyDto,
+   ): Promise<User> {
+-    const teacherSubjects = [] as Subject[];
+     return await this.entityManager.transaction(
+       async (transactionEntityManager) => {
+         const user = await transactionEntityManager.save(
+           User,
+           await this.createUser(registerDto, Roles.TEACHER),
+         );
+-        const teacher = await transactionEntityManager.save(
++        user.teacher = await transactionEntityManager.save(
+           Teacher,
+           await this.teacherService.createTeacher(teacherCreateDto, user.id),
+         );
+-
+-        for (const id of teacherCreateDto.subjectIds) {
+-          const subject = await this.subjectService.getSubject(id);
+-          teacherSubjects.push(subject);
+-        }
+-        teacher.subjects = teacherSubjects;
+-        user.teacher = teacher;
+         await transactionEntityManager.save(user);
+         return await transactionEntityManager.findOne(User, user.id, {
+-          relations: ['teacher', 'teacher.teacherSubjects'],
++          relations: ['teacher', 'teacher.teacher_subjects'],
+         });
+       },
+     );
+Index: src/subject/dtos/subject-create.dto.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/subject/dtos/subject-create.dto.ts b/src/subject/dtos/subject-create.dto.ts
+--- a/src/subject/dtos/subject-create.dto.ts	
++++ b/src/subject/dtos/subject-create.dto.ts	(date 1661259832892)
+@@ -1,5 +1,5 @@
+ import { ApiProperty } from '@nestjs/swagger';
+-import { IsNumber, IsString, Length } from 'class-validator';
++import { IsString, Length } from 'class-validator';
+ 
+ export class SubjectCreateBodyDto {
+   @ApiProperty({
+@@ -11,11 +11,4 @@
+     message: 'Subject name must be between 3 and 30 characters',
+   })
+   name: string;
+-
+-  @ApiProperty({
+-    required: true,
+-    example: 1,
+-  })
+-  @IsNumber()
+-  teacherId: number;
+ }
+Index: src/subject/subject.service.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/subject/subject.service.ts b/src/subject/subject.service.ts
+--- a/src/subject/subject.service.ts	
++++ b/src/subject/subject.service.ts	(date 1661259832884)
+@@ -3,23 +3,21 @@
+ import { SubjectRepository } from './repository/subject.repository';
+ import { isNil } from '@nestjs/common/utils/shared.utils';
+ import { SubjectCreateBodyDto } from './dtos/subject-create.dto';
+-import { TeacherService } from '../teacher/teacher.service';
+ 
+ @Injectable()
+ export class SubjectService {
+-  constructor(
+-    private readonly subjectRepository: SubjectRepository,
+-    private readonly teacherService: TeacherService,
+-  ) {}
++  constructor(private readonly subjectRepository: SubjectRepository) {}
+ 
+   async createSubject(
+-    name: string, teacherId: number
+-  ): Promise<Subject> {
+-    const teacher = await this.teacherService.getTeacher(teacherId);
+-    return await this.subjectRepository.save({
+-      name,
+-      teacher,
+-    });
++    subjectCreateDto: SubjectCreateBodyDto,
++  ): Promise<Subject | { message: string; subject: Subject }> {
++    const subject = await this.getSubjectByName(subjectCreateDto.name);
++    if (isNil(subject)) {
++      return await this.subjectRepository.save({
++        name: subjectCreateDto.name,
++      });
++    }
++    return { message: 'This subject already exists', subject };
+   }
+ 
+   async getSubject(subjectId: number): Promise<Subject> {
+Index: src/subject/subject.controller.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/subject/subject.controller.ts b/src/subject/subject.controller.ts
+--- a/src/subject/subject.controller.ts	
++++ b/src/subject/subject.controller.ts	(date 1661259832880)
+@@ -17,7 +17,7 @@
+   @Post('/create')
+   async createSubject(
+     @Body() subjectCreateDto: SubjectCreateBodyDto,
+-  ): Promise<Subject> {
++  ): Promise<Subject | { message: string; subject: Subject }> {
+     return this.subjectService.createSubject(subjectCreateDto);
+   }
+ 
+Index: src/teacher/teacher.module.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/teacher/teacher.module.ts b/src/teacher/teacher.module.ts
+--- a/src/teacher/teacher.module.ts	
++++ b/src/teacher/teacher.module.ts	(date 1661259832876)
+@@ -4,9 +4,13 @@
+ import { TypeOrmModule } from '@nestjs/typeorm';
+ import { Teacher } from '../db/entities';
+ import { TeacherRepository } from './repos/teacher.repository';
++import { TeacherSubjectModule } from '../teacherSubject/teacherSubject.module';
+ 
+ @Module({
+-  imports: [TypeOrmModule.forFeature([Teacher, TeacherRepository])],
++  imports: [
++    TypeOrmModule.forFeature([Teacher, TeacherRepository]),
++    TeacherSubjectModule,
++  ],
+   providers: [TeacherService],
+   controllers: [TeacherController],
+   exports: [TypeOrmModule, TeacherService],
+Index: src/teacher/teacher.service.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/teacher/teacher.service.ts b/src/teacher/teacher.service.ts
+--- a/src/teacher/teacher.service.ts	
++++ b/src/teacher/teacher.service.ts	(date 1661259832872)
+@@ -2,13 +2,15 @@
+ import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
+ import { isNil } from '@nestjs/common/utils/shared.utils';
+ import { TeacherRepository } from './repos/teacher.repository';
+-import { Teacher } from '../db/entities';
++import { Teacher, TeacherSubject } from '../db/entities';
+ import { EntityManager } from 'typeorm';
++import { TeacherSubjectService } from '../teacherSubject/teacherSubject.service';
+ 
+ @Injectable()
+ export class TeacherService {
+   constructor(
+     private readonly teacherRepository: TeacherRepository,
++    private readonly teacherSubjectService: TeacherSubjectService,
+     private entityManager: EntityManager,
+   ) {}
+ 
+@@ -36,14 +38,24 @@
+   }
+ 
+   async createTeacher(teacherCreateDto: TeacherCreateBodyDto, userId?: number) {
+-    const { firstName, lastName, patronymic } = teacherCreateDto;
++    const { firstName, lastName, patronymic, subjectIds } = teacherCreateDto;
++    const teacherSubjects = [] as TeacherSubject[];
+     return this.entityManager.transaction(async (transactionEntityManager) => {
+-      return await transactionEntityManager.save(Teacher, {
++      const teacher = await transactionEntityManager.save(Teacher, {
+         user: { id: userId },
+         firstName: firstName,
+         lastName: lastName,
+         patronymic,
+       });
++      for (const id of subjectIds) {
++        const subject = await transactionEntityManager.save(
++          TeacherSubject,
++          await this.teacherSubjectService.createTeacherSubject(teacher.id, id),
++        );
++        teacherSubjects.push(subject);
++      }
++      teacher.teacherSubjects = teacherSubjects;
++      return await transactionEntityManager.save(teacher);
+     });
+   }
+ 
+Index: src/teacherSubject/repository/teacherSubject.repository.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/teacherSubject/repository/teacherSubject.repository.ts b/src/teacherSubject/repository/teacherSubject.repository.ts
+--- a/src/teacherSubject/repository/teacherSubject.repository.ts	
++++ b/src/teacherSubject/repository/teacherSubject.repository.ts	(date 1661259867880)
+@@ -1,5 +1,5 @@
+-// import { EntityRepository, Repository } from 'typeorm';
+-// import { TeacherSubject } from '../../db/entities';
+-//
+-// @EntityRepository(TeacherSubject)
+-// export class TeacherSubjectRepository extends Repository<TeacherSubject> {}
++import { EntityRepository, Repository } from 'typeorm';
++import { TeacherSubject } from '../../db/entities';
++
++@EntityRepository(TeacherSubject)
++export class TeacherSubjectRepository extends Repository<TeacherSubject> {}
+Index: src/teacherSubject/teacherSubject.service.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/teacherSubject/teacherSubject.service.ts b/src/teacherSubject/teacherSubject.service.ts
+--- a/src/teacherSubject/teacherSubject.service.ts	
++++ b/src/teacherSubject/teacherSubject.service.ts	(date 1661259902567)
+@@ -1,67 +1,69 @@
+-// import {
+-//   forwardRef,
+-//   Inject,
+-//   Injectable,
+-//   NotFoundException,
+-// } from '@nestjs/common';
+-// import { TeacherService } from '../teacher/teacher.service';
+-// import { SubjectService } from '../subject/subject.service';
+-// import { isNil } from '@nestjs/common/utils/shared.utils';
+-//
+-// @Injectable()
+-// export class TeacherSubjectService {
+-//   constructor(
+-//     private readonly teacherSubjectRepository: TeacherSubjectRepository,
+-//     @Inject(forwardRef(() => TeacherService))
+-//     private readonly teacherService: TeacherService,
+-//     private readonly subjectService: SubjectService,
+-//   ) {}
+-//
+-//   async createTeacherSubject(teacherId: number, subjectId: number) {
+-//     const teacher = await this.teacherService.getTeacher(teacherId);
+-//     const subject = await this.subjectService.getSubject(subjectId);
+-//     return this.teacherSubjectRepository.create({
+-//       teacher,
+-//       subject,
+-//     });
+-//   }
+-//
+-//   async getAllTeacherSubjects(): Promise<TeacherSubject[]> {
+-//     return await this.teacherSubjectRepository.find({
+-//       relations: ['teacher', 'subject'],
+-//     });
+-//   }
+-//
+-//   async getTeacherSubject(teacherSubjectId: number): Promise<TeacherSubject> {
+-//     return await this.teacherSubjectRepository.findOne(teacherSubjectId, {
+-//       relations: ['teacher', 'subject'],
+-//     });
+-//   }
+-//
+-//   async deleteTeacherSubject(
+-//     teacherSubjectId: number,
+-//   ): Promise<TeacherSubject> {
+-//     const teacherSubject = await this.getTeacherSubject(teacherSubjectId);
+-//     if (isNil(teacherSubject))
+-//       throw new NotFoundException('Teacher subject not found');
+-//     return await this.teacherSubjectRepository.remove(teacherSubject);
+-//   }
+-//
+-//   async assignSubjectToTeacher(teacherId: number, subjectId: number) {
+-//     const teacher = await this.teacherService.getTeacher(teacherId);
+-//     const teacherSubjects = teacher.subjects;
+-//     const subject = await this.subjectService.getSubject(subjectId);
+-//     // if (
+-//     //   teacherSubjects
+-//     //     .map((subjects) => {
+-//     //       return subjects.subject;
+-//     //     })
+-//     //     .includes(subject)
+-//     // )
+-//     //   return null;
+-//     const subjectToPush = await this.createTeacherSubject(teacherId, subjectId);
+-//     teacherSubjects.push(subjectToPush);
+-//     teacher.subjects = teacherSubjects;
+-//     return subjectToPush;
+-//   }
+-// }
++import {
++  forwardRef,
++  Inject,
++  Injectable,
++  NotFoundException,
++} from '@nestjs/common';
++import { TeacherService } from '../teacher/teacher.service';
++import { SubjectService } from '../subject/subject.service';
++import { isNil } from '@nestjs/common/utils/shared.utils';
++import { TeacherSubjectRepository } from './repository/teacherSubject.repository';
++import { TeacherSubject } from '../db/entities';
++
++@Injectable()
++export class TeacherSubjectService {
++  constructor(
++    private readonly teacherSubjectRepository: TeacherSubjectRepository,
++    @Inject(forwardRef(() => TeacherService))
++    private readonly teacherService: TeacherService,
++    private readonly subjectService: SubjectService,
++  ) {}
++
++  async createTeacherSubject(teacherId: number, subjectId: number) {
++    const teacher = await this.teacherService.getTeacher(teacherId);
++    const subject = await this.subjectService.getSubject(subjectId);
++    return this.teacherSubjectRepository.create({
++      teacher,
++      subject,
++    });
++  }
++
++  async getAllTeacherSubjects(): Promise<TeacherSubject[]> {
++    return await this.teacherSubjectRepository.find({
++      relations: ['teacher', 'subject'],
++    });
++  }
++
++  async getTeacherSubject(teacherSubjectId: number): Promise<TeacherSubject> {
++    return await this.teacherSubjectRepository.findOne(teacherSubjectId, {
++      relations: ['teacher', 'subject'],
++    });
++  }
++
++  async deleteTeacherSubject(
++    teacherSubjectId: number,
++  ): Promise<TeacherSubject> {
++    const teacherSubject = await this.getTeacherSubject(teacherSubjectId);
++    if (isNil(teacherSubject))
++      throw new NotFoundException('Teacher subject not found');
++    return await this.teacherSubjectRepository.remove(teacherSubject);
++  }
++
++  async assignSubjectToTeacher(teacherId: number, subjectId: number) {
++    const teacher = await this.teacherService.getTeacher(teacherId);
++    const teacherSubjects = teacher.teacherSubjects;
++    const subject = await this.subjectService.getSubject(subjectId);
++    // if (
++    //   teacherSubjects
++    //     .map((subjects) => {
++    //       return subjects.subject;
++    //     })
++    //     .includes(subject)
++    // )
++    //   return null;
++    const subjectToPush = await this.createTeacherSubject(teacherId, subjectId);
++    teacherSubjects.push(subjectToPush);
++    teacher.teacherSubjects = teacherSubjects;
++    return subjectToPush;
++  }
++}
+Index: src/teacherSubject/teacherSubject.controller.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/teacherSubject/teacherSubject.controller.ts b/src/teacherSubject/teacherSubject.controller.ts
+--- a/src/teacherSubject/teacherSubject.controller.ts	
++++ b/src/teacherSubject/teacherSubject.controller.ts	(date 1661259902463)
+@@ -1,34 +1,34 @@
+-// import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+-// import { ApiTags } from '@nestjs/swagger';
+-// import { TeacherSubjectService } from './teacherSubject.service';
+-// import { TeacherSubject } from '../db/entities';
+-// import { TeacherSubjectCreateBodyDto } from './dtos/teacherSubject-create.dto';
+-//
+-// @ApiTags('teacherSubject')
+-// @Controller('teacherSubject')
+-// export class TeacherSubjectController {
+-//   constructor(private readonly teacherSubjectService: TeacherSubjectService) {}
+-//
+-//   @Get('/getAll')
+-//   async getAllTeacherSubjects(): Promise<TeacherSubject[]> {
+-//     return this.teacherSubjectService.getAllTeacherSubjects();
+-//   }
+-//
+-//   @Post('/create')
+-//   async createTeacherSubject(
+-//     @Body() teacherSubjectCreateDto: TeacherSubjectCreateBodyDto,
+-//   ): Promise<TeacherSubject> {
+-//     const { teacherId, subjectId } = teacherSubjectCreateDto;
+-//     return this.teacherSubjectService.createTeacherSubject(
+-//       teacherId,
+-//       subjectId,
+-//     );
+-//   }
+-//
+-//   @Delete(':teacherSubjectId')
+-//   async deleteTeacherSubject(
+-//     @Param('teacherSubjectId') teacherSubjectId: number,
+-//   ): Promise<TeacherSubject> {
+-//     return this.teacherSubjectService.deleteTeacherSubject(teacherSubjectId);
+-//   }
+-// }
++import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
++import { ApiTags } from '@nestjs/swagger';
++import { TeacherSubjectService } from './teacherSubject.service';
++import { TeacherSubject } from '../db/entities';
++import { TeacherSubjectCreateBodyDto } from './dtos/teacherSubject-create.dto';
++
++@ApiTags('teacherSubject')
++@Controller('teacherSubject')
++export class TeacherSubjectController {
++  constructor(private readonly teacherSubjectService: TeacherSubjectService) {}
++
++  @Get('/getAll')
++  async getAllTeacherSubjects(): Promise<TeacherSubject[]> {
++    return this.teacherSubjectService.getAllTeacherSubjects();
++  }
++
++  @Post('/create')
++  async createTeacherSubject(
++    @Body() teacherSubjectCreateDto: TeacherSubjectCreateBodyDto,
++  ): Promise<TeacherSubject> {
++    const { teacherId, subjectId } = teacherSubjectCreateDto;
++    return this.teacherSubjectService.createTeacherSubject(
++      teacherId,
++      subjectId,
++    );
++  }
++
++  @Delete(':teacherSubjectId')
++  async deleteTeacherSubject(
++    @Param('teacherSubjectId') teacherSubjectId: number,
++  ): Promise<TeacherSubject> {
++    return this.teacherSubjectService.deleteTeacherSubject(teacherSubjectId);
++  }
++}

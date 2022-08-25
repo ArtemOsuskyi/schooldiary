@@ -43,7 +43,7 @@ export class StudyCourse {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'class_id', referencedColumnName: 'id' })
-  class: StudyClass;
+  studyClass: StudyClass;
 
   @ManyToOne(() => StudyYear)
   @JoinColumn({ name: 'study_year_id', referencedColumnName: 'id' })
