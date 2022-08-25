@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiHideProperty, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { StudyClassCreateDto } from './dtos/studyClass-create.dto';
 import { StudyClass } from '../db/entities';
 import { StudyClassService } from './studyClass.service';

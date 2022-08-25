@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsISO8601, IsNumber, IsString, Length } from 'class-validator';
+import { IsISO8601, IsNumber, IsString, Length } from 'class-validator';
 import { DateSchedule } from '../../db/entities';
 
 export class HomeworkCreateBodyDto {

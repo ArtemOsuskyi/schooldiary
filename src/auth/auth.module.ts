@@ -9,6 +9,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import * as dotenv from 'dotenv';
 import { StudentModule } from '../student/student.module';
 import { TeacherModule } from '../teacher/teacher.module';
+
 dotenv.config();
 
 @Module({

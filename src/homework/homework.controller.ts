@@ -6,5 +6,6 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('homework')
 export class HomeworkController {
   constructor(private readonly homeworkService: HomeworkService) {}
+
   //TODO: homework routes
 }

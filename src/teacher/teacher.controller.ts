@@ -1,11 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { Teacher } from '../db/entities';
 import { TeacherService } from './teacher.service';
-import {
-  TeacherCreateBodyDto,
-  TeacherCreateDto,
-} from './dtos/teacher-create-dto';
+import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
 
 @ApiTags('teacher')
 @Controller('teacher')

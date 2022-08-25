@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { SubjectService } from './subject.service';
 import { Subject } from '../db/entities';
 import { SubjectCreateBodyDto } from './dtos/subject-create.dto';
