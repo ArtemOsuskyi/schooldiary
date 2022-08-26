@@ -14,6 +14,11 @@ export class SubjectController {
     return this.subjectService.getSubject(subjectId);
   }
 
+  @Get('/getAll')
+  async getAllSubjects(): Promise<Subject[]> {
+    return this.subjectService.getAllSubjects();
+  }
+
   @Post('/testNames')
   async testSearchByNames(@Body() names: string[]) {
     return await this.subjectService.getTeacherBySubjects(names);

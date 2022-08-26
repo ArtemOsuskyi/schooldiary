@@ -28,6 +28,14 @@ export class SubjectService {
     return result;
   }
 
+  async getAllSubjects(): Promise<Subject[]> {
+    return await this.subjectRepository.find({
+      relations: {
+        teachers: true,
+      },
+    });
+  }
+
   async getSubject(subjectId: number): Promise<Subject> {
     const subject = await this.subjectRepository.findOne({
       where: { id: subjectId },
