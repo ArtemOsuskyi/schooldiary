@@ -14,6 +14,11 @@ export class SubjectController {
     return this.subjectService.getSubject(subjectId);
   }
 
+  @Post('/testNames')
+  async testSearchByNames(@Body() names: string[]) {
+    return await this.subjectService.getTeacherBySubjects(names);
+  }
+
   @Post('/create')
   async createSubject(
     @Body() subjectCreateDto: SubjectCreateBodyDto,

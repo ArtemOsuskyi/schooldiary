@@ -3,6 +3,7 @@ import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { Teacher } from '../db/entities';
 import { TeacherService } from './teacher.service';
 import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
+import { TeacherSearchDto } from './dtos/teacher-search.dto';
 
 @ApiTags('teacher')
 @Controller('teacher')
@@ -17,6 +18,13 @@ export class TeacherController {
   @Get(':teacherId')
   async getTeacher(@Param('teacherId') teacherId: number): Promise<Teacher> {
     return this.teacherService.getTeacher(teacherId);
+  }
+
+  @Post('/search')
+  async searchTeacher(
+    @Body() teacherSearchDto: TeacherSearchDto,
+  ): Promise<Teacher[]> {
+    return this.teacherService.searchTeacherByFilters(teacherSearchDto);
   }
 
   @ApiExcludeEndpoint()

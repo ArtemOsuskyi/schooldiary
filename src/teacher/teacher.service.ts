@@ -2,13 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { TeacherRepository } from './repos/teacher.repository';
-import { Teacher } from '../db/entities';
+import { Subject, Teacher } from '../db/entities';
 import { EntityManager } from 'typeorm';
+import { TeacherSearchDto } from './dtos/teacher-search.dto';
+import { SubjectService } from '../subject/subject.service';
 
 @Injectable()
 export class TeacherService {
   constructor(
     private readonly teacherRepository: TeacherRepository,
+    private readonly subjectService: SubjectService,
     private entityManager: EntityManager,
   ) {}
 
@@ -27,9 +30,24 @@ export class TeacherService {
     return await this.teacherRepository.getTeacherByUserId(userId);
   }
 
+  async searchTeacherByFilters(
+    teacherSearchDto: TeacherSearchDto,
+  ): Promise<Teacher[]> {
+    const { firstName, lastName, patronymic, subjects } = teacherSearchDto;
+    // const subjects = await this.subjectService.getTeacherBySubjects(teacherSearchDto.subjects)
+    return await this.teacherRepository.searchTeacherByFilters(
+      firstName,
+      lastName,
+      patronymic,
+      subjects,
+    );
+  }
+
   async getAllTeachers() {
     return await this.teacherRepository.find({
-      relations: ['subjects'],
+      relations: {
+        subjects: true,
+      },
     });
   }
 

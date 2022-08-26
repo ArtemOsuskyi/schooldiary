@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { StudyClass } from '../db/entities';
-import { StudyClassRepository } from './repository/study_class.repository';
+import { StudyClassRepository } from './repository/studyСlass.repository';
 import { StudyClassCreateDto } from './dtos/studyClass-create.dto';
 
 @Injectable()

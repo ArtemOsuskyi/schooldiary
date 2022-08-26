@@ -81,11 +81,12 @@ export class UserService {
               Subject,
               await this.subjectService.createSubject(subjectName, teacher.id),
             );
-          } else
+          } else {
+            subject.teachers.push(teacher);
             await transactionEntityManager.save(Subject, {
               ...subject,
-              teachers: [teacher],
             });
+          }
         }
         await transactionEntityManager.save(teacher);
         await transactionEntityManager.save(user);

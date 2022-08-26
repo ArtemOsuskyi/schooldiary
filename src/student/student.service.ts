@@ -75,8 +75,8 @@ export class StudentService {
     studentStudyCourses.push(studyCourse);
     return this.studentRepository.create({
       user: { id: userId },
-      first_name: firstName,
-      last_name: lastName,
+      firstName: firstName,
+      lastName: lastName,
       patronymic,
       studyCourses: studentStudyCourses,
     });

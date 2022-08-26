@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { StudyClassService } from './studyClass.service';
-import { StudyClassRepository } from './repository/study_class.repository';
+import { StudyClassRepository } from './repository/studyСlass.repository';
 import { StudyClassController } from './studyClass.controller';
 import { TypeOrmExModule } from '../db/typeorm_ex.module';
 
