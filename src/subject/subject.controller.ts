@@ -9,14 +9,14 @@ import { SubjectCreateBodyDto } from './dtos/subject-create.dto';
 export class SubjectController {
   constructor(private readonly subjectService: SubjectService) {}
 
+  @Get('getAll')
+  async getAllSubjects(): Promise<Subject[]> {
+    return this.subjectService.getAllSubjects();
+  }
+
   @Get(':subjectId')
   async getSubject(@Param('subjectId') subjectId: number): Promise<Subject> {
     return this.subjectService.getSubject(subjectId);
-  }
-
-  @Get('/getAll')
-  async getAllSubjects(): Promise<Subject[]> {
-    return this.subjectService.getAllSubjects();
   }
 
   @Post('/testNames')
