@@ -72,22 +72,6 @@ export class UserService {
           await this.teacherService.createTeacher(teacherCreateDto, user.id),
         );
         user.teacher = teacher;
-        for (const subjectName of teacherCreateDto.subjects) {
-          const subject = await this.subjectService.getSubjectByName(
-            subjectName,
-          );
-          if (isNil(subject)) {
-            await transactionEntityManager.save(
-              Subject,
-              await this.subjectService.createSubject(subjectName, teacher.id),
-            );
-          } else {
-            subject.teachers.push(teacher);
-            await transactionEntityManager.save(Subject, {
-              ...subject,
-            });
-          }
-        }
         await transactionEntityManager.save(teacher);
         await transactionEntityManager.save(user);
         return await transactionEntityManager.findOne(User, {
@@ -95,9 +79,7 @@ export class UserService {
             id: user.id,
           },
           relations: {
-            teacher: {
-              subjects: true,
-            },
+            teacher: true,
           },
         });
       },

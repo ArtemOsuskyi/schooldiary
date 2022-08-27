@@ -72,11 +72,21 @@ export class SubjectService {
     return await this.subjectRepository.remove(subject);
   }
 
-  // async assignSubjectToTeacher(subjectId: number, teacherId: number) {
-  //   const subject = await this.getSubject(subjectId);
-  //   return await this.subjectRepository.update(subject, {
-  //     ...subject,
-  //     teachers: [{ id: teacherId }],
-  //   });
-  // }
+  async assignSubjectsToTeacher(subjects: string[], teacherId: number) {
+    for (const subjectName of subjects) {
+      const teacher = await this.teacherService.getTeacher(teacherId);
+      const subject = await this.getSubjectByName(subjectName);
+      if (isNil(subject)) {
+        await this.subjectRepository.save(
+          await this.createSubject(subjectName, teacherId),
+        );
+      } else {
+        subject.teachers.push(teacher);
+        await this.subjectRepository.save({
+          ...subject,
+        });
+      }
+    }
+    return await this.teacherService.getTeacher(teacherId);
+  }
 }

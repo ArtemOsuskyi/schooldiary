@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { SubjectService } from './subject.service';
 import { Subject } from '../db/entities';
 import { SubjectCreateBodyDto } from './dtos/subject-create.dto';
+import { SubjectAssignDto } from './dtos/subjectAssign-dto';
 
 @ApiTags('subject')
 @Controller('subject')
@@ -30,6 +31,15 @@ export class SubjectController {
   ): Promise<Subject> {
     const { name, teacherId } = subjectCreateDto;
     return this.subjectService.createSubject(name, teacherId);
+  }
+
+  @Post('/assignSubjectsToTeacher')
+  async assignSubjectsToTeacher(@Body() subjectAssignDto: SubjectAssignDto) {
+    const { subjects, teacherId } = subjectAssignDto;
+    return await this.subjectService.assignSubjectsToTeacher(
+      subjects,
+      teacherId,
+    );
   }
 
   @Delete(':subjectId')

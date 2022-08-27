@@ -28,13 +28,6 @@ export class TeacherCreateBodyDto {
   @IsString()
   @Length(2, 20)
   patronymic: string;
-
-  @ApiProperty({
-    required: true,
-    example: ['Math', 'Sports', 'Physics'],
-  })
-  @IsArray()
-  subjects: string[];
 }
 
 export class TeacherCreateDto {
