@@ -21,8 +21,8 @@ export class SubjectService {
 
   async createSubject(name: string, teacherId: number): Promise<Subject> {
     const subject = await this.getSubjectByName(name);
+    const teacher = await this.teacherService.getTeacher(teacherId);
     if (!isNil(subject)) {
-      const teacher = await this.teacherService.getTeacher(teacherId);
       if (teacher.subjects.find((sub) => sub.id === subject.id)) return subject;
       subject.teachers.push(teacher);
       return await this.subjectRepository.save({
@@ -31,7 +31,7 @@ export class SubjectService {
     } else
       return await this.subjectRepository.save({
         name,
-        teachers: [{ id: teacherId }],
+        teachers: [teacher],
       });
   }
 

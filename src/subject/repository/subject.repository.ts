@@ -9,11 +9,7 @@ export class SubjectRepository extends Repository<Subject> {
     return await this.findOne({
       where: { name },
       relations: {
-        teachers: {
-          firstName: true,
-          lastName: true,
-          patronymic: true,
-        },
+        teachers: true,
       },
     });
   }
