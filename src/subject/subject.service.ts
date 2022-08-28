@@ -9,7 +9,6 @@ import { SubjectRepository } from './repository/subject.repository';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { TeacherService } from '../teacher/teacher.service';
 import { In } from 'typeorm';
-import { intersectionBy } from 'lodash';
 import { SubjectSearchDto } from './dtos/subject-search.dto';
 
 @Injectable()
@@ -21,12 +20,19 @@ export class SubjectService {
   ) {}
 
   async createSubject(name: string, teacherId: number): Promise<Subject> {
-    const result = await this.subjectRepository.save({
-      name,
-      teachers: [{ id: teacherId }],
-    });
-    console.log(result);
-    return result;
+    const subject = await this.getSubjectByName(name);
+    if (subject.teachers.length > 0) {
+      const teacher = await this.teacherService.getTeacher(teacherId);
+      if (teacher.subjects.find((sub) => sub.id === subject.id)) return subject;
+      subject.teachers.push(teacher);
+      return await this.subjectRepository.save({
+        ...subject,
+      });
+    } else
+      return await this.subjectRepository.save({
+        name,
+        teachers: [{ id: teacherId }],
+      });
   }
 
   async getAllSubjects(): Promise<Subject[]> {
