@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { Teacher } from '../db/entities';
 import { TeacherService } from './teacher.service';
-import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
+import { TeacherCreateBodyDto } from './dtos/teacher-create.dto';
 import { TeacherSearchDto } from './dtos/teacher-search.dto';
 
 @ApiTags('teacher')

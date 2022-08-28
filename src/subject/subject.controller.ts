@@ -3,7 +3,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { SubjectService } from './subject.service';
 import { Subject } from '../db/entities';
 import { SubjectCreateBodyDto } from './dtos/subject-create.dto';
-import { SubjectAssignDto } from './dtos/subjectAssign-dto';
+import { SubjectAssignDto } from './dtos/subject-assign.dto';
+import { SubjectSearchDto } from './dtos/subject-search.dto';
 
 @ApiTags('subject')
 @Controller('subject')
@@ -40,6 +41,11 @@ export class SubjectController {
       subjects,
       teacherId,
     );
+  }
+
+  @Post('/search')
+  async searchObjects(@Body() subjectSearchDto: SubjectSearchDto) {
+    return await this.subjectService.searchSubject(subjectSearchDto);
   }
 
   @Delete(':subjectId')

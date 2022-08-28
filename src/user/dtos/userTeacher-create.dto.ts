@@ -4,7 +4,7 @@ import { RegisterBodyDto, RegisterDto } from '../../auth/dtos/register-dto';
 import {
   TeacherCreateBodyDto,
   TeacherCreateDto,
-} from '../../teacher/dtos/teacher-create-dto';
+} from '../../teacher/dtos/teacher-create.dto';
 
 export class UserTeacherCreateBodyDto {
   @ApiProperty({

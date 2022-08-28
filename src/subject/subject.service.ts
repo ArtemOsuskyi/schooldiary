@@ -10,6 +10,7 @@ import { isNil } from '@nestjs/common/utils/shared.utils';
 import { TeacherService } from '../teacher/teacher.service';
 import { In } from 'typeorm';
 import { intersectionBy } from 'lodash';
+import { SubjectSearchDto } from './dtos/subject-search.dto';
 
 @Injectable()
 export class SubjectService {
@@ -20,7 +21,7 @@ export class SubjectService {
   ) {}
 
   async createSubject(name: string, teacherId: number): Promise<Subject> {
-    const result = await this.subjectRepository.create({
+    const result = await this.subjectRepository.save({
       name,
       teachers: [{ id: teacherId }],
     });
@@ -58,13 +59,16 @@ export class SubjectService {
         teachers: true,
       },
     });
-    // console.log(result);
     result.reduce((acc, currentValue) => {
       console.log(currentValue);
-
       return acc;
     }, []);
     return result;
+  }
+
+  async searchSubject(subjectSearchDto: SubjectSearchDto) {
+    const { subjectName, teacherId } = subjectSearchDto;
+    return this.subjectRepository.searchSubject(subjectName, teacherId);
   }
 
   async deleteSubject(subjectId: number): Promise<Subject> {

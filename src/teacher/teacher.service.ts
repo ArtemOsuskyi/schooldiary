@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TeacherCreateBodyDto } from './dtos/teacher-create-dto';
+import { TeacherCreateBodyDto } from './dtos/teacher-create.dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { TeacherRepository } from './repos/teacher.repository';
 import { Subject, Teacher } from '../db/entities';

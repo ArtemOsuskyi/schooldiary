@@ -11,7 +11,7 @@ import { StudentService } from '../student/student.service';
 import { Roles } from '../db/enums/roles.enum';
 import * as bcrypt from 'bcrypt';
 import { TeacherService } from '../teacher/teacher.service';
-import { TeacherCreateBodyDto } from '../teacher/dtos/teacher-create-dto';
+import { TeacherCreateBodyDto } from '../teacher/dtos/teacher-create.dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { EntityManager } from 'typeorm';
 import { SubjectService } from '../subject/subject.service';

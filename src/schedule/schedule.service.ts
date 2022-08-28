@@ -28,7 +28,7 @@ export class ScheduleService {
       async (transactionEntityManager) => {
         const existingDateSchedule =
           await this.dateScheduleService.getDateScheduleByDate(date);
-        const dateSchedule = transactionEntityManager.create(
+        const dateSchedule = await transactionEntityManager.save(
           DateSchedule,
           isNil(existingDateSchedule)
             ? transactionEntityManager.create(DateSchedule, {
@@ -40,7 +40,9 @@ export class ScheduleService {
           StudyCourse,
           {
             where: { id: studyCourseId },
-            relations: ['students'],
+            relations: {
+              students: true,
+            },
           },
         );
         return await transactionEntityManager.save(Schedule, {
@@ -58,6 +60,7 @@ export class ScheduleService {
       where: { id: scheduleId },
       relations: {
         studyCourse: true,
+        dateSchedule: true,
       },
     });
     if (isNil(schedule)) throw new NotFoundException('Schedule not found');

@@ -9,11 +9,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class DateScheduleController {
   constructor(private readonly dateScheduleService: DateScheduleService) {}
 
-  @Get(':scheduleId')
+  @Get(':dateScheduleId')
   async getSchedule(
-    @Param('scheduleId') scheduleId: number,
+    @Param('dateScheduleId') dateScheduleId: number,
   ): Promise<DateSchedule> {
-    return this.dateScheduleService.getDateSchedule(scheduleId);
+    return this.dateScheduleService.getDateSchedule(dateScheduleId);
   }
 
   @Post('/create')
