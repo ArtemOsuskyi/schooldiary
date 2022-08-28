@@ -86,16 +86,7 @@ export class SubjectService {
     for (const subjectName of subjects) {
       const teacher = await this.teacherService.getTeacher(teacherId);
       const subject = await this.getSubjectByName(subjectName);
-      if (isNil(subject)) {
-        await this.subjectRepository.save(
-          await this.createSubject(subjectName, teacherId),
-        );
-      } else {
-        subject.teachers.push(teacher);
-        await this.subjectRepository.save({
-          ...subject,
-        });
-      }
+      await this.createSubject(subjectName, teacherId);
     }
     return await this.teacherService.getTeacher(teacherId);
   }
