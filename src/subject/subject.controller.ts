@@ -1,10 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SubjectService } from './subject.service';
 import { Subject } from '../db/entities';
 import { SubjectCreateBodyDto } from './dtos/subject-create.dto';
 import { SubjectAssignDto } from './dtos/subject-assign.dto';
 import { SubjectSearchDto } from './dtos/subject-search.dto';
+import { SubjectEditDto } from './dtos/subject-edit.dto';
 
 @ApiTags('subject')
 @Controller('subject')
@@ -34,6 +43,14 @@ export class SubjectController {
     return this.subjectService.createSubject(name, teacherId);
   }
 
+  @Patch('/edit/:subjectId')
+  async editSubject(
+    @Param('subjectId') subjectId: number,
+    @Body() subjectEditDto: SubjectEditDto,
+  ) {
+    return this.subjectService.editSubject(subjectId, subjectEditDto);
+  }
+
   @Post('/assignSubjectsToTeacher')
   async assignSubjectsToTeacher(@Body() subjectAssignDto: SubjectAssignDto) {
     const { subjects, teacherId } = subjectAssignDto;
@@ -48,7 +65,7 @@ export class SubjectController {
     return await this.subjectService.searchSubject(subjectSearchDto);
   }
 
-  @Delete(':subjectId')
+  @Delete('/delete/:subjectId')
   async deleteSubject(@Param('subjectId') subjectId: number): Promise<Subject> {
     return this.subjectService.deleteSubject(subjectId);
   }

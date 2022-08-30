@@ -10,6 +10,7 @@ import { isNil } from '@nestjs/common/utils/shared.utils';
 import { TeacherService } from '../teacher/teacher.service';
 import { In } from 'typeorm';
 import { SubjectSearchDto } from './dtos/subject-search.dto';
+import { SubjectEditDto } from './dtos/subject-edit.dto';
 
 @Injectable()
 export class SubjectService {
@@ -54,6 +55,20 @@ export class SubjectService {
     return subject;
   }
 
+  async editSubject(subjectId: number, subjectEditDto: SubjectEditDto) {
+    const subject = await this.getSubject(subjectId);
+    const teacher = await this.teacherService.getTeacher(
+      subjectEditDto.teacherId,
+    );
+    if (!subject.teachers.find((teach) => teach.id === teacher.id)) {
+      subject.teachers.push(teacher);
+    }
+    return await this.subjectRepository.save({
+      ...subject,
+      ...subjectEditDto,
+    });
+  }
+
   async getSubjectByName(name: string): Promise<Subject> {
     return this.subjectRepository.getSubjectByName(name);
   }
@@ -84,8 +99,6 @@ export class SubjectService {
 
   async assignSubjectsToTeacher(subjects: string[], teacherId: number) {
     for (const subjectName of subjects) {
-      const teacher = await this.teacherService.getTeacher(teacherId);
-      const subject = await this.getSubjectByName(subjectName);
       await this.createSubject(subjectName, teacherId);
     }
     return await this.teacherService.getTeacher(teacherId);

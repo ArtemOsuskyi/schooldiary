@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { DateSchedule } from '../db/entities';
 import { DateScheduleService } from './dateSchedule.service';
 import { DateScheduleCreateBodyDto } from './dtos/dateSchedule-create.dto';
@@ -21,5 +21,12 @@ export class DateScheduleController {
     @Body() dateScheduleCreateDto: DateScheduleCreateBodyDto,
   ): Promise<DateSchedule> {
     return this.dateScheduleService.createDateSchedule(dateScheduleCreateDto);
+  }
+
+  @Delete('/delete/:dateScheduleId')
+  async deleteDateSchedule(
+    @Param('dateScheduleId') dateScheduleId: number,
+  ): Promise<DateSchedule> {
+    return this.dateScheduleService.deleteDateSchedule(dateScheduleId);
   }
 }

@@ -3,7 +3,7 @@ import { RegisterBodyDto, RegisterDto } from '../../auth/dtos/register-dto';
 import {
   StudentCreateBodyDto,
   StudentCreateDto,
-} from '../../student/dtos/student-create-dto';
+} from '../../student/dtos/student-create.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserStudentCreateBodyDto {

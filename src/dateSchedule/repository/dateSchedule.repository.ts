@@ -8,6 +8,9 @@ export class DateScheduleRepository extends Repository<DateSchedule> {
     return this.findOne({
       where: { id: dateScheduleId },
       relations: {
+        schedule: {
+          subject: true,
+        },
         homework: true,
         NAs: true,
         grades: true,

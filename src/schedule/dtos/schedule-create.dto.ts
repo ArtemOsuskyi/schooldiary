@@ -13,6 +13,19 @@ export class ScheduleCreateBodyDto {
 
   @ApiProperty({
     required: true,
+    example: 1,
+  })
+  @IsNumber()
+  teacherId: number;
+
+  @ApiProperty({
+    required: true,
+    example: 'Math',
+  })
+  subjectName: string;
+
+  @ApiProperty({
+    required: true,
     example: nowDateIso,
   })
   @IsISO8601()

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ScheduleService } from './schedule.service';
 import { Schedule } from '../db/entities';
@@ -21,5 +21,12 @@ export class ScheduleController {
     @Body() scheduleCreateDto: ScheduleCreateBodyDto,
   ): Promise<Schedule> {
     return this.scheduleService.createSchedule(scheduleCreateDto);
+  }
+
+  @Delete('/delete/:scheduleId')
+  async deleteSchedule(
+    @Param('scheduleId') scheduleId: number,
+  ): Promise<Schedule> {
+    return this.scheduleService.deleteSchedule(scheduleId);
   }
 }

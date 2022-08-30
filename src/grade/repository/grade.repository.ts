@@ -2,49 +2,32 @@ import { FindManyOptions, Repository } from 'typeorm';
 import { Grade } from '../../db/entities';
 import { GradeType } from '../../db/enums/grade_type.enum';
 import { CustomRepository } from '../../db/typeorm_ex.decorator';
+import { isNil } from '@nestjs/common/utils/shared.utils';
 
 @CustomRepository(Grade)
 export class GradeRepository extends Repository<Grade> {
-  async getStudentGrades(
-    studentId: number,
-    options?: FindManyOptions<Grade>,
-  ): Promise<Grade[]> {
+  async searchGrades(
+    value?: number,
+    gradeType?: GradeType,
+    studentId?: number,
+    subjectName?: string,
+  ) {
     return await this.find({
       where: {
-        student: { id: studentId },
+        ...(!isNil(value) && { value }),
+        ...(!isNil(gradeType) && { gradeType }),
+        ...(!isNil(studentId) && { student: { id: studentId } }),
+        ...(!isNil(subjectName) && {
+          dateSchedule: { schedule: { subject: { name: subjectName } } },
+        }),
       },
-    });
-  }
-
-  async getStudentGradesByType(
-    studentId: number,
-    gradeType: GradeType,
-  ): Promise<Grade[]> {
-    return await this.getStudentGrades(studentId, {
-      where: {
-        gradeType: gradeType,
-      },
-    });
-  }
-
-  async getStudentGradesByValue(
-    studentId: number,
-    value: number,
-  ): Promise<Grade[]> {
-    return await this.getStudentGrades(studentId, {
-      where: {
-        value,
-      },
-    });
-  }
-
-  async getStudentGradesByDate(
-    studentId: number,
-    date: Date,
-  ): Promise<Grade[]> {
-    return await this.getStudentGrades(studentId, {
-      where: {
-        dateSchedule: { date },
+      relations: {
+        student: true,
+        dateSchedule: {
+          schedule: {
+            subject: true,
+          },
+        },
       },
     });
   }

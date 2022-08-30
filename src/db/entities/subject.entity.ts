@@ -14,7 +14,7 @@ export class Subject {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
 
-  @Column({ name: 'name', type: 'varchar', nullable: false })
+  @Column({ name: 'name', type: 'varchar', nullable: false, unique: true })
   name: string;
 
   @ManyToMany(() => Teacher, (teacher) => teacher.subjects, {

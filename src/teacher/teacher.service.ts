@@ -6,6 +6,7 @@ import { Subject, Teacher } from '../db/entities';
 import { EntityManager } from 'typeorm';
 import { TeacherSearchDto } from './dtos/teacher-search.dto';
 import { SubjectService } from '../subject/subject.service';
+import { TeacherEditDto } from './dtos/teacher-edit.dto';
 
 @Injectable()
 export class TeacherService {
@@ -24,6 +25,30 @@ export class TeacherService {
     });
     if (isNil(teacher)) throw new NotFoundException('Teacher not found');
     return teacher;
+  }
+
+  async editTeacher(teacherId: number, teacherEditDto: TeacherEditDto) {
+    const teacher = await this.getTeacher(teacherId);
+    const subjects = [] as Subject[];
+    if (!isNil(teacherEditDto.subjectIds)) {
+      for (const subjectId of teacherEditDto.subjectIds) {
+        const subject = await this.subjectService.getSubject(subjectId);
+        console.log(subject);
+        subjects.push(subject);
+        console.log(subjects);
+      }
+      return await this.teacherRepository.save({
+        ...teacher,
+        ...teacherEditDto,
+        subjects: subjects,
+      });
+    } else {
+      return await this.teacherRepository.save({
+        ...teacher,
+        ...teacherEditDto,
+        subjects: teacher.subjects,
+      });
+    }
   }
 
   async getTeacherByUserId(userId: number): Promise<Teacher> {

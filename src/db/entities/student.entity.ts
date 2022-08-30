@@ -47,7 +47,7 @@ export class Student {
   })
   NAs: NA[];
 
-  @CreateDateColumn({ default: nowDate })
+  @CreateDateColumn({ default: nowDate, select: false })
   createdAt: Date;
 
   @UpdateDateColumn({ default: nowDate })

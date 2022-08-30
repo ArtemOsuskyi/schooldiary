@@ -12,8 +12,8 @@ export class StudentRepository extends Repository<Student> {
   ): Promise<Student[]> {
     return this.find({
       where: {
-        ...(!isNil(firstName) && { first_name: ILike(firstName) }),
-        ...(!isNil(lastName) && { last_name: ILike(lastName) }),
+        ...(!isNil(firstName) && { firstName: ILike(firstName) }),
+        ...(!isNil(lastName) && { lastName: ILike(lastName) }),
         ...(!isNil(patronymic) && { patronymic: ILike(patronymic) }),
       },
     });

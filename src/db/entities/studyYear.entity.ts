@@ -15,10 +15,10 @@ export class StudyYear {
   id: number;
 
   @Column({ name: 'start_date', type: 'date' })
-  start_date: Date;
+  startDate: Date;
 
   @Column({ name: 'end_date', type: 'date' })
-  end_date: Date;
+  endDate: Date;
 
   @OneToMany(() => StudyCourse, (studyCourse) => studyCourse.studyYear, {
     cascade: true,

@@ -29,12 +29,26 @@ export class NaService {
     });
   }
 
+  async getAllNAs(): Promise<NA[]> {
+    return this.naRepository.find({
+      relations: {
+        student: true,
+        dateSchedule: true,
+      },
+    });
+  }
+
   async getNa(naId: number): Promise<NA> {
     const na = await this.naRepository.findOne({
       where: { id: naId },
     });
-    if (isNil(na)) throw new NotFoundException();
+    if (isNil(na)) throw new NotFoundException('NA not found');
     return na;
+  }
+
+  async deleteNa(naId: number): Promise<NA> {
+    const na = await this.getNa(naId);
+    return await this.naRepository.remove(na);
   }
 
   async assignNaToStudent(
@@ -48,13 +62,5 @@ export class NaService {
     student.NAs = naToUpdate;
     await this.studentRepository.save(student);
     return na;
-  }
-
-  async getStudentNa(studentId: number): Promise<NA[]> {
-    return await this.naRepository.getStudentNa(studentId);
-  }
-
-  async getStudentNaByDate(studentId: number, date: Date): Promise<NA[]> {
-    return await this.naRepository.getStudentNaByDate(studentId, date);
   }
 }

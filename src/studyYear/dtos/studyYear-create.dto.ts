@@ -8,7 +8,7 @@ export class StudyYearCreateBodyDto {
     example: '2022-09-01', //YYYY-MM-DD
     required: true,
   })
-  start_date: Date;
+  startDate: Date;
 
   @IsISO8601()
   @IsNotEmpty()
@@ -16,7 +16,7 @@ export class StudyYearCreateBodyDto {
     example: '2023-05-25',
     required: true,
   })
-  end_date: Date;
+  endDate: Date;
 }
 
 export class StudyYearCreateDto {

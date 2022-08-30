@@ -1,8 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StudyYearService } from './studyYear.service';
 import { StudyYearCreateBodyDto } from './dtos/studyYear-create.dto';
 import { StudyYear } from '../db/entities';
+import { StudyYearEditDto } from './dtos/studyYear-edit.dto';
 
 @ApiTags('studyYear')
 @Controller('studyYear')
@@ -26,6 +35,17 @@ export class StudyYearController {
     @Body() createStudyYearDto: StudyYearCreateBodyDto,
   ): Promise<StudyYear> {
     return await this.studyYearService.createStudyYear(createStudyYearDto);
+  }
+
+  @Patch('/edit/:studyYearId')
+  async editStudyYear(
+    @Param('studyYearId') studyYearId: number,
+    @Body() studyYearEditDto: StudyYearEditDto,
+  ): Promise<StudyYear> {
+    return await this.studyYearService.editStudyYear(
+      studyYearId,
+      studyYearEditDto,
+    );
   }
 
   @Delete(':studyYearId')

@@ -5,12 +5,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { isNil } from '@nestjs/common/utils/shared.utils';
-import { StudentCreateBodyDto } from './dtos/student-create-dto';
+import { StudentCreateBodyDto } from './dtos/student-create.dto';
 import { StudentRepository } from './repos/student.repository';
 import { Student, StudyCourse } from '../db/entities';
 import { StudyCourseService } from '../studyCourse/studyCourse.service';
 import { EntityManager } from 'typeorm';
 import { StudentSearchByFullNameDto } from './dtos/student-searchByFullName.dto';
+import { StudentEditDto } from './dtos/student-edit.dto';
 
 @Injectable()
 export class StudentService {
@@ -28,7 +29,9 @@ export class StudentService {
         studyCourses: {
           studyClass: true,
         },
-        grades: true,
+        grades: {
+          dateSchedule: true,
+        },
         NAs: true,
         user: true,
       },
@@ -79,6 +82,18 @@ export class StudentService {
       lastName: lastName,
       patronymic,
       studyCourses: studentStudyCourses,
+    });
+  }
+
+  async editStudent(
+    studentId: number,
+    studentEditDto: StudentEditDto,
+  ): Promise<Student> {
+    const student = await this.getStudent(studentId);
+    // const {firstName, lastName, patronymic, studyYearId, studyClassId} = studentEditDto
+    return await this.studentRepository.save({
+      ...student,
+      ...studentEditDto,
     });
   }
 

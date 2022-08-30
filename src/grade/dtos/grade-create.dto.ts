@@ -1,6 +1,7 @@
 import { IsEnum, IsISO8601, IsNumber, Max, Min } from 'class-validator';
 import { GradeType } from '../../db/enums/grade_type.enum';
 import { ApiProperty } from '@nestjs/swagger';
+import { nowDateIso } from '../../constants';
 
 export class GradeCreateBodyDto {
   @ApiProperty({
@@ -21,10 +22,10 @@ export class GradeCreateBodyDto {
 
   @ApiProperty({
     required: true,
-    example: '2022-08-16', //YYYY-MM-DD
+    example: 1, //YYYY-MM-DD
   })
-  @IsISO8601()
-  date: Date;
+  @IsNumber()
+  dateScheduleId: number;
 
   @ApiProperty({
     required: true,

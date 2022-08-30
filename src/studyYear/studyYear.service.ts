@@ -7,6 +7,7 @@ import { StudyYear } from '../db/entities';
 import { StudyYearRepository } from './repository/studyYear.repository';
 import { StudyYearCreateBodyDto } from './dtos/studyYear-create.dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { StudyYearEditDto } from './dtos/studyYear-edit.dto';
 
 @Injectable()
 export class StudyYearService {
@@ -19,14 +20,30 @@ export class StudyYearService {
   async createStudyYear(
     studyYearCreateDto: StudyYearCreateBodyDto,
   ): Promise<StudyYear> {
-    const { start_date, end_date } = studyYearCreateDto;
-    if (start_date > end_date)
+    const { startDate, endDate } = studyYearCreateDto;
+    if (startDate > endDate)
       throw new BadRequestException(
         'Start date cannot be greater than end date',
       );
     return await this.studyYearRepository.save({
-      start_date,
-      end_date,
+      startDate,
+      endDate,
+    });
+  }
+
+  async editStudyYear(
+    studyYearId: number,
+    studyYearEditDto: StudyYearEditDto,
+  ): Promise<StudyYear> {
+    const studyYear = await this.getStudyYear(studyYearId);
+    const { startDate, endDate } = studyYearEditDto;
+    if (startDate > endDate)
+      throw new BadRequestException(
+        'Start date cannot be greater than end date',
+      );
+    return this.studyYearRepository.save({
+      ...studyYear,
+      ...studyYearEditDto,
     });
   }
 

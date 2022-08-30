@@ -6,7 +6,7 @@ import {
 import { Student, Subject, Teacher, User } from '../db/entities';
 import { UserRepository } from './repository/user.repository';
 import { RegisterBodyDto } from '../auth/dtos/register-dto';
-import { StudentCreateBodyDto } from '../student/dtos/student-create-dto';
+import { StudentCreateBodyDto } from '../student/dtos/student-create.dto';
 import { StudentService } from '../student/student.service';
 import { Roles } from '../db/enums/roles.enum';
 import * as bcrypt from 'bcrypt';

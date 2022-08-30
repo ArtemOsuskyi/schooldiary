@@ -1,9 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { StudentService } from './student.service';
 import { Student } from '../db/entities';
-import { StudentCreateBodyDto } from './dtos/student-create-dto';
+import { StudentCreateBodyDto } from './dtos/student-create.dto';
 import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { StudentSearchByFullNameDto } from './dtos/student-searchByFullName.dto';
+import { StudentEditDto } from './dtos/student-edit.dto';
 
 @ApiTags('student')
 @Controller('student')
@@ -47,6 +56,14 @@ export class StudentController {
     @Param('studyYearId') studyYearId: number,
   ): Promise<Student[]> {
     return this.studentService.getStudentsByStudyYear(studyYearId);
+  }
+
+  @Patch('/edit/:studentId')
+  async editStudent(
+    @Param('studentId') studentId: number,
+    @Body() studentEditDto: StudentEditDto,
+  ): Promise<Student> {
+    return this.studentService.editStudent(studentId, studentEditDto);
   }
 
   @ApiExcludeEndpoint()

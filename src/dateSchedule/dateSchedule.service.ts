@@ -36,4 +36,9 @@ export class DateScheduleService {
       },
     });
   }
+
+  async deleteDateSchedule(dateScheduleId: number): Promise<DateSchedule> {
+    const dateSchedule = await this.getDateSchedule(dateScheduleId);
+    return await this.dateScheduleRepository.remove(dateSchedule);
+  }
 }
