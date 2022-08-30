@@ -40,7 +40,10 @@ export class StudyCourseService {
 
   async getAllStudyCourses(): Promise<StudyCourse[]> {
     return this.studyCourseRepository.find({
-      relations: ['students'],
+      relations: {
+        studyClass: true,
+        studyYear: true,
+      },
     });
   }
 
