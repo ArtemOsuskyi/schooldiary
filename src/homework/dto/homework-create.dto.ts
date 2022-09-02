@@ -12,7 +12,7 @@ export class HomeworkCreateBodyDto {
 
   @ApiProperty({
     required: true,
-    example: nowDateIso + 1,
+    example: nowDateIso,
   })
   @IsISO8601()
   deadline: Date;

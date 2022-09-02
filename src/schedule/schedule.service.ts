@@ -13,6 +13,7 @@ import { isNil } from '@nestjs/common/utils/shared.utils';
 import { EntityManager } from 'typeorm';
 import { TeacherService } from '../teacher/teacher.service';
 import { SubjectService } from '../subject/subject.service';
+import { ScheduleEditDto } from './dtos/schedule-edit.dto';
 
 @Injectable()
 export class ScheduleService {
@@ -39,6 +40,7 @@ export class ScheduleService {
       async (transactionEntityManager) => {
         const teacher = await this.teacherService.getTeacher(teacherId);
         const subject = await this.subjectService.getSubjectByName(subjectName);
+        const dateSchedules = [] as DateSchedule[];
         const existingDateSchedule =
           await this.dateScheduleService.getDateScheduleByDate(date);
         const newDateSchedule = await transactionEntityManager.save(
@@ -49,6 +51,7 @@ export class ScheduleService {
               })
             : existingDateSchedule,
         );
+        dateSchedules.push(newDateSchedule);
         const studyCourse = await transactionEntityManager.findOne(
           StudyCourse,
           {
@@ -58,27 +61,43 @@ export class ScheduleService {
             },
           },
         );
-        const schedule = transactionEntityManager.create(Schedule, {
+        return await transactionEntityManager.save(Schedule, {
           teacher,
           subject,
           studyCourse,
-          dateSchedule: [],
+          dateSchedule: dateSchedules,
           lessonNumber,
           weekday,
         });
-        schedule.dateSchedule.push(newDateSchedule);
-        return await transactionEntityManager.save(Schedule, {
-          ...schedule,
-        });
       },
     );
+  }
+
+  async editSchedule(
+    scheduleId: number,
+    editScheduleDto: ScheduleEditDto,
+  ): Promise<Schedule> {
+    const { subjectId, weekday, lessonNumber, teacherId } = editScheduleDto;
+    const schedule = await this.getSchedule(scheduleId);
+
+    return await this.scheduleRepository.save({
+      ...schedule,
+      ...editScheduleDto,
+      teacher: { id: teacherId ?? schedule.teacher.id },
+      subject: { id: subjectId ?? schedule.subject.id },
+      weekday: weekday ?? schedule.weekday,
+      lessonNumber: lessonNumber ?? schedule.lessonNumber,
+    });
   }
 
   async getSchedule(scheduleId: number): Promise<Schedule> {
     const schedule = await this.scheduleRepository.findOne({
       where: { id: scheduleId },
       relations: {
-        studyCourse: true,
+        studyCourse: {
+          studyYear: true,
+          studyClass: true,
+        },
         dateSchedule: true,
         teacher: true,
         subject: true,
@@ -86,21 +105,6 @@ export class ScheduleService {
     });
     if (isNil(schedule)) throw new NotFoundException('Schedule not found');
     return schedule;
-  }
-
-  async getScheduleByClassAndDate(classId: number, date: Date) {
-    return await this.scheduleRepository.find({
-      where: {
-        studyCourse: {
-          studyClass: { id: classId },
-        },
-        dateSchedule: { date },
-      },
-      relations: {
-        studyCourse: true,
-        dateSchedule: true,
-      },
-    });
   }
 
   async deleteSchedule(scheduleId: number): Promise<Schedule> {

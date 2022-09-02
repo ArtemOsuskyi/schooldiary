@@ -1,7 +1,6 @@
-import { IsEnum, IsISO8601, IsNumber, Max, Min } from 'class-validator';
+import { IsEnum, IsNumber, Max, Min } from 'class-validator';
 import { GradeType } from '../../db/enums/grade_type.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { nowDateIso } from '../../constants';
 
 export class GradeCreateBodyDto {
   @ApiProperty({

@@ -1,4 +1,4 @@
-import { FindManyOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Grade } from '../../db/entities';
 import { GradeType } from '../../db/enums/grade_type.enum';
 import { CustomRepository } from '../../db/typeorm_ex.decorator';

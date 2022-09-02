@@ -1,18 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class SubjectEditDto {
+export class NaEditDto {
   @ApiProperty({
-    example: 'Math',
+    example: 5,
+  })
+  @IsNumber()
+  @IsOptional()
+  dateScheduleId: number;
+
+  @ApiProperty({
+    example: 'Family issues',
   })
   @IsString()
   @IsOptional()
-  name: string;
+  reason: string;
 
   @ApiProperty({
     example: 1,
   })
   @IsNumber()
   @IsOptional()
-  teacherId: number;
+  studentId: number;
 }

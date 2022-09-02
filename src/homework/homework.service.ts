@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Homework } from '../db/entities';
 import { HomeworkCreateBodyDto } from './dto/homework-create.dto';
 import { HomeworkRepository } from './repository/homework.repository';
 import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { HomeworkEditDto } from './dto/homework-edit.dto';
+import { HomeworkSearchDto } from './dto/homework-search.dto';
 
 @Injectable()
 export class HomeworkService {
@@ -39,6 +45,33 @@ export class HomeworkService {
 
   async getAllHomework(): Promise<Homework[]> {
     return await this.homeworkRepository.find();
+  }
+
+  async searchHomework(
+    homeworkSearchDto: HomeworkSearchDto,
+  ): Promise<Homework[]> {
+    return this.homeworkRepository.searchHomework(homeworkSearchDto);
+  }
+
+  async editHomework(
+    homeworkId: number,
+    homeworkEditDto: HomeworkEditDto,
+  ): Promise<Homework> {
+    const homework = await this.getHomework(homeworkId);
+    if (
+      !isNil(homeworkEditDto.deadline) &&
+      homeworkEditDto.deadline < homework.deadline
+    )
+      throw new BadRequestException('This deadline already expired');
+    return await this.homeworkRepository.save({
+      ...homework,
+      ...homeworkEditDto,
+      dateSchedule: !isNil(homeworkEditDto.date)
+        ? await this.dateScheduleService.getDateScheduleByDate(
+            homeworkEditDto.date,
+          )
+        : homework.dateSchedule,
+    });
   }
 
   async deleteHomework(homeworkId: number): Promise<Homework> {

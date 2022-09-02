@@ -28,13 +28,14 @@ export class DateScheduleService {
   }
 
   async getDateScheduleByDate(date: Date): Promise<DateSchedule> {
-    // if (isNil(dateSchedule))
-    //   return this.dateScheduleRepository.create({ date });
-    return await this.dateScheduleRepository.findOne({
+    const dateSchedule = await this.dateScheduleRepository.findOne({
       where: {
         date,
       },
     });
+    if (isNil(dateSchedule))
+      throw new NotFoundException('Date schedule not found');
+    return dateSchedule;
   }
 
   async deleteDateSchedule(dateScheduleId: number): Promise<DateSchedule> {

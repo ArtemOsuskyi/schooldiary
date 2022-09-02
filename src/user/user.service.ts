@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Student, Subject, Teacher, User } from '../db/entities';
+import { Student, Teacher, User } from '../db/entities';
 import { UserRepository } from './repository/user.repository';
 import { RegisterBodyDto } from '../auth/dtos/register-dto';
 import { StudentCreateBodyDto } from '../student/dtos/student-create.dto';
