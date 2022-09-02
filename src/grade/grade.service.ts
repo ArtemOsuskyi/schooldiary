@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Grade, Student } from '../db/entities';
+import { Grade, Student, StudyClass, StudyYear, Subject } from '../db/entities';
 import { GradeRepository } from './repository/grade.repository';
 import { GradeCreateBodyDto } from './dtos/grade-create.dto';
 import { isNil } from '@nestjs/common/utils/shared.utils';
@@ -7,6 +7,7 @@ import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 import { GradeSearchDto } from './dtos/grade-search.dto';
 import { GradeEditDto } from './dtos/grade-edit.dto';
 import { EntityManager } from 'typeorm';
+import { GradeType } from '../db/enums/grade_type.enum';
 
 @Injectable()
 export class GradeService {
@@ -17,7 +18,21 @@ export class GradeService {
   ) {}
 
   async getGrades(): Promise<Grade[]> {
-    return await this.gradeRepository.find();
+    return await this.gradeRepository.find({
+      relations: {
+        student: {
+          studyCourses: {
+            studyClass: true,
+            studyYear: true,
+          },
+        },
+        dateSchedule: {
+          schedule: {
+            subject: true,
+          },
+        },
+      },
+    });
   }
 
   async getGrade(gradeId: number): Promise<Grade> {
@@ -75,6 +90,75 @@ export class GradeService {
             })
           : grade.student,
       });
+    });
+  }
+
+  async getAverageGradesByClass(
+    classId: number,
+    subjectId: number,
+    gradeType: GradeType,
+    studyYearId: number,
+  ) {
+    return this.entityManager.transaction(async (transactionEntityManager) => {
+      const studyClass = await transactionEntityManager.findOne(StudyClass, {
+        where: { id: classId },
+      });
+      const subject = await transactionEntityManager.findOne(Subject, {
+        where: { id: subjectId },
+      });
+      const studyYear = await transactionEntityManager.findOne(StudyYear, {
+        where: { id: studyYearId },
+      });
+      const grades = await this.gradeRepository.find({
+        where: {
+          student: {
+            studyCourses: {
+              studyClass,
+              studyYear,
+            },
+          },
+          dateSchedule: {
+            schedule: {
+              subject,
+            },
+          },
+        },
+        relations: {
+          student: {
+            studyCourses: {
+              studyClass: true,
+              studyYear: true,
+            },
+          },
+          dateSchedule: {
+            schedule: {
+              subject: true,
+            },
+          },
+        },
+        select: {
+          value: true,
+          gradeType: true,
+          student: {
+            firstName: true,
+            lastName: true,
+            patronymic: true,
+            studyCourses: {
+              studyClass: {
+                name: true,
+              },
+            },
+          },
+        },
+      });
+      const averageGrade =
+        grades
+          .map((grade) => grade.value)
+          .reduce((acc, currentValue) => {
+            acc = acc + currentValue;
+            return acc;
+          }, 0) / grades.length;
+      return { grades, averageGrade };
     });
   }
 

@@ -12,7 +12,6 @@ import { GradeType } from '../enums/grade_type.enum';
 import { Student } from './student.entity';
 import { nowDate } from '../../constants';
 
-//TODO: add not null constraints to all entities
 @Entity({ name: 'grade' })
 export class Grade {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
