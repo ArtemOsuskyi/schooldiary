@@ -52,7 +52,12 @@ export class UserService {
           Student,
           await this.studentService.createStudent(studentCreateDto, user.id),
         );
-        return await transactionEntityManager.save(User, user);
+        return await transactionEntityManager.findOne(User, {
+          where: user,
+          relations: {
+            student: true,
+          },
+        });
       },
     );
   }
