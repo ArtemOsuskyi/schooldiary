@@ -34,7 +34,7 @@ export class StudentRepository extends Repository<Student> {
       .leftJoinAndSelect('student.studyCourses', 'studyCourse')
       .leftJoinAndSelect('studyCourse.studyYear', 'studyYear')
       .where(`studyYear.id = ${studyYearId}`)
-      .leftJoinAndSelect('studyCourse.class', 'class')
+      .leftJoinAndSelect('studyCourse.studyClass', 'class')
       .getMany();
   }
 }
