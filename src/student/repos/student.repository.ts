@@ -23,7 +23,7 @@ export class StudentRepository extends Repository<Student> {
     return await this.createQueryBuilder('student')
       .leftJoinAndSelect('student.studyCourses', 'studyCourse')
       .where(`studyCourse.class.id = ${classId}`)
-      .leftJoinAndSelect('studyCourse.class', 'class')
+      .leftJoinAndSelect('studyCourse.studyClass', 'class')
       .leftJoinAndSelect('studyCourse.studyYear', 'studyYear')
       .getMany();
   }
