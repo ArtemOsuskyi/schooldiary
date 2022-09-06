@@ -18,6 +18,11 @@ import { ScheduleEditDto } from './dtos/schedule-edit.dto';
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
+  @Get('/getAll')
+  async getAllSchedules(): Promise<Schedule[]> {
+    return this.scheduleService.getAllSchedules();
+  }
+
   @Get(':scheduleId')
   async getSchedule(
     @Param('scheduleId') scheduleId: number,

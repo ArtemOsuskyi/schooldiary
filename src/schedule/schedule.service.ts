@@ -27,6 +27,17 @@ export class ScheduleService {
     private entityManager: EntityManager,
   ) {}
 
+  async getAllSchedules(): Promise<Schedule[]> {
+    return await this.scheduleRepository.find({
+      relations: {
+        subject: true,
+        dateSchedule: true,
+        teacher: true,
+        studyCourse: true,
+      },
+    });
+  }
+
   async createSchedule(scheduleCreateDto: ScheduleCreateBodyDto) {
     const {
       teacherId,
