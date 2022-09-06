@@ -33,9 +33,7 @@ export class DateScheduleService {
         date,
       },
     });
-    if (isNil(dateSchedule))
-      throw new NotFoundException('Date schedule not found');
-    return dateSchedule;
+    return dateSchedule ?? null;
   }
 
   async deleteDateSchedule(dateScheduleId: number): Promise<DateSchedule> {

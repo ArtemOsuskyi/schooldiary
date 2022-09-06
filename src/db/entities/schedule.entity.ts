@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -18,7 +17,6 @@ import { Teacher } from './teacher.entity';
 import { Subject } from './subject.entity';
 
 @Entity({ name: 'schedule' })
-@Index(['teacher', 'subject'], { unique: true })
 export class Schedule {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
