@@ -120,6 +120,12 @@ export class ScheduleService {
 
   async deleteSchedule(scheduleId: number): Promise<Schedule> {
     const schedule = await this.getSchedule(scheduleId);
-    return await this.scheduleRepository.remove(schedule);
+    return this.entityManager.transaction(async (transactionEntityManager) => {
+      await transactionEntityManager.remove(
+        DateSchedule,
+        schedule.dateSchedule,
+      );
+      return await transactionEntityManager.remove(schedule);
+    });
   }
 }
