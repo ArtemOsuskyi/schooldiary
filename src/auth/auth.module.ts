@@ -17,7 +17,6 @@ dotenv.config();
     UserModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
-      property: 'user',
       session: false,
     }),
     JwtModule.register({

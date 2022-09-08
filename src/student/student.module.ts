@@ -5,12 +5,14 @@ import { StudentRepository } from './repos/student.repository';
 import { StudyCourseModule } from '../studyCourse/studyCourse.module';
 import { NaModule } from '../na/na.module';
 import { TypeOrmExModule } from '../db/typeorm_ex.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmExModule.forCustomRepository([StudentRepository]),
     forwardRef(() => StudyCourseModule),
     NaModule,
+    JwtModule,
   ],
   controllers: [StudentController],
   providers: [StudentService],

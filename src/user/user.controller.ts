@@ -4,8 +4,11 @@ import { User } from '../db/entities';
 import { UserService } from './user.service';
 import { UserStudentCreateBodyDto } from './dtos/userStudent-create.dto';
 import { UserTeacherCreateBodyDto } from './dtos/userTeacher-create.dto';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('user')
+@ApprovedRoles(Roles.ADMIN)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

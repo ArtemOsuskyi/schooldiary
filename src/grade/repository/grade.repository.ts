@@ -9,8 +9,8 @@ export class GradeRepository extends Repository<Grade> {
   async searchGrades(
     value?: number,
     gradeType?: GradeType,
-    studentId?: number,
     subjectName?: string,
+    studentId?: number,
   ) {
     return await this.find({
       where: {

@@ -12,8 +12,11 @@ import { ScheduleService } from './schedule.service';
 import { Schedule } from '../db/entities';
 import { ScheduleCreateBodyDto } from './dtos/schedule-create.dto';
 import { ScheduleEditDto } from './dtos/schedule-edit.dto';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('schedule')
+@ApprovedRoles(Roles.ADMIN)
 @Controller('schedule')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
@@ -22,7 +25,7 @@ export class ScheduleController {
   async getAllSchedules(): Promise<Schedule[]> {
     return this.scheduleService.getAllSchedules();
   }
-
+  @ApprovedRoles(Roles.TEACHER, Roles.STUDENT)
   @Get(':scheduleId')
   async getSchedule(
     @Param('scheduleId') scheduleId: number,

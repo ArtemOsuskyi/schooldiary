@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import { NaService } from './na.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -14,11 +15,19 @@ import { NA } from '../db/entities';
 import { NaSearchDto } from './dtos/na-search.dto';
 import { NaEditDto } from './dtos/na-edit.dto';
 import { NaCountDto } from './dtos/na-count.dto';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
+import { JwtService } from '@nestjs/jwt';
+import { NaSearchCurrentStudentDto } from './dtos/na-searchCurrentStudent.dto';
 
 @ApiTags('NA')
+@ApprovedRoles(Roles.TEACHER)
 @Controller('na')
 export class NaController {
-  constructor(private readonly naService: NaService) {}
+  constructor(
+    private readonly naService: NaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Get('/getAll')
   async getAllNAs(): Promise<NA[]> {
@@ -52,6 +61,16 @@ export class NaController {
   @Post('/search')
   async searchNa(@Body() naSearchDto: NaSearchDto): Promise<NA[]> {
     return this.naService.searchNa(naSearchDto);
+  }
+
+  @Post('/searchCurrentUser')
+  @ApprovedRoles(Roles.STUDENT)
+  async searchCurrentStudentNa(
+    @Req() req,
+    @Body() naSearchDto: NaSearchCurrentStudentDto,
+  ) {
+    const studentId = this.jwtService.decode(req.cookies['token'])['id'];
+    return this.naService.searchCurrentStudentNa(studentId, naSearchDto);
   }
 
   @Delete('/delete/:naId')

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { Teacher } from '../db/entities';
@@ -13,8 +14,14 @@ import { TeacherService } from './teacher.service';
 import { TeacherCreateBodyDto } from './dtos/teacher-create.dto';
 import { TeacherSearchDto } from './dtos/teacher-search.dto';
 import { TeacherEditDto } from './dtos/teacher-edit.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles-guard';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('teacher')
+@ApprovedRoles(Roles.ADMIN)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('teacher')
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
@@ -46,11 +53,6 @@ export class TeacherController {
 
   @ApiExcludeEndpoint()
   @Post('create')
-  // @ApiResponse({
-  //   status: 201,
-  //   description: 'Teacher created successfully',
-  //   type: TeacherCreateDto,
-  // })
   async createTeacher(
     @Body() createTeacherDto: TeacherCreateBodyDto,
   ): Promise<Teacher> {

@@ -9,6 +9,7 @@ import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 import { NaSearchDto } from './dtos/na-search.dto';
 import { NaEditDto } from './dtos/na-edit.dto';
 import { Between } from 'typeorm';
+import { NaSearchCurrentStudentDto } from './dtos/na-searchCurrentStudent.dto';
 
 @Injectable()
 export class NaService {
@@ -68,6 +69,14 @@ export class NaService {
 
   async searchNa(naSearchDto: NaSearchDto): Promise<NA[]> {
     const { date, subject, studentId, reason } = naSearchDto;
+    return await this.naRepository.searchNA(date, subject, studentId, reason);
+  }
+
+  async searchCurrentStudentNa(
+    studentId: number,
+    naSearchDto: NaSearchCurrentStudentDto,
+  ) {
+    const { date, subject, reason } = naSearchDto;
     return await this.naRepository.searchNA(date, subject, studentId, reason);
   }
 

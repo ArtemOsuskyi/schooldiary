@@ -1,9 +1,9 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginBodyDto } from './dtos/login-dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { User } from '../db/entities';
+import { Response } from 'express';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -14,7 +14,11 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() loginDto: LoginBodyDto,
-  ): Promise<{ accessToken: string; data: User }> {
-    return await this.authService.login(loginDto);
+    @Req() req,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const result = await this.authService.login(loginDto);
+    response.cookie('token', result.accessToken);
+    return result;
   }
 }

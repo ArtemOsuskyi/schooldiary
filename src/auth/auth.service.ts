@@ -29,7 +29,7 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.validateUser(email, password);
     if (!user) throw new UnauthorizedException();
-    const payload = { email: user.email, id: user.id };
+    const payload = { email: user.email, id: user.id, role: user.role };
     const result = {
       accessToken: this.jwtService.sign(payload),
       data: await this.userService.getUser(user.id),
@@ -46,7 +46,7 @@ export class AuthService {
     return user;
   }
 
-  async validatePassword(
+  private async validatePassword(
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {

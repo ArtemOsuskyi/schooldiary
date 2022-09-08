@@ -8,6 +8,7 @@ import { GradeSearchDto } from './dtos/grade-search.dto';
 import { GradeEditDto } from './dtos/grade-edit.dto';
 import { EntityManager } from 'typeorm';
 import { GradeType } from '../db/enums/grade_type.enum';
+import { GradeSearchCurrentStudentDto } from './dtos/grade-searchCurrentStudent.dto';
 
 @Injectable()
 export class GradeService {
@@ -56,8 +57,21 @@ export class GradeService {
     return this.gradeRepository.searchGrades(
       value,
       gradeType,
-      studentId,
       subjectName,
+      studentId,
+    );
+  }
+
+  async searchGradesForCurrentStudent(
+    studentId: number,
+    gradeSearchDto: GradeSearchCurrentStudentDto,
+  ): Promise<Grade[]> {
+    const { value, gradeType, subjectName } = gradeSearchDto;
+    return await this.gradeRepository.searchGrades(
+      value,
+      gradeType,
+      subjectName,
+      studentId,
     );
   }
 

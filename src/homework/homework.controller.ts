@@ -13,13 +13,16 @@ import { Homework } from '../db/entities';
 import { HomeworkCreateBodyDto } from './dto/homework-create.dto';
 import { HomeworkEditDto } from './dto/homework-edit.dto';
 import { HomeworkSearchDto } from './dto/homework-search.dto';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('homework')
+@ApprovedRoles(Roles.TEACHER)
 @Controller('homework')
 export class HomeworkController {
   constructor(private readonly homeworkService: HomeworkService) {}
 
-  @Get()
+  @Get('/getAll')
   async getAllHomeworks(): Promise<Homework[]> {
     return await this.homeworkService.getAllHomework();
   }

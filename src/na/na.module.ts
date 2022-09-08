@@ -5,12 +5,14 @@ import { NaController } from './na.controller';
 import { StudentModule } from '../student/student.module';
 import { DateScheduleModule } from '../dateSchedule/dateSchedule.module';
 import { TypeOrmExModule } from '../db/typeorm_ex.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmExModule.forCustomRepository([NaRepository]),
     forwardRef(() => StudentModule),
     DateScheduleModule,
+    JwtModule,
   ],
   controllers: [NaController],
   providers: [NaService],
