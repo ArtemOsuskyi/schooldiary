@@ -1,10 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { DateSchedule } from '../db/entities';
 import { DateScheduleService } from './dateSchedule.service';
 import { DateScheduleCreateBodyDto } from './dtos/dateSchedule-create.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('dateSchedule')
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('dateSchedule')
 export class DateScheduleController {
   constructor(private readonly dateScheduleService: DateScheduleService) {}

@@ -1,8 +1,8 @@
 import {
   CanActivate,
   ExecutionContext,
-  HttpException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -21,7 +21,7 @@ export class RolesGuard implements CanActivate {
     console.log(userRole, roles);
     if (roles.find((role) => role === userRole) || userRole === Roles.ADMIN)
       return true;
-    throw new HttpException('Access denied', 401);
+    throw new UnauthorizedException('Access denied');
   }
 
   private getRole(token: string) {

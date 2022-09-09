@@ -6,6 +6,7 @@ import { StudentModule } from '../student/student.module';
 import { TeacherModule } from '../teacher/teacher.module';
 import { SubjectModule } from '../subject/subject.module';
 import { TypeOrmExModule } from '../db/typeorm_ex.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TypeOrmExModule } from '../db/typeorm_ex.module';
     StudentModule,
     TeacherModule,
     SubjectModule,
+    JwtModule,
   ],
   providers: [UserService],
   controllers: [UserController],

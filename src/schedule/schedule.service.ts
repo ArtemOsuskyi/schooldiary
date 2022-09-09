@@ -14,6 +14,7 @@ import { EntityManager } from 'typeorm';
 import { TeacherService } from '../teacher/teacher.service';
 import { SubjectService } from '../subject/subject.service';
 import { ScheduleEditDto } from './dtos/schedule-edit.dto';
+import { ScheduleSearchDto } from './dtos/schedule-search.dto';
 
 @Injectable()
 export class ScheduleService {
@@ -116,6 +117,13 @@ export class ScheduleService {
     });
     if (isNil(schedule)) throw new NotFoundException('Schedule not found');
     return schedule;
+  }
+
+  async searchSchedule(
+    scheduleSearchDto: ScheduleSearchDto,
+  ): Promise<Schedule[]> {
+    const { date, className } = scheduleSearchDto;
+    return await this.scheduleRepository.searchSchedule(date, className);
   }
 
   async deleteSchedule(scheduleId: number): Promise<Schedule> {

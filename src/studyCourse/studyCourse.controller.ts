@@ -1,13 +1,24 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StudyCourseService } from './studyCourse.service';
 import { StudyCourse } from '../db/entities';
 import { StudyCourseCreateBodyDto } from './dtos/studyCourse-create.dto';
 import { StudyCourseRemoveStudentDto } from './dtos/studyCourse-removeStudent.dto';
 import { StudyCourseSearchDto } from './dtos/studyCourse-search.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('studyCourse')
 @Controller('studyCourse')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class StudyCourseController {
   constructor(private readonly studyCourseService: StudyCourseService) {}
 

@@ -7,6 +7,7 @@ import { StudyCourseModule } from '../studyCourse/studyCourse.module';
 import { TypeOrmExModule } from '../db/typeorm_ex.module';
 import { TeacherModule } from '../teacher/teacher.module';
 import { SubjectModule } from '../subject/subject.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SubjectModule } from '../subject/subject.module';
     forwardRef(() => StudyCourseModule),
     TeacherModule,
     SubjectModule,
+    JwtModule,
   ],
   controllers: [ScheduleController],
   providers: [ScheduleService],

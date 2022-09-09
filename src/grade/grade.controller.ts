@@ -22,9 +22,10 @@ import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { GradeSearchCurrentStudentDto } from './dtos/grade-searchCurrentStudent.dto';
+import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('grade')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApprovedRoles(Roles.TEACHER)
 @Controller('grade')
 export class GradeController {

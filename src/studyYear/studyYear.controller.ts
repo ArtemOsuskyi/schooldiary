@@ -6,14 +6,18 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StudyYearService } from './studyYear.service';
 import { StudyYearCreateBodyDto } from './dtos/studyYear-create.dto';
 import { StudyYear } from '../db/entities';
 import { StudyYearEditDto } from './dtos/studyYear-edit.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('studyYear')
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('studyYear')
 export class StudyYearController {
   constructor(private readonly studyYearService: StudyYearService) {}

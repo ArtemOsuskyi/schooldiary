@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { HomeworkService } from './homework.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -15,9 +16,12 @@ import { HomeworkEditDto } from './dto/homework-edit.dto';
 import { HomeworkSearchDto } from './dto/homework-search.dto';
 import { ApprovedRoles } from '../auth/decorators/role-decorator';
 import { Roles } from '../db/enums/roles.enum';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('homework')
 @ApprovedRoles(Roles.TEACHER)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('homework')
 export class HomeworkController {
   constructor(private readonly homeworkService: HomeworkService) {}

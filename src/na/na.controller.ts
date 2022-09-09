@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { NaService } from './na.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -19,9 +20,12 @@ import { ApprovedRoles } from '../auth/decorators/role-decorator';
 import { Roles } from '../db/enums/roles.enum';
 import { JwtService } from '@nestjs/jwt';
 import { NaSearchCurrentStudentDto } from './dtos/na-searchCurrentStudent.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('NA')
 @ApprovedRoles(Roles.TEACHER)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('na')
 export class NaController {
   constructor(

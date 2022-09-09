@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { Student } from '../db/entities';
@@ -13,8 +14,14 @@ import { StudentCreateBodyDto } from './dtos/student-create.dto';
 import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { StudentSearchByFullNameDto } from './dtos/student-searchByFullName.dto';
 import { StudentEditDto } from './dtos/student-edit.dto';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('student')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApprovedRoles(Roles.ADMIN)
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
