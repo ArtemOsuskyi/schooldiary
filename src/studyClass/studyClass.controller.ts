@@ -13,9 +13,12 @@ import { StudyClass } from '../db/entities';
 import { StudyClassService } from './studyClass.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-guard';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('studyClass')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@ApprovedRoles(Roles.ADMIN)
 @Controller('studyClass')
 export class StudyClassController {
   constructor(private readonly studyClassService: StudyClassService) {}
