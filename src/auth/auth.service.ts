@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginBodyDto } from './dtos/login-dto';
@@ -28,7 +24,6 @@ export class AuthService {
   ): Promise<{ accessToken: string; data: User }> {
     const { email, password } = loginDto;
     const user = await this.validateUser(email, password);
-    if (!user) throw new UnauthorizedException();
     const payload = { email: user.email, id: user.id, role: user.role };
     const result = {
       accessToken: this.jwtService.sign(payload),
@@ -54,5 +49,9 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials');
     }
     return true;
+  }
+
+  async checkToken(token: string) {
+    return await this.jwtService.verify(token);
   }
 }

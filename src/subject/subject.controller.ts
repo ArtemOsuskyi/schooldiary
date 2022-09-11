@@ -17,10 +17,13 @@ import { SubjectSearchDto } from './dtos/subject-search.dto';
 import { SubjectEditDto } from './dtos/subject-edit.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-guard';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('subject')
 @Controller('subject')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@ApprovedRoles(Roles.ADMIN)
 export class SubjectController {
   constructor(private readonly subjectService: SubjectService) {}
 

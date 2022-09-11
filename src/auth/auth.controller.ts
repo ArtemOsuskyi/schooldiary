@@ -3,7 +3,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginBodyDto } from './dtos/login-dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -20,5 +21,15 @@ export class AuthController {
     const result = await this.authService.login(loginDto);
     response.cookie('token', result.accessToken);
     return result;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/checkToken')
+  async checkToken(
+    @Req() req: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const token = req.cookies['token'];
+    return await this.authService.checkToken(token);
   }
 }
