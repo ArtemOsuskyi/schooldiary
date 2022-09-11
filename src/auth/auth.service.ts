@@ -51,7 +51,7 @@ export class AuthService {
     return true;
   }
 
-  async checkToken(token: string) {
+  async checkToken(token: string): Promise<object> {
     return await this.jwtService.verify(token);
   }
 }

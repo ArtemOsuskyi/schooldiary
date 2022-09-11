@@ -34,7 +34,7 @@ async function bootstrap() {
     credentials: true,
     methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
     preflightContinue: true,
-    origin: 'http://localhost:4200',
+    origin: ['http://localhost:4200', 'http://localhost:3000'],
   });
 
   app.use(cookieParser());

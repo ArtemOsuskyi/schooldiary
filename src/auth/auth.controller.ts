@@ -1,10 +1,17 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginBodyDto } from './dtos/login-dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Request, Response } from 'express';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -23,13 +30,18 @@ export class AuthController {
     return result;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/checkToken')
   async checkToken(
     @Req() req: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
     const token = req.cookies['token'];
-    return await this.authService.checkToken(token);
+    try {
+      return await this.authService.checkToken(token);
+    } catch (e) {
+      req.cookies['token'] = '';
+      response.clearCookie('token');
+      throw new BadRequestException('Token expired');
+    }
   }
 }
