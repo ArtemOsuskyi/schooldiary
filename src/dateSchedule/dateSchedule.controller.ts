@@ -23,6 +23,11 @@ import { Roles } from '../db/enums/roles.enum';
 export class DateScheduleController {
   constructor(private readonly dateScheduleService: DateScheduleService) {}
 
+  @Get('/getAll')
+  async getAllDateSchedules(): Promise<DateSchedule[]> {
+    return this.dateScheduleService.getAllDateSchedules();
+  }
+
   @Get(':dateScheduleId')
   async getSchedule(
     @Param('dateScheduleId') dateScheduleId: number,

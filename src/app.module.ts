@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { StudyClassModule } from './studyClass/studyClass.module';
 import { StudyYearModule } from './studyYear/studyYear.module';
 import { StudyCourseModule } from './studyCourse/studyCourse.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { StudentModule } from './student/student.module';
 import { TeacherModule } from './teacher/teacher.module';
@@ -18,33 +18,14 @@ import { SubjectModule } from './subject/subject.module';
 import { HomeworkModule } from './homework/homework.module';
 import { StudyClassController } from './studyClass/studyClass.controller';
 import { DateScheduleModule } from './dateSchedule/dateSchedule.module';
-import * as Entities from 'src/db/entities/index';
+import { typeOrmAsyncConfig } from './db/typeorm-config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const dbConnection: TypeOrmModuleOptions = {
-          type: 'postgres',
-          host: configService.get('DB_HOST'),
-          port: configService.get('DB_PORT'),
-          name: 'Admin',
-          username: configService.get('DB_USERNAME'),
-          password: configService.get('DB_PASSWORD'),
-          database: configService.get('DB_NAME'),
-          entities: Object.values(Entities),
-          synchronize: false,
-          migrations: ['db/migrations/*.ts'],
-          logging: true,
-        };
-        return dbConnection;
-      },
-    }),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     StudentModule,
     TeacherModule,
     ScheduleModule,
@@ -59,7 +40,7 @@ import * as Entities from 'src/db/entities/index';
     HomeworkModule,
     DateScheduleModule,
   ],
-  controllers: [AppController, StudyClassController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

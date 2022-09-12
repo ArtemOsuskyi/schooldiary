@@ -18,6 +18,17 @@ export class DateScheduleService {
     });
   }
 
+  async getAllDateSchedules(): Promise<DateSchedule[]> {
+    return this.dateScheduleRepository.find({
+      relations: {
+        schedule: true,
+        homework: true,
+        NAs: true,
+        grades: true,
+      },
+    });
+  }
+
   async getDateSchedule(dataScheduleId: number): Promise<DateSchedule> {
     const dateSchedule = await this.dateScheduleRepository.getDateScheduleById(
       dataScheduleId,

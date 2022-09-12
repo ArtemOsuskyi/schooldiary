@@ -25,13 +25,11 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.validateUser(email, password);
     const payload = { email: user.email, id: user.id, role: user.role };
-    const result = {
+    delete user.password;
+    return {
       accessToken: this.jwtService.sign(payload),
-      data: await this.userService.getUser(user.id),
+      data: user,
     };
-    if (result.data.teacher === null) delete result.data.teacher;
-    if (result.data.student === null) delete result.data.student;
-    return result;
   }
 
   async validateUser(email: string, password: string): Promise<User> {
