@@ -15,9 +15,12 @@ import { StudyYear } from '../db/entities';
 import { StudyYearEditDto } from './dtos/studyYear-edit.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-guard';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('studyYear')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@ApprovedRoles(Roles.ADMIN)
 @Controller('studyYear')
 export class StudyYearController {
   constructor(private readonly studyYearService: StudyYearService) {}

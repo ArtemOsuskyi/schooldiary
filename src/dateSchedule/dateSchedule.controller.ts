@@ -13,9 +13,12 @@ import { DateScheduleCreateBodyDto } from './dtos/dateSchedule-create.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-guard';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('dateSchedule')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@ApprovedRoles(Roles.STUDENT, Roles.TEACHER)
 @Controller('dateSchedule')
 export class DateScheduleController {
   constructor(private readonly dateScheduleService: DateScheduleService) {}

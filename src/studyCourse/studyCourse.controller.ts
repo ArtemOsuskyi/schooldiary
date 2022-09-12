@@ -15,10 +15,13 @@ import { StudyCourseRemoveStudentDto } from './dtos/studyCourse-removeStudent.dt
 import { StudyCourseSearchDto } from './dtos/studyCourse-search.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-guard';
+import { ApprovedRoles } from '../auth/decorators/role-decorator';
+import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('studyCourse')
 @Controller('studyCourse')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@ApprovedRoles(Roles.ADMIN)
 export class StudyCourseController {
   constructor(private readonly studyCourseService: StudyCourseService) {}
 

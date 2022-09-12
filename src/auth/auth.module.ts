@@ -21,8 +21,7 @@ dotenv.config();
     }),
     JwtModule.register({
       secret: process.env.SECRET_KEY,
-      signOptions: { expiresIn: '15s' },
-      verifyOptions: {},
+      signOptions: { expiresIn: '1h' },
     }),
     StudentModule,
     TeacherModule,

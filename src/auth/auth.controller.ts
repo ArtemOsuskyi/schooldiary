@@ -38,7 +38,7 @@ export class AuthController {
     const token = req.cookies['token'];
     try {
       return await this.authService.checkToken(token);
-    } catch (e) {
+    } catch (error) {
       req.cookies['token'] = '';
       response.clearCookie('token');
       throw new BadRequestException('Token expired');

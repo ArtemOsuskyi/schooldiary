@@ -35,7 +35,7 @@ export class NaController {
 
   @Get('/getAll')
   async getAllNAs(): Promise<NA[]> {
-    return this.naService.getAllNAs();
+    return await this.naService.getAllNAs();
   }
 
   @Get(':naId')
