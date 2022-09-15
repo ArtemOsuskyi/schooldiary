@@ -34,8 +34,10 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findUserByEmail(email);
+    console.log(user);
     if (isNil(user)) throw new BadRequestException('Wrong credentials');
     await this.validatePassword(password, user.password);
+    console.log(password, user.password);
     return user;
   }
 

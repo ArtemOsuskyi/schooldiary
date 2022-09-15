@@ -5,36 +5,31 @@ import { CustomRepository } from '../../db/typeorm_ex.decorator';
 
 @CustomRepository(Student)
 export class StudentRepository extends Repository<Student> {
-  async findStudentByFullName(
+  async searchStudents(
     firstName?: string,
     lastName?: string,
     patronymic?: string,
+    classId?: number,
+    studyYearId?: number,
   ): Promise<Student[]> {
     return this.find({
       where: {
         ...(!isNil(firstName) && { firstName: ILike(firstName) }),
         ...(!isNil(lastName) && { lastName: ILike(lastName) }),
         ...(!isNil(patronymic) && { patronymic: ILike(patronymic) }),
+        ...(!isNil(classId) && {
+          studyCourses: { studyClass: { id: classId } },
+        }),
+        ...(!isNil(studyYearId) && {
+          studyCourses: { studyYear: { id: studyYearId } },
+        }),
+      },
+      relations: {
+        studyCourses: {
+          studyClass: true,
+          studyYear: true,
+        },
       },
     });
-  }
-
-  async findStudentsByClass(classId: number): Promise<Student[]> {
-    return await this.createQueryBuilder('student')
-      .leftJoinAndSelect('student.studyCourses', 'studyCourse')
-      .where(`studyCourse.class.id = ${classId}`)
-      .leftJoinAndSelect('studyCourse.studyClass', 'class')
-      .leftJoinAndSelect('studyCourse.studyYear', 'studyYear')
-      .getMany();
-  }
-
-  async findStudentsByStudyYear(studyYearId: number): Promise<Student[]> {
-    console.log(studyYearId);
-    return await this.createQueryBuilder('student')
-      .leftJoinAndSelect('student.studyCourses', 'studyCourse')
-      .leftJoinAndSelect('studyCourse.studyYear', 'studyYear')
-      .where(`studyYear.id = ${studyYearId}`)
-      .leftJoinAndSelect('studyCourse.studyClass', 'class')
-      .getMany();
   }
 }

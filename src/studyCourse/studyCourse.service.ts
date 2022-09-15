@@ -43,6 +43,7 @@ export class StudyCourseService {
       relations: {
         studyClass: true,
         studyYear: true,
+        students: true,
       },
     });
   }

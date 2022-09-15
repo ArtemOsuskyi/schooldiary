@@ -92,20 +92,17 @@ export class UserService {
   }
 
   async getUser(userId: number): Promise<User> {
-    const user = await this.userRepository.findOne(
-      {
-        where: {
-          id: userId,
-        },
-        relations: {
-          student: {
-            studyCourses: true,
-          },
-          teacher: true,
-        },
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
       },
-      // relations: { ['student', 'student.studyCourses', 'teacher']}
-    );
+      relations: {
+        student: {
+          studyCourses: true,
+        },
+        teacher: true,
+      },
+    });
     if (isNil(user)) throw new NotFoundException("User doesn't exist");
     if (isNil(user.teacher)) delete user.teacher;
     if (isNil(user.student)) delete user.student;

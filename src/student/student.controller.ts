@@ -12,7 +12,7 @@ import { StudentService } from './student.service';
 import { Student } from '../db/entities';
 import { StudentCreateBodyDto } from './dtos/student-create.dto';
 import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { StudentSearchByFullNameDto } from './dtos/student-searchByFullName.dto';
+import { StudentSearchDto } from './dtos/student-search.dto';
 import { StudentEditDto } from './dtos/student-edit.dto';
 import { ApprovedRoles } from '../auth/decorators/role-decorator';
 import { Roles } from '../db/enums/roles.enum';
@@ -44,25 +44,11 @@ export class StudentController {
     return this.studentService.getStudent(studentId);
   }
 
-  @Get('/search/byClassId/:classId')
-  async getStudentsByClassId(
-    @Param('classId') classId: number,
+  @Post('/search')
+  async searchStudents(
+    @Body() studentSearchDto: StudentSearchDto,
   ): Promise<Student[]> {
-    return this.studentService.getStudentsByClass(classId);
-  }
-
-  @Post('/search/byFullName')
-  async getStudentsByFullName(
-    @Body() studentSearchDto: StudentSearchByFullNameDto,
-  ): Promise<Student[]> {
-    return this.studentService.getStudentsByFullName(studentSearchDto);
-  }
-
-  @Get('/search/byStudyYear/:studyYearId')
-  async getStudentsByStudyYear(
-    @Param('studyYearId') studyYearId: number,
-  ): Promise<Student[]> {
-    return this.studentService.getStudentsByStudyYear(studyYearId);
+    return this.studentService.searchStudents(studentSearchDto);
   }
 
   @Patch('/edit/:studentId')

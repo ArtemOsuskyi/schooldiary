@@ -23,6 +23,7 @@ export class Schedule {
 
   @ManyToOne(() => StudyCourse, {
     onUpdate: 'CASCADE',
+    nullable: false,
   })
   @JoinColumn({ name: 'study_course_id', referencedColumnName: 'id' })
   studyCourse: StudyCourse;

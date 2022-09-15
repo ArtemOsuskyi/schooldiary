@@ -48,7 +48,7 @@ export class TeacherController {
   async searchTeacher(
     @Body() teacherSearchDto: TeacherSearchDto,
   ): Promise<Teacher[]> {
-    return this.teacherService.searchTeacherByFilters(teacherSearchDto);
+    return this.teacherService.searchTeacher(teacherSearchDto);
   }
 
   @ApiExcludeEndpoint()

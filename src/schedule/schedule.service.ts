@@ -51,18 +51,6 @@ export class ScheduleService {
       async (transactionEntityManager) => {
         const teacher = await this.teacherService.getTeacher(teacherId);
         const subject = await this.subjectService.getSubjectByName(subjectName);
-        // const dateSchedules = [] as DateSchedule[];
-        // const existingDateSchedule =
-        //   await this.dateScheduleService.getDateScheduleByDate(date);
-        // const newDateSchedule = await transactionEntityManager.save(
-        //   DateSchedule,
-        //   isNil(existingDateSchedule)
-        //     ? transactionEntityManager.create(DateSchedule, {
-        //         date,
-        //       })
-        //     : existingDateSchedule,
-        // );
-        // dateSchedules.push(newDateSchedule);
         if (
           !teacher.subjects.find(
             (teacherSubject) => teacherSubject.name === subject.name,
@@ -75,12 +63,14 @@ export class ScheduleService {
         const studyCourse = await transactionEntityManager.findOne(
           StudyCourse,
           {
-            where: { id: studyCourseId },
-            relations: {
-              students: true,
+            where: {
+              id: studyCourseId,
             },
+            relations: { students: true, studyClass: true },
           },
         );
+        if (isNil(studyCourse))
+          throw new NotFoundException('Study course not found');
         return await transactionEntityManager.save(Schedule, {
           teacher,
           subject,
@@ -129,8 +119,14 @@ export class ScheduleService {
   async searchSchedule(
     scheduleSearchDto: ScheduleSearchDto,
   ): Promise<Schedule[]> {
-    const { className } = scheduleSearchDto;
-    return await this.scheduleRepository.searchSchedule(className);
+    const { className, dateScheduleId, teacherId, studyCourseId } =
+      scheduleSearchDto;
+    return await this.scheduleRepository.searchSchedule(
+      className,
+      dateScheduleId,
+      teacherId,
+      studyCourseId,
+    );
   }
 
   async deleteSchedule(scheduleId: number): Promise<Schedule> {

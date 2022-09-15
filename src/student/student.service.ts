@@ -10,7 +10,7 @@ import { StudentRepository } from './repos/student.repository';
 import { Student, StudyCourse } from '../db/entities';
 import { StudyCourseService } from '../studyCourse/studyCourse.service';
 import { EntityManager } from 'typeorm';
-import { StudentSearchByFullNameDto } from './dtos/student-searchByFullName.dto';
+import { StudentSearchDto } from './dtos/student-search.dto';
 import { StudentEditDto } from './dtos/student-edit.dto';
 
 @Injectable()
@@ -42,25 +42,25 @@ export class StudentService {
 
   async getAllStudents() {
     return await this.studentRepository.find({
-      relations: ['studyCourses', 'grades', 'NAs'],
+      relations: {
+        studyCourses: {
+          studyClass: true,
+          studyYear: true,
+        },
+      },
     });
   }
 
-  async getStudentsByFullName(studentSearchDto: StudentSearchByFullNameDto) {
-    const { firstName, lastName, patronymic } = studentSearchDto;
-    return await this.studentRepository.findStudentByFullName(
+  async searchStudents(studentSearchDto: StudentSearchDto) {
+    const { firstName, lastName, patronymic, classId, studyYearId } =
+      studentSearchDto;
+    return await this.studentRepository.searchStudents(
       firstName,
       lastName,
       patronymic,
+      classId,
+      studyYearId,
     );
-  }
-
-  async getStudentsByClass(classId: number) {
-    return await this.studentRepository.findStudentsByClass(classId);
-  }
-
-  async getStudentsByStudyYear(studyYearId: number) {
-    return await this.studentRepository.findStudentsByStudyYear(studyYearId);
   }
 
   async createStudent(

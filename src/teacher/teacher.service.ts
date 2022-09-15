@@ -51,13 +51,7 @@ export class TeacherService {
     }
   }
 
-  async getTeacherByUserId(userId: number): Promise<Teacher> {
-    return await this.teacherRepository.getTeacherByUserId(userId);
-  }
-
-  async searchTeacherByFilters(
-    teacherSearchDto: TeacherSearchDto,
-  ): Promise<Teacher[]> {
+  async searchTeacher(teacherSearchDto: TeacherSearchDto): Promise<Teacher[]> {
     const { firstName, lastName, patronymic, subjects } = teacherSearchDto;
     // const subjects = await this.subjectService.getTeacherBySubjects(teacherSearchDto.subjects)
     return await this.teacherRepository.searchTeacherByFilters(

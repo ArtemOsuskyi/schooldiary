@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class StudentSearchByFullNameDto {
+export class StudentSearchDto {
   @ApiProperty({
     example: 'Artem',
   })
@@ -22,4 +22,18 @@ export class StudentSearchByFullNameDto {
   @IsString()
   @IsOptional()
   patronymic: string;
+
+  @ApiProperty({
+    example: 1,
+  })
+  @IsNumber()
+  @IsOptional()
+  classId: number;
+
+  @ApiProperty({
+    example: 1,
+  })
+  @IsNumber()
+  @IsOptional()
+  studyYearId: number;
 }
