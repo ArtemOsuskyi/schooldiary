@@ -27,11 +27,11 @@ export class StudyCourse {
   @JoinTable({
     name: 'study_course_student',
     joinColumn: {
-      name: 'student_id',
+      name: 'study_course_id',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'study_course_id',
+      name: 'student_id',
       referencedColumnName: 'id',
     },
   })

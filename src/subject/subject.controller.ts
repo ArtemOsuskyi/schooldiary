@@ -37,9 +37,9 @@ export class SubjectController {
     return this.subjectService.getSubject(subjectId);
   }
 
-  @Post('/testNames')
-  async testSearchByNames(@Body() names: string[]) {
-    return await this.subjectService.getTeacherBySubjects(names);
+  @Post('/getByName/:subjectName')
+  async testSearchByNames(@Param('subjectName') subjectName: string) {
+    return await this.subjectService.getSubjectByName(subjectName);
   }
 
   @Post('/create')

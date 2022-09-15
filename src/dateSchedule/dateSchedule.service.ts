@@ -1,20 +1,37 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DateSchedule } from '../db/entities';
 import { DateScheduleCreateBodyDto } from './dtos/dateSchedule-create.dto';
 import { DateScheduleRepository } from './repository/dateSchedule.repository';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { ScheduleService } from '../schedule/schedule.service';
+import { nowDateIso } from '../constants';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class DateScheduleService {
   constructor(
     private readonly dateScheduleRepository: DateScheduleRepository,
+    private readonly scheduleService: ScheduleService,
   ) {}
 
   async createDateSchedule(
     dateScheduleCreateDto: DateScheduleCreateBodyDto,
   ): Promise<DateSchedule> {
+    const { scheduleId, date } = dateScheduleCreateDto;
+    const schedule = await this.scheduleService.getSchedule(scheduleId);
+    console.log(dayjs(date).format('dddd'), schedule.weekday);
+    if (dayjs(date).format('dddd') !== schedule.weekday) {
+      throw new BadRequestException(
+        'Cannot attach date with different day of week',
+      );
+    }
     return this.dateScheduleRepository.save({
-      date: dateScheduleCreateDto.date,
+      schedule,
+      date: date ?? nowDateIso,
     });
   }
 

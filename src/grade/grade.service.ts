@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Grade, Student, StudyClass, StudyYear, Subject } from '../db/entities';
 import { GradeRepository } from './repository/grade.repository';
 import { GradeCreateBodyDto } from './dtos/grade-create.dto';
@@ -9,12 +13,14 @@ import { GradeEditDto } from './dtos/grade-edit.dto';
 import { EntityManager } from 'typeorm';
 import { GradeType } from '../db/enums/grade_type.enum';
 import { GradeSearchCurrentStudentDto } from './dtos/grade-searchCurrentStudent.dto';
+import { StudentService } from '../student/student.service';
 
 @Injectable()
 export class GradeService {
   constructor(
     private readonly gradeRepository: GradeRepository,
     private readonly dateScheduleService: DateScheduleService,
+    private readonly studentService: StudentService,
     private entityManager: EntityManager,
   ) {}
 
@@ -80,8 +86,20 @@ export class GradeService {
     const dateSchedule = await this.dateScheduleService.getDateSchedule(
       dateScheduleId,
     );
+    console.log(dateSchedule.schedule.studyCourse);
+    const student = await this.studentService.getStudent(studentId);
+    if (
+      !student.studyCourses.find(
+        (studyCourse) =>
+          studyCourse.id === dateSchedule.schedule.studyCourse.id,
+      )
+    ) {
+      throw new BadRequestException(
+        "Can't create grade for student from a different study course",
+      );
+    }
     return await this.gradeRepository.save({
-      student: { id: studentId },
+      student,
       value,
       dateSchedule,
       gradeType,

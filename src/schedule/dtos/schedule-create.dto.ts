@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsISO8601, IsNumber, Max, Min } from 'class-validator';
+import { IsEnum, IsNumber, IsString, Max, Min } from 'class-validator';
 import { Weekdays } from '../../db/enums/weekday.enum';
-import { currentDayOfWeek, nowDateIso } from '../../constants';
+import { currentDayOfWeek } from '../../constants';
 
 export class ScheduleCreateBodyDto {
   @ApiProperty({
@@ -22,14 +22,8 @@ export class ScheduleCreateBodyDto {
     required: true,
     example: 'Math',
   })
+  @IsString()
   subjectName: string;
-
-  @ApiProperty({
-    required: true,
-    example: nowDateIso,
-  })
-  @IsISO8601()
-  date: Date;
 
   @ApiProperty({
     required: true,

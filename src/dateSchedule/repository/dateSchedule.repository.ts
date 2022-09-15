@@ -10,6 +10,7 @@ export class DateScheduleRepository extends Repository<DateSchedule> {
       relations: {
         schedule: {
           subject: true,
+          studyCourse: true,
         },
         homework: true,
         NAs: true,

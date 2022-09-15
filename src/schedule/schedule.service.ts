@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -36,34 +37,41 @@ export class ScheduleService {
         teacher: true,
         studyCourse: true,
       },
+      order: {
+        weekday: 'ASC',
+        lessonNumber: 'ASC',
+      },
     });
   }
 
   async createSchedule(scheduleCreateDto: ScheduleCreateBodyDto) {
-    const {
-      teacherId,
-      subjectName,
-      date,
-      studyCourseId,
-      weekday,
-      lessonNumber,
-    } = scheduleCreateDto;
+    const { studyCourseId, teacherId, subjectName, lessonNumber, weekday } =
+      scheduleCreateDto;
     return await this.entityManager.transaction(
       async (transactionEntityManager) => {
         const teacher = await this.teacherService.getTeacher(teacherId);
         const subject = await this.subjectService.getSubjectByName(subjectName);
-        const dateSchedules = [] as DateSchedule[];
-        const existingDateSchedule =
-          await this.dateScheduleService.getDateScheduleByDate(date);
-        const newDateSchedule = await transactionEntityManager.save(
-          DateSchedule,
-          isNil(existingDateSchedule)
-            ? transactionEntityManager.create(DateSchedule, {
-                date,
-              })
-            : existingDateSchedule,
-        );
-        dateSchedules.push(newDateSchedule);
+        // const dateSchedules = [] as DateSchedule[];
+        // const existingDateSchedule =
+        //   await this.dateScheduleService.getDateScheduleByDate(date);
+        // const newDateSchedule = await transactionEntityManager.save(
+        //   DateSchedule,
+        //   isNil(existingDateSchedule)
+        //     ? transactionEntityManager.create(DateSchedule, {
+        //         date,
+        //       })
+        //     : existingDateSchedule,
+        // );
+        // dateSchedules.push(newDateSchedule);
+        if (
+          !teacher.subjects.find(
+            (teacherSubject) => teacherSubject.name === subject.name,
+          )
+        ) {
+          throw new BadRequestException(
+            "This teacher doesn't teach this subject",
+          );
+        }
         const studyCourse = await transactionEntityManager.findOne(
           StudyCourse,
           {
@@ -77,7 +85,6 @@ export class ScheduleService {
           teacher,
           subject,
           studyCourse,
-          dateSchedule: dateSchedules,
           lessonNumber,
           weekday,
         });
@@ -122,8 +129,8 @@ export class ScheduleService {
   async searchSchedule(
     scheduleSearchDto: ScheduleSearchDto,
   ): Promise<Schedule[]> {
-    const { date, className } = scheduleSearchDto;
-    return await this.scheduleRepository.searchSchedule(date, className);
+    const { className } = scheduleSearchDto;
+    return await this.scheduleRepository.searchSchedule(className);
   }
 
   async deleteSchedule(scheduleId: number): Promise<Schedule> {

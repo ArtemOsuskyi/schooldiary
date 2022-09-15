@@ -16,7 +16,6 @@ import { NaModule } from './na/na.module';
 import { GradeModule } from './grade/grade.module';
 import { SubjectModule } from './subject/subject.module';
 import { HomeworkModule } from './homework/homework.module';
-import { StudyClassController } from './studyClass/studyClass.controller';
 import { DateScheduleModule } from './dateSchedule/dateSchedule.module';
 import { typeOrmAsyncConfig } from './db/typeorm-config';
 
