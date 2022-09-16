@@ -59,11 +59,16 @@ export class NaService {
   async editNa(naId: number, naEditDto: NaEditDto): Promise<NA> {
     const { studentId, dateScheduleId } = naEditDto;
     const na = await this.getNa(naId);
+    const student = !isNil(studentId)
+      ? await this.studentService.getStudent(studentId)
+      : null;
+    const dateSchedule = !isNil(dateScheduleId)
+      ? await this.dateScheduleService.getDateSchedule(dateScheduleId)
+      : null;
     return await this.naRepository.save({
       ...na,
-      ...naEditDto,
-      student: { id: studentId ?? na.student.id },
-      dateSchedule: { id: dateScheduleId ?? na.dateSchedule.id },
+      student: student ?? na.student,
+      dateSchedule: dateSchedule ?? na.dateSchedule,
     });
   }
 

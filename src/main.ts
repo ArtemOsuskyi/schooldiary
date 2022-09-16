@@ -33,7 +33,7 @@ async function bootstrap() {
     ],
     credentials: true,
     methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-    preflightContinue: true,
+    preflightContinue: false,
     origin: ['http://localhost:4200', 'http://localhost:3000'],
   });
 
