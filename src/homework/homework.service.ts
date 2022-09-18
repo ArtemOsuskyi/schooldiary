@@ -46,7 +46,13 @@ export class HomeworkService {
   async getAllHomework(): Promise<Homework[]> {
     return await this.homeworkRepository.find({
       relations: {
-        dateSchedule: true,
+        dateSchedule: {
+          schedule: {
+            studyCourse: {
+              studyClass: true,
+            },
+          },
+        },
       },
     });
   }

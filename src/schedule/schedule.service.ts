@@ -107,7 +107,9 @@ export class ScheduleService {
           studyYear: true,
           studyClass: true,
         },
-        dateSchedule: true,
+        dateSchedule: {
+          homework: true,
+        },
         teacher: true,
         subject: true,
       },

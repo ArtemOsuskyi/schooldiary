@@ -20,13 +20,13 @@ export class Student {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
 
-  @Column({ name: 'first_name', type: 'varchar' })
+  @Column({ name: 'first_name', type: 'varchar', nullable: false })
   firstName: string;
 
-  @Column({ name: 'last_name', type: 'varchar' })
+  @Column({ name: 'last_name', type: 'varchar', nullable: false })
   lastName: string;
 
-  @Column({ name: 'patronymic', type: 'varchar' })
+  @Column({ name: 'patronymic', type: 'varchar', nullable: false })
   patronymic: string;
 
   @OneToOne(() => User, { nullable: false })

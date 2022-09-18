@@ -67,6 +67,7 @@ export class NaService {
       : null;
     return await this.naRepository.save({
       ...na,
+      ...naEditDto,
       student: student ?? na.student,
       dateSchedule: dateSchedule ?? na.dateSchedule,
     });

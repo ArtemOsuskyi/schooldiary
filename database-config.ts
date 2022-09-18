@@ -15,7 +15,6 @@ export default new DataSource({
   entities: Object.values(Entities),
   synchronize: true,
   migrations: ['src/db/migrations/*.ts'],
-  logging: true,
   migrationsRun: true,
 } as DataSourceOptions);
 
