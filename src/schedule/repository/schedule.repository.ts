@@ -30,7 +30,9 @@ export class ScheduleRepository extends Repository<Schedule> {
         subject: true,
         dateSchedule: true,
         teacher: true,
-        studyCourse: true,
+        studyCourse: {
+          studyClass: true,
+        },
       },
     });
   }

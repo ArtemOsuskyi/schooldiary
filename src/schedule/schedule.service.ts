@@ -88,12 +88,13 @@ export class ScheduleService {
   ): Promise<Schedule> {
     const { subjectId, weekday, lessonNumber, teacherId } = editScheduleDto;
     const schedule = await this.getSchedule(scheduleId);
+    const teacher = await this.teacherService.getTeacher(teacherId);
+    const subject = await this.subjectService.getSubject(subjectId);
 
     return await this.scheduleRepository.save({
       ...schedule,
-      ...editScheduleDto,
-      teacher: { id: teacherId ?? schedule.teacher.id },
-      subject: { id: subjectId ?? schedule.subject.id },
+      teacher: teacher ?? schedule.teacher,
+      subject: subject ?? schedule.subject,
       weekday: weekday ?? schedule.weekday,
       lessonNumber: lessonNumber ?? schedule.lessonNumber,
     });

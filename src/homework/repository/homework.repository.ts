@@ -27,7 +27,7 @@ export class HomeworkRepository extends Repository<Homework> {
             schedule: { studyCourse: { studyClass: { id: studyClassId } } },
           },
         }),
-        ...(!isNil(studyClassId) && {
+        ...(!isNil(teacherId) && {
           dateSchedule: {
             schedule: { teacher: { id: teacherId } },
           },
@@ -40,9 +40,13 @@ export class HomeworkRepository extends Repository<Homework> {
       },
       relations: {
         dateSchedule: {
+          homework: true,
           schedule: {
             teacher: true,
             subject: true,
+            studyCourse: {
+              studyClass: true,
+            },
           },
         },
       },
