@@ -35,7 +35,9 @@ export class ScheduleService {
         subject: true,
         dateSchedule: true,
         teacher: true,
-        studyCourse: true,
+        studyCourse: {
+          studyClass: true,
+        },
       },
       order: {
         weekday: 'ASC',
