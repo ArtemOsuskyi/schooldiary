@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { StudyClass } from '../db/entities';
 import { StudyClassRepository } from './repository/studyСlass.repository';
@@ -11,9 +15,21 @@ export class StudyClassService {
   async createClass(
     studyClassCreateDto: StudyClassCreateDto,
   ): Promise<StudyClass> {
+    const { name } = studyClassCreateDto;
+    if (await this.classNameExists(name))
+      throw new BadRequestException('Class with this name already exists');
     return await this.classRepository.save({
-      name: studyClassCreateDto.name,
+      name,
     });
+  }
+
+  private async classNameExists(className: string): Promise<boolean> {
+    const studyClass = await this.classRepository.findOne({
+      where: {
+        name: className,
+      },
+    });
+    return !isNil(studyClass);
   }
 
   async getAllClasses(): Promise<StudyClass[]> {

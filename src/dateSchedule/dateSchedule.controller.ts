@@ -18,7 +18,7 @@ import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('dateSchedule')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@ApprovedRoles(Roles.STUDENT, Roles.TEACHER)
+@ApprovedRoles(Roles.ADMIN)
 @Controller('dateSchedule')
 export class DateScheduleController {
   constructor(private readonly dateScheduleService: DateScheduleService) {}
@@ -26,6 +26,13 @@ export class DateScheduleController {
   @Get('/getAll')
   async getAllDateSchedules(): Promise<DateSchedule[]> {
     return this.dateScheduleService.getAllDateSchedules();
+  }
+
+  @Get('/byScheduleId/:scheduleId')
+  async getByScheduleId(
+    @Param('scheduleId') scheduleId: number,
+  ): Promise<DateSchedule | null> {
+    return this.dateScheduleService.getDateScheduleByScheduleId(scheduleId);
   }
 
   @Get(':dateScheduleId')

@@ -90,7 +90,15 @@ export class StudentService {
     studentEditDto: StudentEditDto,
   ): Promise<Student> {
     const student = await this.getStudent(studentId);
-    // const {firstName, lastName, patronymic, studyYearId, studyClassId} = studentEditDto
+    const { studyYearId, studyClassId } = studentEditDto;
+    if (!isNil(studyYearId) && !isNil(studyClassId)) {
+      const studyCourse =
+        await this.studyCourseService.getStudyCourseForStudent(
+          studyYearId,
+          studyClassId,
+        );
+      student.studyCourses.push(studyCourse);
+    }
     return await this.studentRepository.save({
       ...student,
       ...studentEditDto,

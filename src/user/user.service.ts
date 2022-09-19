@@ -26,7 +26,7 @@ export class UserService {
     private entityManager: EntityManager,
   ) {}
 
-  async createUser(registerDto: RegisterBodyDto, role: Roles) {
+  private async createUser(registerDto: RegisterBodyDto, role: Roles) {
     const { email, password } = registerDto;
     const existingUser = await this.findUserByEmail(email);
     if (existingUser) throw new BadRequestException('This user already exists');

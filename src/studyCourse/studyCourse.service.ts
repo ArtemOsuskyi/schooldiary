@@ -29,11 +29,10 @@ export class StudyCourseService {
     createStudyCourseDto: StudyCourseCreateBodyDto,
   ): Promise<StudyCourse> {
     const { classId, studyYearId } = createStudyCourseDto;
-    //const student = await this.studentService.getStudent(studentId);
     const studyClass = await this.studyClassService.getClassById(classId);
     const studyYear = await this.studyYearService.getStudyYear(studyYearId);
     return await this.studyCourseRepository.save({
-      studyClass: studyClass,
+      studyClass,
       studyYear,
     });
   }

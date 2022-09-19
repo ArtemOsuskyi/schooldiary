@@ -23,7 +23,13 @@ export class DateScheduleService {
   ): Promise<DateSchedule> {
     const { scheduleId, date } = dateScheduleCreateDto;
     const schedule = await this.scheduleService.getSchedule(scheduleId);
-    console.log(dayjs(date).format('dddd'), schedule.weekday);
+    if (
+      schedule.dateSchedule.some((dateSchedule) => dateSchedule.date === date)
+    ) {
+      throw new BadRequestException(
+        'This date is already attached to this schedule',
+      );
+    }
     if (dayjs(date).format('dddd') !== schedule.weekday) {
       throw new BadRequestException(
         'Cannot attach date with different day of week',
@@ -59,6 +65,22 @@ export class DateScheduleService {
     const dateSchedule = await this.dateScheduleRepository.findOne({
       where: {
         date,
+      },
+    });
+    return dateSchedule ?? null;
+  }
+
+  async getDateScheduleByScheduleId(
+    scheduleId: number,
+  ): Promise<DateSchedule | null> {
+    const dateSchedule = await this.dateScheduleRepository.findOne({
+      where: {
+        schedule: { id: scheduleId },
+      },
+      relations: {
+        schedule: true,
+        homework: true,
+        grades: true,
       },
     });
     return dateSchedule ?? null;

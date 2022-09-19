@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -15,6 +16,7 @@ import { NA } from './NAs.entity';
 import { nowDate } from '../../constants';
 
 @Entity({ name: 'date_schedule' })
+@Index(['id', 'schedule'], { unique: true })
 export class DateSchedule {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;

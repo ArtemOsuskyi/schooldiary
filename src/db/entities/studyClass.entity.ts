@@ -14,7 +14,7 @@ export class StudyClass {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
   id: number;
 
-  @Column({ name: 'name', type: 'varchar' })
+  @Column({ name: 'name', type: 'varchar', unique: true })
   name: string;
 
   @OneToMany(() => StudyCourse, (studyCourse) => studyCourse.studyClass)
