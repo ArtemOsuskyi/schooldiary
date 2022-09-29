@@ -21,12 +21,11 @@ import { Roles } from '../db/enums/roles.enum';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { GradeSearchCurrentStudentDto } from './dtos/grade-searchCurrentStudent.dto';
 import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('grade')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@ApprovedRoles(Roles.TEACHER)
+@ApprovedRoles(Roles.STUDENT, Roles.TEACHER)
 @Controller('grade')
 export class GradeController {
   constructor(
@@ -37,6 +36,12 @@ export class GradeController {
   @Get('/getAll')
   async getAllGrades(): Promise<Grade[]> {
     return await this.gradeService.getGrades();
+  }
+
+  @Get('/getAllForCurrentStudent')
+  async getAllForCurrentStudent(@Req() req: Request) {
+    const userId = await this.jwtService.decode(req.cookies['token'])['id'];
+    return this.gradeService.getAllGradesForCurrentStudent(userId);
   }
 
   @Get(':gradeId')
@@ -60,7 +65,7 @@ export class GradeController {
   @ApprovedRoles(Roles.STUDENT)
   async searchGradesForCurrentStudent(
     @Req() req: Request,
-    @Body() gradeSearchDto: GradeSearchCurrentStudentDto,
+    @Body() gradeSearchDto: GradeSearchDto,
   ) {
     const studentId = this.jwtService.decode(req.cookies['token'])['id'];
     return this.gradeService.searchGradesForCurrentStudent(

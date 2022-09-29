@@ -40,6 +40,20 @@ export class StudentService {
     return student;
   }
 
+  async getStudentByUserId(userId: number) {
+    return await this.studentRepository.findOne({
+      where: {
+        user: {id: userId}
+      },
+      relations: {
+        user: true,
+        studyCourses: {
+          studyClass: true
+        }
+      }
+    })
+  }
+
   async getAllStudents() {
     return await this.studentRepository.find({
       relations: {

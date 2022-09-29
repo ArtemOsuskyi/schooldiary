@@ -22,9 +22,11 @@ import { JwtService } from '@nestjs/jwt';
 import { NaSearchCurrentStudentDto } from './dtos/na-searchCurrentStudent.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-guard';
+import { NaDateSearchDto } from './dtos/na-dateSearch.dto';
+import { Request } from 'express';
 
 @ApiTags('NA')
-@ApprovedRoles(Roles.TEACHER)
+@ApprovedRoles(Roles.STUDENT, Roles.TEACHER)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('na')
 export class NaController {
@@ -38,6 +40,13 @@ export class NaController {
     return await this.naService.getAllNAs();
   }
 
+  @ApprovedRoles(Roles.STUDENT)
+  @Get('/getAllForCurrentStudent')
+  async getAllNAsForCurrentStudent(@Req() req: Request) {
+    const userId = this.jwtService.decode(req.cookies['token'])['id'];
+    return this.naService.getNAsForCurrentStudent(userId);
+  }
+
   @Get(':naId')
   async getNa(@Param('naId') naId: number): Promise<NA> {
     return this.naService.getNa(naId);
@@ -46,6 +55,12 @@ export class NaController {
   @Post('create')
   async createNa(@Body() naCreateDto: NaCreateBodyDto): Promise<NA> {
     return this.naService.createNa(naCreateDto);
+  }
+
+  @Post('minimalNas')
+  async minNA(@Body() naDateSearch: NaDateSearchDto) {
+    const { startDate, endDate } = naDateSearch;
+    return this.naService.getMinimalNAs(startDate, endDate);
   }
 
   @Patch('/edit/:naId')

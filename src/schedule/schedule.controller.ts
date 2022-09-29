@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -18,24 +19,43 @@ import { Roles } from '../db/enums/roles.enum';
 import { ScheduleSearchDto } from './dtos/schedule-search.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-guard';
+import { Request } from 'express';
+import { JwtService } from '@nestjs/jwt';
+import { StudentService } from '../student/student.service';
 
 @ApiTags('schedule')
-@ApprovedRoles(Roles.ADMIN)
+@ApprovedRoles(Roles.ADMIN, Roles.STUDENT)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('schedule')
 export class ScheduleController {
-  constructor(private readonly scheduleService: ScheduleService) {}
+  constructor(
+    private readonly scheduleService: ScheduleService,
+    private readonly jwtService: JwtService,
+    private readonly studentService: StudentService,
+  ) {}
 
   @Get('/getAll')
   async getAllSchedules(): Promise<Schedule[]> {
     return this.scheduleService.getAllSchedules();
   }
+
   @ApprovedRoles(Roles.TEACHER, Roles.STUDENT)
   @Get(':scheduleId')
   async getSchedule(
     @Param('scheduleId') scheduleId: number,
   ): Promise<Schedule> {
     return this.scheduleService.getSchedule(scheduleId);
+  }
+
+  @ApprovedRoles(Roles.STUDENT)
+  @Post('/currentStudentSearch')
+  async getScheduleForCurrentStudent(@Req() req: Request): Promise<Schedule[]> {
+    const userId = await this.jwtService.decode(req.cookies['token'])['id'];
+    const student = await this.studentService.getStudentByUserId(userId);
+    return await this.scheduleService.getScheduleForCurrentStudent(
+      student.id,
+      student.studyCourses[0].id,
+    );
   }
 
   @Post('/search')

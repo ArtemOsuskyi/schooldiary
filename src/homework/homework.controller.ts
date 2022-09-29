@@ -5,30 +5,41 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post, Req,
   UseGuards,
 } from '@nestjs/common';
-import { HomeworkService } from './homework.service';
-import { ApiTags } from '@nestjs/swagger';
-import { Homework } from '../db/entities';
+import { HomeworkService }       from './homework.service';
+import { ApiTags }               from '@nestjs/swagger';
+import { Homework }              from '../db/entities';
 import { HomeworkCreateBodyDto } from './dto/homework-create.dto';
-import { HomeworkEditDto } from './dto/homework-edit.dto';
-import { HomeworkSearchDto } from './dto/homework-search.dto';
-import { ApprovedRoles } from '../auth/decorators/role-decorator';
-import { Roles } from '../db/enums/roles.enum';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles-guard';
+import { HomeworkEditDto }       from './dto/homework-edit.dto';
+import { HomeworkSearchDto }     from './dto/homework-search.dto';
+import { ApprovedRoles }         from '../auth/decorators/role-decorator';
+import { Roles }                 from '../db/enums/roles.enum';
+import { JwtAuthGuard }          from '../auth/guards/jwt-auth.guard';
+import { RolesGuard }            from '../auth/guards/roles-guard';
+import {Request}                 from "express";
+import {JwtService}              from "@nestjs/jwt";
 
 @ApiTags('homework')
-@ApprovedRoles(Roles.TEACHER)
+@ApprovedRoles(Roles.TEACHER, Roles.STUDENT)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('homework')
 export class HomeworkController {
-  constructor(private readonly homeworkService: HomeworkService) {}
+  constructor(private readonly homeworkService: HomeworkService,
+              private readonly jwtService: JwtService) {}
 
   @Get('/getAll')
   async getAllHomeworks(): Promise<Homework[]> {
     return await this.homeworkService.getAllHomework();
+  }
+
+  @Get('/getAllForCurrentStudent')
+  async getAllForCurrentStudent(
+      @Req() req: Request
+  ) {
+    const userId = await this.jwtService.decode(req.cookies['token'])['id']
+    return await this.homeworkService.getAllHomeworksForCurrentStudent(userId)
   }
 
   @Get(':homeworkId')

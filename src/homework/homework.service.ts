@@ -10,12 +10,14 @@ import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 import { isNil } from '@nestjs/common/utils/shared.utils';
 import { HomeworkEditDto } from './dto/homework-edit.dto';
 import { HomeworkSearchDto } from './dto/homework-search.dto';
+import { StudentService } from '../student/student.service';
 
 @Injectable()
 export class HomeworkService {
   constructor(
     private readonly homeworkRepository: HomeworkRepository,
     private readonly dateScheduleService: DateScheduleService,
+    private readonly studentService: StudentService,
   ) {}
 
   async createHomework(
@@ -48,6 +50,31 @@ export class HomeworkService {
       relations: {
         dateSchedule: {
           schedule: {
+            studyCourse: {
+              studyClass: true,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async getAllHomeworksForCurrentStudent(userId: number) {
+    const student = await this.studentService.getStudentByUserId(userId);
+    return await this.homeworkRepository.find({
+      where: {
+        dateSchedule: {
+          schedule: {
+            studyCourse: {
+              studyClass: { id: student.studyCourses[0].studyClass.id },
+            },
+          },
+        },
+      },
+      relations: {
+        dateSchedule: {
+          schedule: {
+            teacher: true,
             studyCourse: {
               studyClass: true,
             },

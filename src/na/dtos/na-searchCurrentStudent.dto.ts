@@ -18,13 +18,6 @@ export class NaSearchCurrentStudentDto {
   subject: string;
 
   @ApiProperty({
-    example: 1,
-  })
-  @IsNumber()
-  @IsOptional()
-  studentId: number;
-
-  @ApiProperty({
     example: 'Health issues',
   })
   @IsString()

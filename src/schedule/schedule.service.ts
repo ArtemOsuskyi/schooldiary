@@ -11,7 +11,7 @@ import { DateScheduleService } from '../dateSchedule/dateSchedule.service';
 import { StudyCourseService } from '../studyCourse/studyCourse.service';
 import { DateSchedule, Schedule, StudyCourse } from '../db/entities';
 import { isNil } from '@nestjs/common/utils/shared.utils';
-import { EntityManager } from 'typeorm';
+import { Any, EntityManager, In } from 'typeorm';
 import { TeacherService } from '../teacher/teacher.service';
 import { SubjectService } from '../subject/subject.service';
 import { ScheduleEditDto } from './dtos/schedule-edit.dto';
@@ -82,6 +82,35 @@ export class ScheduleService {
         });
       },
     );
+  }
+
+  async getScheduleForCurrentStudent(
+      studentId: number,
+    studyCourseId: number,
+  ) {
+    const studyCourse = await this.studyCourseService.getStudyCourseById(
+      studyCourseId,
+    );
+    return this.scheduleRepository.find({
+      where: {
+        studyCourse: {
+          students: {id: studentId},
+          id: studyCourse.id,
+        },
+      },
+      order: {
+        weekday: 'ASC',
+        lessonNumber: 'ASC',
+      },
+      relations: {
+        subject: true,
+        dateSchedule: true,
+        teacher: true,
+        studyCourse: {
+          studyClass: true
+        }
+      },
+    });
   }
 
   async editSchedule(

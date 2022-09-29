@@ -8,12 +8,14 @@ import { TypeOrmExModule } from '../db/typeorm_ex.module';
 import { TeacherModule } from '../teacher/teacher.module';
 import { SubjectModule } from '../subject/subject.module';
 import { JwtModule } from '@nestjs/jwt';
+import { StudentModule } from '../student/student.module';
 
 @Module({
   imports: [
     TypeOrmExModule.forCustomRepository([ScheduleRepository]),
     forwardRef(() => DateScheduleModule),
     forwardRef(() => StudyCourseModule),
+    forwardRef(() => StudentModule),
     TeacherModule,
     SubjectModule,
     JwtModule,

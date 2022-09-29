@@ -26,6 +26,10 @@ export class ScheduleRepository extends Repository<Schedule> {
           studyCourse: { id: studyCourseId },
         }),
       },
+      order: {
+        weekday: 'ASC',
+        lessonNumber: 'ASC',
+      },
       relations: {
         subject: true,
         dateSchedule: true,

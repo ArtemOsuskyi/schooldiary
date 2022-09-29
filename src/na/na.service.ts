@@ -33,6 +33,50 @@ export class NaService {
     });
   }
 
+  async getNAsForCurrentStudent(userId: number) {
+    const student = await this.studentService.getStudentByUserId(userId)
+    return await this.naRepository.find({
+      where: {
+        student: {
+          id: student.id
+        }
+      },
+      relations: {
+        student: true,
+        dateSchedule: {
+          schedule: {
+            subject: true
+          }
+        }
+      }
+    })
+  }
+
+  async getMinimalNAs(startDate: Date, endDate: Date) {
+    const allNa = await this.naRepository.find({
+      relations: {
+        dateSchedule: true,
+        student: true,
+      },
+      where: {
+        dateSchedule: {
+          date: Between(startDate, endDate),
+        },
+      },
+    });
+    const students = allNa.map(
+      (na) => `${na.student.firstName} ${na.student.lastName}`,
+    );
+    const resultStudents = [
+      ...students.reduce(
+        (acc, currentValue) =>
+          acc.set(currentValue, (acc.get(currentValue) || 0) + 1),
+        new Map(),
+      ),
+    ];
+    return resultStudents;
+  }
+
   async getAllNAs(): Promise<NA[]> {
     return this.naRepository.find({
       relations: {
@@ -79,9 +123,11 @@ export class NaService {
   }
 
   async searchCurrentStudentNa(
-    studentId: number,
+    userId: number,
     naSearchDto: NaSearchCurrentStudentDto,
   ) {
+    const student = await this.studentService.getStudentByUserId(userId)
+    const studentId = student.id
     const { date, subject, reason } = naSearchDto;
     return await this.naRepository.searchNA(date, subject, studentId, reason);
   }
