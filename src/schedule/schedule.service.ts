@@ -40,6 +40,11 @@ export class ScheduleService {
         },
       },
       order: {
+        studyCourse: {
+          studyClass: {
+            name: 'DESC',
+          },
+        },
         weekday: 'ASC',
         lessonNumber: 'ASC',
       },
@@ -84,17 +89,14 @@ export class ScheduleService {
     );
   }
 
-  async getScheduleForCurrentStudent(
-      studentId: number,
-    studyCourseId: number,
-  ) {
+  async getScheduleForCurrentStudent(studentId: number, studyCourseId: number) {
     const studyCourse = await this.studyCourseService.getStudyCourseById(
       studyCourseId,
     );
     return this.scheduleRepository.find({
       where: {
         studyCourse: {
-          students: {id: studentId},
+          students: { id: studentId },
           id: studyCourse.id,
         },
       },
@@ -107,8 +109,8 @@ export class ScheduleService {
         dateSchedule: true,
         teacher: true,
         studyCourse: {
-          studyClass: true
-        }
+          studyClass: true,
+        },
       },
     });
   }

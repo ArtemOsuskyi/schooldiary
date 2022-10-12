@@ -50,6 +50,7 @@ export class HomeworkService {
       relations: {
         dateSchedule: {
           schedule: {
+            subject: true,
             studyCourse: {
               studyClass: true,
             },
@@ -65,6 +66,7 @@ export class HomeworkService {
       where: {
         dateSchedule: {
           schedule: {
+            subject: true,
             studyCourse: {
               studyClass: { id: student.studyCourses[0].studyClass.id },
             },
@@ -74,6 +76,7 @@ export class HomeworkService {
       relations: {
         dateSchedule: {
           schedule: {
+            subject: true,
             teacher: true,
             studyCourse: {
               studyClass: true,

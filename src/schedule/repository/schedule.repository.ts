@@ -27,6 +27,11 @@ export class ScheduleRepository extends Repository<Schedule> {
         }),
       },
       order: {
+        studyCourse: {
+          studyClass: {
+            name: 'ASC',
+          },
+        },
         weekday: 'ASC',
         lessonNumber: 'ASC',
       },

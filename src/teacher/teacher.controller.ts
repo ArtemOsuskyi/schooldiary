@@ -20,7 +20,7 @@ import { ApprovedRoles } from '../auth/decorators/role-decorator';
 import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('teacher')
-@ApprovedRoles(Roles.ADMIN)
+@ApprovedRoles(Roles.ADMIN, Roles.STUDENT)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('teacher')
 export class TeacherController {

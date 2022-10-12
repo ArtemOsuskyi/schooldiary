@@ -69,20 +69,20 @@ export class GradeService {
   }
 
   async getAllGradesForCurrentStudent(userId: number) {
-    const student = await this.studentService.getStudentByUserId(userId)
+    const student = await this.studentService.getStudentByUserId(userId);
     return await this.gradeRepository.find({
-      where:{
-        student: {id: student.id}
+      where: {
+        student: { id: student.id },
       },
       relations: {
         student: true,
         dateSchedule: {
           schedule: {
-            subject: true
-          }
-        }
-      }
-    })
+            subject: true,
+          },
+        },
+      },
+    });
   }
 
   async searchGradesForCurrentStudent(
@@ -160,6 +160,7 @@ export class GradeService {
       });
       const grades = await this.gradeRepository.find({
         where: {
+          gradeType,
           student: {
             studyCourses: {
               studyClass,

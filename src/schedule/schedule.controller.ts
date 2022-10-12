@@ -24,7 +24,7 @@ import { JwtService } from '@nestjs/jwt';
 import { StudentService } from '../student/student.service';
 
 @ApiTags('schedule')
-@ApprovedRoles(Roles.ADMIN, Roles.STUDENT)
+@ApprovedRoles(Roles.TEACHER)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('schedule')
 export class ScheduleController {
@@ -59,6 +59,8 @@ export class ScheduleController {
   }
 
   @Post('/search')
+  @ApprovedRoles(Roles.TEACHER)
+  @UseGuards(RolesGuard)
   async searchSchedule(
     @Body() scheduleSearchDto: ScheduleSearchDto,
   ): Promise<Schedule[]> {

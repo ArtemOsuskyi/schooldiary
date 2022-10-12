@@ -20,7 +20,7 @@ import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('studyYear')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@ApprovedRoles(Roles.ADMIN)
+@ApprovedRoles(Roles.TEACHER)
 @Controller('studyYear')
 export class StudyYearController {
   constructor(private readonly studyYearService: StudyYearService) {}

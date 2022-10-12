@@ -18,7 +18,7 @@ import { Roles } from '../db/enums/roles.enum';
 
 @ApiTags('studyClass')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@ApprovedRoles(Roles.ADMIN)
+@ApprovedRoles(Roles.STUDENT, Roles.TEACHER)
 @Controller('studyClass')
 export class StudyClassController {
   constructor(private readonly studyClassService: StudyClassService) {}

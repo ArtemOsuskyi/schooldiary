@@ -21,7 +21,7 @@ import { RolesGuard } from '../auth/guards/roles-guard';
 
 @ApiTags('student')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@ApprovedRoles(Roles.ADMIN)
+@ApprovedRoles(Roles.ADMIN, Roles.TEACHER)
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}

@@ -23,7 +23,7 @@ import { Roles } from '../db/enums/roles.enum';
 @ApiTags('subject')
 @Controller('subject')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@ApprovedRoles(Roles.ADMIN)
+@ApprovedRoles(Roles.TEACHER, Roles.STUDENT)
 export class SubjectController {
   constructor(private readonly subjectService: SubjectService) {}
 
