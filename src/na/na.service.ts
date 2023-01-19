@@ -34,22 +34,22 @@ export class NaService {
   }
 
   async getNAsForCurrentStudent(userId: number) {
-    const student = await this.studentService.getStudentByUserId(userId)
+    const student = await this.studentService.getStudentByUserId(userId);
     return await this.naRepository.find({
       where: {
         student: {
-          id: student.id
-        }
+          id: student.id,
+        },
       },
       relations: {
         student: true,
         dateSchedule: {
           schedule: {
-            subject: true
-          }
-        }
-      }
-    })
+            subject: true,
+          },
+        },
+      },
+    });
   }
 
   async getMinimalNAs(startDate: Date, endDate: Date) {
@@ -126,8 +126,8 @@ export class NaService {
     userId: number,
     naSearchDto: NaSearchCurrentStudentDto,
   ) {
-    const student = await this.studentService.getStudentByUserId(userId)
-    const studentId = student.id
+    const student = await this.studentService.getStudentByUserId(userId);
+    const studentId = student.id;
     const { date, subject, reason } = naSearchDto;
     return await this.naRepository.searchNA(date, subject, studentId, reason);
   }

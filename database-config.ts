@@ -9,11 +9,10 @@ export default new DataSource({
   database: process.env.DB_NAME,
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT),
-  name: 'Admin',
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   entities: Object.values(Entities),
-  synchronize: true,
+  synchronize: false,
   migrations: ['src/db/migrations/*.ts'],
   migrationsRun: true,
 } as DataSourceOptions);

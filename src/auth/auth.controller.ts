@@ -30,7 +30,7 @@ export class AuthController {
     return result;
   }
 
-  @Post('/checkToken')
+  @Post('/check-token')
   async checkToken(
     @Req() req: Request,
     @Res({ passthrough: true }) response: Response,

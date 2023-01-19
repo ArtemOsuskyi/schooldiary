@@ -25,7 +25,7 @@ import { Roles } from '../db/enums/roles.enum';
 export class StudyYearController {
   constructor(private readonly studyYearService: StudyYearService) {}
 
-  @Get('getAll')
+  @Get('all')
   async getAllStudyYears(): Promise<StudyYear[]> {
     return this.studyYearService.getAllStudyYear();
   }

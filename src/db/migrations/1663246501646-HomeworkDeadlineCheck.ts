@@ -1,17 +1,18 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import { MigrationInterface, QueryRunner, TableCheck } from 'typeorm';
 
 export class HomeworkDeadlineCheck1663246501646 implements MigrationInterface {
-  constraint = 'HomeworkDeadlineCheck';
+  private readonly tableName = 'homework';
+  private readonly constraint = new TableCheck({
+    name: 'homework_deadline_check',
+    columnNames: ['deadline'],
+    expression: `"deadline" > now()::date`,
+  });
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `ALTER TABLE "homework" ADD CONSTRAINT ${this.constraint} CHECK ( "deadline" > now()::date)`,
-    );
+    await queryRunner.createCheckConstraint(this.tableName, this.constraint);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `ALTER TABLE "homework" DROP CONSTRAINT ${this.constraint}`,
-    );
+    await queryRunner.dropCheckConstraint(this.tableName, this.constraint);
   }
 }

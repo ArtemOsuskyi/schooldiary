@@ -8,6 +8,8 @@ import { User } from '../db/entities';
 import { StudentService } from '../student/student.service';
 import { TeacherService } from '../teacher/teacher.service';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { Roles } from '../db/enums/roles.enum';
+import { studentDataSource, teacherDataSource } from '../db/typeorm-config';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +28,16 @@ export class AuthService {
     const user = await this.validateUser(email, password);
     const payload = { email: user.email, id: user.id, role: user.role };
     delete user.password;
+    if (user.role === Roles.TEACHER) {
+      await teacherDataSource.initialize().then(() => {
+        console.log('Switched connection to teacher');
+      });
+    }
+    if (user.role === Roles.STUDENT) {
+      await studentDataSource.initialize().then(() => {
+        console.log('Switched connection to student');
+      });
+    }
     return {
       accessToken: this.jwtService.sign(payload),
       data: user,

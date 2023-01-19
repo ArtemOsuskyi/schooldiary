@@ -33,12 +33,12 @@ export class GradeController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @Get('/getAll')
+  @Get('/all')
   async getAllGrades(): Promise<Grade[]> {
     return await this.gradeService.getGrades();
   }
 
-  @Get('/getAllForCurrentStudent')
+  @Get('/get-all-for-current-student')
   async getAllForCurrentStudent(@Req() req: Request) {
     const userId = await this.jwtService.decode(req.cookies['token'])['id'];
     return this.gradeService.getAllGradesForCurrentStudent(userId);
@@ -61,7 +61,7 @@ export class GradeController {
     return await this.gradeService.searchGrades(gradeSearchDto);
   }
 
-  @Post('/currentStudentSearch')
+  @Post('/current-student-search')
   @ApprovedRoles(Roles.STUDENT)
   async searchGradesForCurrentStudent(
     @Req() req: Request,
@@ -74,7 +74,7 @@ export class GradeController {
     );
   }
 
-  @Post('/getAverageForClass')
+  @Post('/get-average-for-class')
   async getAverageGradeForClass(@Body() gradeAverageDto: GradeAverageDto) {
     const { classId, subjectId, gradeType, studyYearId } = gradeAverageDto;
     return this.gradeService.getAverageGradesByClass(

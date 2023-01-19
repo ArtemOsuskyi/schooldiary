@@ -34,7 +34,7 @@ export class ScheduleController {
     private readonly studentService: StudentService,
   ) {}
 
-  @Get('/getAll')
+  @Get('/all')
   async getAllSchedules(): Promise<Schedule[]> {
     return this.scheduleService.getAllSchedules();
   }
@@ -48,7 +48,7 @@ export class ScheduleController {
   }
 
   @ApprovedRoles(Roles.STUDENT)
-  @Post('/currentStudentSearch')
+  @Post('/current-student-search')
   async getScheduleForCurrentStudent(@Req() req: Request): Promise<Schedule[]> {
     const userId = await this.jwtService.decode(req.cookies['token'])['id'];
     const student = await this.studentService.getStudentByUserId(userId);

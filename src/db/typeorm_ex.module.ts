@@ -9,15 +9,13 @@ export class TypeOrmExModule {
   ): DynamicModule {
     const providers: Provider[] = [];
 
-    for (const repository of repositories) {
+    repositories.forEach((repository) => {
       const entity = Reflect.getMetadata(
         TYPEORM_EX_CUSTOM_REPOSITORY,
         repository,
       );
 
-      if (!entity) {
-        continue;
-      }
+      if (!entity) return;
 
       providers.push({
         inject: [getDataSourceToken()],
@@ -31,7 +29,7 @@ export class TypeOrmExModule {
           );
         },
       });
-    }
+    });
 
     return {
       exports: providers,

@@ -1,11 +1,22 @@
 version: '3.5'
 
 services:
-  db:
+  build-service:
+    build:
+      context: .
+    depends_on:
+      - postgres
+    env_file:
+      - .env.docker
+    ports:
+      - '${LOCAL_PORT}:${LOCAL_PORT}'
+    command: bash -c "npm i && npm run start:dev"
+
+  postgres:
     image: postgres:14-alpine
     command: postgres -c 'max_connections=200'
     ports:
-      - 5432:5432
+      - "5430:5430"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=a1501s0607

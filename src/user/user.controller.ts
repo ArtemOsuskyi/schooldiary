@@ -26,7 +26,7 @@ export class UserController {
     return await this.userService.findUserByEmail(email);
   }
 
-  @Post('/createStudent')
+  @Post('/create-student')
   async createUserStudent(
     @Body() userStudentCreateDto: UserStudentCreateBodyDto,
   ): Promise<User> {
@@ -36,7 +36,7 @@ export class UserController {
     );
   }
 
-  @Post('/createTeacher')
+  @Post('/create-teacher')
   async createUserTeacher(
     @Body() userTeacherCreateDto: UserTeacherCreateBodyDto,
   ): Promise<User> {

@@ -35,13 +35,13 @@ export class NaController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @Get('/getAll')
+  @Get('/all')
   async getAllNAs(): Promise<NA[]> {
     return await this.naService.getAllNAs();
   }
 
   @ApprovedRoles(Roles.STUDENT)
-  @Get('/getAllForCurrentStudent')
+  @Get('/get-all-for-current-student')
   async getAllNAsForCurrentStudent(@Req() req: Request) {
     const userId = this.jwtService.decode(req.cookies['token'])['id'];
     return this.naService.getNAsForCurrentStudent(userId);
@@ -57,7 +57,7 @@ export class NaController {
     return this.naService.createNa(naCreateDto);
   }
 
-  @Post('minimalNas')
+  @Post('minimal-NAs')
   async minNA(@Body() naDateSearch: NaDateSearchDto) {
     const { startDate, endDate } = naDateSearch;
     return this.naService.getMinimalNAs(startDate, endDate);
@@ -71,7 +71,7 @@ export class NaController {
     return this.naService.editNa(naId, naEditDto);
   }
 
-  @Post('/countNa')
+  @Post('/count')
   async countNa(@Body() naCountDto: NaCountDto) {
     const { fromDate, toDate, studyClassId, studentId } = naCountDto;
     return this.naService.countNa(fromDate, toDate, studyClassId, studentId);
@@ -82,7 +82,7 @@ export class NaController {
     return this.naService.searchNa(naSearchDto);
   }
 
-  @Post('/searchCurrentUser')
+  @Post('/search-current-user')
   @ApprovedRoles(Roles.STUDENT)
   async searchCurrentStudentNa(
     @Req() req,

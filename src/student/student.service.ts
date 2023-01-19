@@ -43,15 +43,15 @@ export class StudentService {
   async getStudentByUserId(userId: number) {
     return await this.studentRepository.findOne({
       where: {
-        user: {id: userId}
+        user: { id: userId },
       },
       relations: {
         user: true,
         studyCourses: {
-          studyClass: true
-        }
-      }
-    })
+          studyClass: true,
+        },
+      },
+    });
   }
 
   async getAllStudents() {

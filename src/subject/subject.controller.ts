@@ -27,7 +27,7 @@ import { Roles } from '../db/enums/roles.enum';
 export class SubjectController {
   constructor(private readonly subjectService: SubjectService) {}
 
-  @Get('getAll')
+  @Get('all')
   async getAllSubjects(): Promise<Subject[]> {
     return this.subjectService.getAllSubjects();
   }
@@ -37,7 +37,7 @@ export class SubjectController {
     return this.subjectService.getSubject(subjectId);
   }
 
-  @Post('/getByName/:subjectName')
+  @Get('/get-by-name/:subjectName')
   async testSearchByNames(@Param('subjectName') subjectName: string) {
     return await this.subjectService.getSubjectByName(subjectName);
   }
@@ -58,7 +58,7 @@ export class SubjectController {
     return this.subjectService.editSubject(subjectId, subjectEditDto);
   }
 
-  @Post('/assignSubjectsToTeacher')
+  @Post('/assign-subjects-to-teacher')
   async assignSubjectsToTeacher(@Body() subjectAssignDto: SubjectAssignDto) {
     const { subjects, teacherId } = subjectAssignDto;
     return await this.subjectService.assignSubjectsToTeacher(

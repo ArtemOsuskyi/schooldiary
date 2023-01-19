@@ -23,12 +23,12 @@ import { Roles } from '../db/enums/roles.enum';
 export class DateScheduleController {
   constructor(private readonly dateScheduleService: DateScheduleService) {}
 
-  @Get('/getAll')
+  @Get('/all')
   async getAllDateSchedules(): Promise<DateSchedule[]> {
     return this.dateScheduleService.getAllDateSchedules();
   }
 
-  @Get('/byScheduleId/:scheduleId')
+  @Get('/by-schedule-id/:scheduleId')
   async getByScheduleId(
     @Param('scheduleId') scheduleId: number,
   ): Promise<DateSchedule | null> {

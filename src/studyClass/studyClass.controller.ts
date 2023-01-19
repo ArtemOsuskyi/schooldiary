@@ -23,7 +23,7 @@ import { Roles } from '../db/enums/roles.enum';
 export class StudyClassController {
   constructor(private readonly studyClassService: StudyClassService) {}
 
-  @Get('/getAll')
+  @Get('/all')
   async getAllStudyClasses(): Promise<StudyClass[]> {
     return this.studyClassService.getAllClasses();
   }

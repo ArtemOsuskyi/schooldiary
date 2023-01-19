@@ -38,11 +38,11 @@ export class Teacher {
   @JoinTable({
     name: 'teacher_subject',
     joinColumn: {
-      name: 'subject_id',
+      name: 'teacher_id',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'teacher_id',
+      name: 'subject_id',
       referencedColumnName: 'id',
     },
   })

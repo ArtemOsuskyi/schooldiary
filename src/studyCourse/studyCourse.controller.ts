@@ -25,7 +25,7 @@ import { Roles } from '../db/enums/roles.enum';
 export class StudyCourseController {
   constructor(private readonly studyCourseService: StudyCourseService) {}
 
-  @Get('/getAll')
+  @Get('/all')
   async getAllStudyCourses(): Promise<StudyCourse[]> {
     return this.studyCourseService.getAllStudyCourses();
   }
@@ -49,7 +49,7 @@ export class StudyCourseController {
     return this.studyCourseService.searchStudyCourse(studyCourseSearchDto);
   }
 
-  @Patch('removeStudentFromStudyCourse')
+  @Patch('remove-student-from-study-course')
   async removeStudentFromStudyCourse(
     @Body() studentRemoveDto: StudyCourseRemoveStudentDto,
   ) {
